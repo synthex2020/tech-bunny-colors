@@ -5,10 +5,20 @@ import Medium from "../../../assets/icons/medium.svg?react"
 import Tiktok from "../../../assets/icons/tiktok.svg?react"
 import Twitter from "../../../assets/icons/twitter.svg?react"
 import Youtube from "../../../assets/icons/youtube.svg?react"
+import { useNavigate } from "react-router"
 
-import ProjectPopUpModal from "./ProjectPopUpModal"
+//  INTEREFACE
+interface Posts {
+    title: string,
+    thumbnail: string,
+    media : string,
+    caption: string,
+    hashtags: string,
+    mentions : string,
+    adCost : string,
+    adRun: boolean,
 
-
+}
 //  INTERFACE 
 interface Project {
     title: string,
@@ -18,19 +28,29 @@ interface Project {
     tags: string,
     targetAudience: string,
     adRun: boolean,
-    cost: string
+    budget: string,
+    facebook: Posts[],
+    instagram : Posts[],
+    twitter : Posts[],
+    youtube : Posts[],
+    tiktok : Posts[],
+    linkedIn : Posts[],
+    medium : Posts[]
+}
+
+interface ProjectProps {
+    project : Project;
 }
 
 function socialMediaButton(buttonValue: string, project: Project) {
+    const navigate = useNavigate();
 
     if (buttonValue == 'facebook') {
         return (
-            <a onClick={() => (document.getElementById("facebook") as HTMLDialogElement)?.showModal()}>
+            <a onClick={() => navigate('/socialDir/projectsTable', {
+                state : {"posts" : project.facebook}
+            })}>
                 <Facebook />
-                <ProjectPopUpModal  
-                    project={project}
-                    modalId="facebook"
-                />
             </a>
 
         );
@@ -38,68 +58,56 @@ function socialMediaButton(buttonValue: string, project: Project) {
 
     if (buttonValue == 'instagram') {
         return (
-        <a onClick={() => (document.getElementById("instagram") as HTMLDialogElement)?.showModal()}>
+        <a onClick={() => navigate('/socialDir/projectsTable' , {
+            state : {"posts" : project.instagram}
+        })}>
             <Instagram />
-            <ProjectPopUpModal 
-                project={project}
-                modalId="instagram"
-            />
         </a>);
     } // end if 
 
     if (buttonValue == 'linkedin') {
         return (
-        <a onClick={() => (document.getElementById("linkedin") as HTMLDialogElement)?.showModal()}>
+        <a onClick={() => navigate('/socialDir/projectsTable', {
+            state : {"posts" : project.linkedIn}
+        })}>
             <LinkedIn />
-            <ProjectPopUpModal 
-                project={project}
-                modalId="linkedin"
-            />
         </a>);
     } // end if 
 
     if (buttonValue == 'medium') {
         return (
-        <a onClick={() => (document.getElementById("medium") as HTMLDialogElement)?.showModal()}>
+        <a onClick={() => navigate('/socialDir/projectsTable', {
+            state : {"posts" : project.medium}
+        })}>
             <Medium />
-            <ProjectPopUpModal 
-                project={project}
-                modalId="medium"
-            />
         </a>);
     } // end if 
 
     if (buttonValue == 'tiktok') {
         return (
-            <a onClick={() => (document.getElementById("tiktok") as HTMLDialogElement)?.showModal()}>
+            <a onClick={() => navigate('/socialDir/projectsTable', {
+                state : {"posts" : project.tiktok}
+            })}>
                 <Tiktok />
-                <ProjectPopUpModal 
-                    project={project}
-                    modalId="tiktok"
-            />
             </a>
         );
     } // end if 
 
     if (buttonValue == 'twitter') {
         return (
-        <a onClick={() => (document.getElementById("twitter") as HTMLDialogElement)?.showModal()}>
+        <a onClick={() => navigate('/socialDir/projectsTable', {
+            state : {"posts" : project.twitter}
+        })}>
             <Twitter />
-            <ProjectPopUpModal 
-                project={project}
-                modalId="twitter"
-            />
         </a>);
     } // end if 
 
     if (buttonValue == 'youtube') {
         return (
-            <a onClick={() => (document.getElementById("youtube") as HTMLDialogElement)?.showModal()}>
+            <a onClick={() => navigate('/socialDir/projectsTable', {
+                state : {"posts" : project.youtube}
+            })}>
                 <Youtube />
-                <ProjectPopUpModal 
-                    project={project}
-                    modalId="youtube"
-            />
             </a>
         );
     } // end if 
@@ -108,7 +116,7 @@ function socialMediaButton(buttonValue: string, project: Project) {
     );
 }
 
-function ProjectCard(project : Project) {
+function ProjectCard({project} : ProjectProps) {
     return (
         <div className="card card-compact bg-base-100 w-96 shadow-xl">
             <figure>
@@ -121,9 +129,9 @@ function ProjectCard(project : Project) {
                 <h2 className="card-title">{project.title}</h2>
                 {/** CAPTION + TAGS + HASHTAGS + ADRUN */}
                 <p>{project.caption}</p>
-                <h3 className="text text-sm">{project.tags}</h3>
-                <h4 className="text text-xs">{project.hashtags}</h4>
-                <p className="text text-lg">Has Ad : {project.adRun.toString()}</p>
+                <h3 className="text text-sm">Typical {project.tags}</h3>
+                <h4 className="text text-xs">Typical {project.hashtags}</h4>
+                <p className="text text-lg">Ad budget : {project.budget}</p>
                 <div className="card-actions justify-end gap-4">
                     {/** A ROW OF BUTTONS BASED OF ACCESSIBLE SOCIALS */}
                     {socialMediaButton('facebook', project)}
@@ -132,8 +140,6 @@ function ProjectCard(project : Project) {
                     {socialMediaButton('twitter', project)}
                 </div>
             </div>
-
-
         </div>
     );
 } // end project card 
