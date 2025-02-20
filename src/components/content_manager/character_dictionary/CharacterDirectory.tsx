@@ -1,3 +1,6 @@
+// SHOW SERIES CARDS FIRST AND THEY LEAD TO CHARACTER TABLE
+
+
 function CharacterDirectory () {
     return(
         <div>
