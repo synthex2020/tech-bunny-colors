@@ -1,4 +1,6 @@
 //  SHOW MORE DETAILS ON SERIES  - INCLUDE IN-WORLD LOCATIONS AND EVENTS OF IMPORTANCE
+import { useState } from "react";
+
 
 interface Locations {
     title: string;
@@ -76,7 +78,42 @@ interface SeriesProps {
     modalId: string;
 }
 
+
 function SeriesMoreDetailsModal(seriesProps: SeriesProps) {
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    const  MediaCarousel = () =>  {
+        const images = seriesProps.series.images;
+
+        const prevSlide = () => {
+            setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+        };
+    
+        const nextSlide = () => {
+            setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+        };
+    
+        return (
+            <div className="carousel w-1/2 relative">
+                {images.map((src, index) => (
+                    <div
+                        key={index}
+                        className={`carousel-item absolute w-1/2 transition-opacity duration-700 ${index === currentIndex ? "opacity-100" : "opacity-0"
+                            }`}
+                    >
+                        <img src={src} alt={`Slide ${index + 1}`} />
+                    </div>
+                ))}
+    
+                <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                    <button onClick={prevSlide} className="btn btn-circle">❮</button>
+                    <button onClick={nextSlide} className="btn btn-circle">❯</button>
+                </div>
+            </div>
+        );
+    
+    }
+    
     return (
         <div>
             <button
@@ -90,19 +127,46 @@ function SeriesMoreDetailsModal(seriesProps: SeriesProps) {
 
                     <div className="hero bg-base-200 min-h-screen">
                         <div className="hero-content flex-col lg:flex-row">
-                            {/** MEDIA ITEMS  */}
-                            <img
-                                src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
-                                className="max-w-sm rounded-lg shadow-2xl" />
+                            {/** MEDIA ITEMS - Images  */}
+                            <MediaCarousel />
                             
-                            {/** TEXT DESCRIPTORS  */}
+                            {/** TEXT DESCRIPTORS + HYPER LINKS   */}
                             <div>
-                                <h1 className="text-5xl font-bold">Box Office News!</h1>
-                                <p className="py-6">
-                                    Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
-                                    quasi. In deleniti eaque aut repudiandae et a id nisi.
+                                <h1 className="text-5xl font-bold">{seriesProps.series.title}</h1>
+                                <h2 className="text-3xl font-semibold">{seriesProps.series.authors}</h2>
+                                <h2 className="text-3xl font-semibold">{seriesProps.series.artists}</h2>
+                                <h4 className="text-2xl">{seriesProps.series.genre}</h4>
+                                <h5 className="text-sm">{seriesProps.series.powerSystem.toString()}</h5>
+                                <p className="py-6 overflow-clip">
+                                    {seriesProps.series.age} Years | {seriesProps.series.auidence} <br/>
+                                    {seriesProps.series.issues} Issues | {seriesProps.series.volumes} Volumes <br/>
+                                    Was merchandised : {seriesProps.series.merchandised.toString()}<br/>
+                                    Published : {seriesProps.series.published.toString()}<br/>
+                                    Status : {seriesProps.series.currentStatus} <br/>
+                                    {seriesProps.series.plot}
                                 </p>
-                                <button className="btn btn-primary">Get Started</button>
+
+                                <div className="flex flex-row gap-2">
+                                    <a 
+                                        target="_blank" 
+                                        href=""
+                                    >
+                                        Important Events
+                                    </a>
+                                    <a 
+                                        target="_blank" 
+                                        href=""
+                                        >
+                                            Locations
+                                        </a>
+                                    <a 
+                                        target="_blank" 
+                                        href=""
+                                        >
+                                            Characters
+                                    </a>
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -129,5 +193,6 @@ function SeriesMoreDetailsModal(seriesProps: SeriesProps) {
         </div>
     );
 }
+
 
 export default SeriesMoreDetailsModal;

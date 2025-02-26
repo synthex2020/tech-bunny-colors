@@ -63,7 +63,7 @@ function App() {
           <h2 className="card-title">Character Directory</h2>
           <p>Collection of characters and their related assets such as references and character sheets</p>
           <div className="card-actions justify-end">
-            <button className="btn btn-primary">View</button>
+            <button className="btn btn-primary" onClick={() => navigate('characterDir')}>View</button>
           </div>
         </div>
       </div>
