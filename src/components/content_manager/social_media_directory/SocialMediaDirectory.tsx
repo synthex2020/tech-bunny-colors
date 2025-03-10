@@ -1,4 +1,3 @@
-import ProjectPromotionalPosts from "./ProjectUpdatePosts";
 import ProjectUpdatePosts from "./ProjectUpdatePosts";
 
 //  MAIN DISPLAY PAGE 
@@ -272,32 +271,12 @@ const projectUpdates = [
 
 function SocialMediaDirectory() {
     return (
-        <div role="tablist" className="tabs tabs-bordered w-full">
-            <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Tab 1" />
-            <div role="tabpanel" className="tab-content p-10">
-                {/** PROJECT PROMOTIONALS  */}
-                <ProjectPromotionalPosts 
+      <div>
+        {/** PROJECT UPDATES */}
+        <ProjectUpdatePosts 
                     projects={projectPosts}
                 />
-            </div>
-
-            <input
-                type="radio"
-                name="my_tabs_1"
-                role="tab"
-                className="tab"
-                aria-label="Tab 2"
-                defaultChecked />
-            <div role="tabpanel" className="tab-content p-10">
-                {/** PROJECT UPDATES */}
-                <ProjectUpdatePosts 
-                    projects={projectPosts}
-                />
-            </div>
-
-            <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Tab 3" />
-            <div role="tabpanel" className="tab-content p-10">Tab content 3</div>
-        </div>
+      </div>
     );
 }
 

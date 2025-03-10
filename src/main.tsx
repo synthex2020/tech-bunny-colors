@@ -10,6 +10,7 @@ import ProjectsDisplayTable from './components/content_manager/social_media_dire
 import CharacterTable from './components/content_manager/character_dictionary/CharactersTable.tsx'
 import LocationsTable from './components/content_manager/character_dictionary/LocationsTable.tsx'
 import ImportantEventsTable from './components/content_manager/character_dictionary/ImportantEventsTable.tsx'
+import AddNewSocialMediaPost from './components/content_manager/social_media_directory/AddNewPost.tsx'
 
 
 createRoot(document.getElementById('root')!).render(
@@ -17,6 +18,7 @@ createRoot(document.getElementById('root')!).render(
     <Routes>
       <Route path='/' element={<App/>}/>
       <Route path='/socialDir/projectsTable' element={<ProjectsDisplayTable />}/>
+      <Route path='/socialDir/addNewPost' element={<AddNewSocialMediaPost />}   />
       <Route path='brandingKit' element={<BrandingKit/>}/>
       <Route path='characterDir' element={<CharacterDirectory />}/>
       <Route path='/characterDir/charactersTable' element={<CharacterTable />} />

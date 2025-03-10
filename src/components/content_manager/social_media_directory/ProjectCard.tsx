@@ -11,11 +11,11 @@ import { useNavigate } from "react-router"
 interface Posts {
     title: string,
     thumbnail: string,
-    media : string,
+    media: string,
     caption: string,
     hashtags: string,
-    mentions : string,
-    adCost : string,
+    mentions: string,
+    adCost: string,
     adRun: boolean,
 
 }
@@ -30,16 +30,16 @@ interface Project {
     adRun: boolean,
     budget: string,
     facebook: Posts[],
-    instagram : Posts[],
-    twitter : Posts[],
-    youtube : Posts[],
-    tiktok : Posts[],
-    linkedIn : Posts[],
-    medium : Posts[]
+    instagram: Posts[],
+    twitter: Posts[],
+    youtube: Posts[],
+    tiktok: Posts[],
+    linkedIn: Posts[],
+    medium: Posts[]
 }
 
 interface ProjectProps {
-    project : Project;
+    project: Project;
 }
 
 function socialMediaButton(buttonValue: string, project: Project) {
@@ -48,7 +48,7 @@ function socialMediaButton(buttonValue: string, project: Project) {
     if (buttonValue == 'facebook') {
         return (
             <a onClick={() => navigate('/socialDir/projectsTable', {
-                state : {"posts" : project.facebook}
+                state: { "posts": project.facebook }
             })}>
                 <Facebook />
             </a>
@@ -58,35 +58,35 @@ function socialMediaButton(buttonValue: string, project: Project) {
 
     if (buttonValue == 'instagram') {
         return (
-        <a onClick={() => navigate('/socialDir/projectsTable' , {
-            state : {"posts" : project.instagram}
-        })}>
-            <Instagram />
-        </a>);
+            <a onClick={() => navigate('/socialDir/projectsTable', {
+                state: { "posts": project.instagram }
+            })}>
+                <Instagram />
+            </a>);
     } // end if 
 
     if (buttonValue == 'linkedin') {
         return (
-        <a onClick={() => navigate('/socialDir/projectsTable', {
-            state : {"posts" : project.linkedIn}
-        })}>
-            <LinkedIn />
-        </a>);
+            <a onClick={() => navigate('/socialDir/projectsTable', {
+                state: { "posts": project.linkedIn }
+            })}>
+                <LinkedIn />
+            </a>);
     } // end if 
 
     if (buttonValue == 'medium') {
         return (
-        <a onClick={() => navigate('/socialDir/projectsTable', {
-            state : {"posts" : project.medium}
-        })}>
-            <Medium />
-        </a>);
+            <a onClick={() => navigate('/socialDir/projectsTable', {
+                state: { "posts": project.medium }
+            })}>
+                <Medium />
+            </a>);
     } // end if 
 
     if (buttonValue == 'tiktok') {
         return (
             <a onClick={() => navigate('/socialDir/projectsTable', {
-                state : {"posts" : project.tiktok}
+                state: { "posts": project.tiktok }
             })}>
                 <Tiktok />
             </a>
@@ -95,28 +95,48 @@ function socialMediaButton(buttonValue: string, project: Project) {
 
     if (buttonValue == 'twitter') {
         return (
-        <a onClick={() => navigate('/socialDir/projectsTable', {
-            state : {"posts" : project.twitter}
-        })}>
-            <Twitter />
-        </a>);
+            <a onClick={() => navigate('/socialDir/projectsTable', {
+                state: { "posts": project.twitter }
+            })}>
+                <Twitter />
+            </a>);
     } // end if 
 
     if (buttonValue == 'youtube') {
         return (
             <a onClick={() => navigate('/socialDir/projectsTable', {
-                state : {"posts" : project.youtube}
+                state: { "posts": project.youtube }
             })}>
                 <Youtube />
             </a>
         );
     } // end if 
+
+    if (buttonValue == 'add') {
+        return (
+            <div
+                    className="btn btn-primary"
+                    onClick={() => {
+                        console.log('clicked');
+                        navigate('/socialDir/addNewPost', {
+                            state: {
+                                "title": project.title
+                            }
+                        });
+                    }}
+                >
+                    Add new post
+                </div>
+        );
+    }
     return (
         <button className="btn btn-primary">View</button>
     );
 }
 
-function ProjectCard({project} : ProjectProps) {
+
+function ProjectCard({ project }: ProjectProps) {
+
     return (
         <div className="card card-compact bg-base-100 w-96 shadow-xl">
             <figure>
@@ -132,6 +152,8 @@ function ProjectCard({project} : ProjectProps) {
                 <h3 className="text text-sm">Typical {project.tags}</h3>
                 <h4 className="text text-xs">Typical {project.hashtags}</h4>
                 <p className="text text-lg">Ad budget : {project.budget}</p>
+                {/** ADD NEW SOCIAL MEDIA POST FOR THE PROJECT  */}
+                {socialMediaButton('add', project)}
                 <div className="card-actions justify-end gap-4">
                     {/** A ROW OF BUTTONS BASED OF ACCESSIBLE SOCIALS */}
                     {socialMediaButton('facebook', project)}
