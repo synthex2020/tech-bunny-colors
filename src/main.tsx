@@ -11,6 +11,7 @@ import CharacterTable from './components/content_manager/character_dictionary/Ch
 import LocationsTable from './components/content_manager/character_dictionary/LocationsTable.tsx'
 import ImportantEventsTable from './components/content_manager/character_dictionary/ImportantEventsTable.tsx'
 import AddNewSocialMediaPost from './components/content_manager/social_media_directory/AddNewPost.tsx'
+import AddNewSeries from './components/content_manager/character_dictionary/AddNewSeries.tsx'
 
 
 createRoot(document.getElementById('root')!).render(
@@ -24,6 +25,7 @@ createRoot(document.getElementById('root')!).render(
       <Route path='/characterDir/charactersTable' element={<CharacterTable />} />
       <Route path='/characterDir/locationsTable' element={<LocationsTable />} />
       <Route path='/characterDir/importantEvents' element={<ImportantEventsTable />} />
+      <Route path='/characterDir/addNewSeries' element={<AddNewSeries />} />
       <Route path='colorGradient' element={<ColorGradientForm />}/>
       <Route path='socialDir' element={<SocialMediaDiretory />}>
       </Route>
