@@ -47,7 +47,7 @@ interface Character {
 
 //  style, 
 interface Series {
-
+    
     title: string;
     authors: string;
     artists: string;
@@ -81,6 +81,7 @@ interface SeriesCardProps {
 
 function SeriesCard(series : SeriesCardProps) {
     const navigate = useNavigate();
+    const seriesId = '';
     return (
         <div className="card card-compact bg-base-100 w-96 shadow-xl">
             <figure>
@@ -100,11 +101,22 @@ function SeriesCard(series : SeriesCardProps) {
                     Auidence : {series.series.auidence}
                 </p>
                 {/** VIEW SERIES DETAILS  */}
-                <div className="flex flex-row justify-start">
+                <div className="flex flex-row justify-start gap-4">
                     <SeriesMoreDetailsModal 
                         series={series.series}
                         modalId={series.index.toString()}
                     />
+
+                    <button 
+                        className="btn btn-outline text-sm"
+                        onClick={() => navigate('/characterDir/addNewCharacter', {
+                            state : {
+                                seriesId: seriesId
+                            }
+                        })}
+                    > 
+                        Add Character
+                    </button>
                 </div>
                 <div className="card-actions justify-end">
                     {/** ACCESS TO TABLES - LOCATION, CHARACTERS, EVENTS  */}

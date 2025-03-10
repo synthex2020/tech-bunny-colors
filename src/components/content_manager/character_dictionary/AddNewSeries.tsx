@@ -54,7 +54,7 @@ function AddNewSeries() {
         images : ""
     });
     const handleMediaFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
-        
+
         if (event.target.files) {
             const arrayFiles = Array.from(event.target.files);
             const imageSrcs = arrayFiles.map((file) => URL.createObjectURL(file));
@@ -64,7 +64,7 @@ function AddNewSeries() {
         }
     };
 
-    const handleFormChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleFormChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         //  ADD THE FORM ELEMENTS NEEDED 
         let value : (typeof formData)[keyof typeof formData] = event.target.value;
         
@@ -199,13 +199,14 @@ function AddNewSeries() {
                                 <select 
                                     defaultValue="Pick an age rating" 
                                     className="select select-bordered"
+                                    id="age"
                                 >
-                                    <option disabled={true}>E - Rated E for Everyone</option>
-                                    <option> 12+ - Rated 12+ for young children</option>
-                                    <option> 16+ - Rated 16+ for young teens</option>
-                                    <option> 17+ - Rated 17+ for older teens</option>
-                                    <option> 18+ - Rated 18+ for young adults</option>
-                                    <option> R+ - Rated R+ for Mature Auidences</option>
+                                    <option value={"E"} disabled={true}>E - Rated E for Everyone</option>
+                                    <option value={"12+"}> 12+ - Rated 12+ for young children</option>
+                                    <option value={"16+"}> 16+ - Rated 16+ for young teens</option>
+                                    <option value={"17+"}> 17+ - Rated 17+ for older teens</option>
+                                    <option value={"18+"}> 18+ - Rated 18+ for young adults</option>
+                                    <option value={"R+"}> R+ - Rated R+ for Mature Auidences</option>
                                 </select>
                             </div>
 
