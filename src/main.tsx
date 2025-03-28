@@ -13,6 +13,8 @@ import ImportantEventsTable from './components/content_manager/character_diction
 import AddNewSocialMediaPost from './components/content_manager/social_media_directory/AddNewPost.tsx'
 import AddNewSeries from './components/content_manager/character_dictionary/AddNewSeries.tsx'
 import AddNewCharacter from './components/content_manager/character_dictionary/AddNewCharacter.tsx'
+import GradientInit from './components/color_gradients/GradientInit.tsx'
+import DaisyUIThemePack from './components/theme_selectors/DaisyUIThemePack.tsx'
 
 
 createRoot(document.getElementById('root')!).render(
@@ -28,7 +30,9 @@ createRoot(document.getElementById('root')!).render(
       <Route path='/characterDir/importantEvents' element={<ImportantEventsTable />} />
       <Route path='/characterDir/addNewSeries' element={<AddNewSeries />} />
       <Route path='/characterDir/addNewCharacter' element={<AddNewCharacter />} />
-      <Route path='colorGradient' element={<ColorGradientForm />}/>
+      <Route path='/themes' element={<GradientInit />} />
+      <Route path='/themes/colorGradient' element={<ColorGradientForm />}/>
+      <Route path='/themes/daisyui' element={<DaisyUIThemePack />} />
       <Route path='socialDir' element={<SocialMediaDiretory />}>
       </Route>
     

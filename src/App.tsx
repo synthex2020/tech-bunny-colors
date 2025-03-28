@@ -31,7 +31,7 @@ function App() {
           <h2 className="card-title">Themes and Colors Gradient Selector</h2>
           <p>Select themes and colors with a given gradient</p>
           <div className="card-actions justify-end">
-            <button className="btn btn-primary" onClick={() => navigate('colorGradient')}>View</button>
+            <button className="btn btn-primary" onClick={() => navigate('/themes')}>View</button>
           </div>
         </div>
       </div>
