@@ -3,16 +3,6 @@ import { useNavigate } from 'react-router';
 import './App.css';
 
 // Project Card Sample Data (could be moved to a separate file)
-const sampleProject = {
-  title: "New Comic Release",
-  media: "https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp",
-  caption: "Our latest comic is now available!",
-  hashtags: "#comics #newrelease",
-  tags: "action, adventure, sci-fi",
-  targetAudience: "Comic Enthusiasts",
-  adRun: true,
-  cost: "500.00"
-};
 
 // Card Configuration Type
 interface DirectoryCardProps {

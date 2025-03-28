@@ -1,4 +1,3 @@
-import React from 'react';
 import ProjectUpdatePosts from "./ProjectUpdatePosts";
 
 // Separate data into its own file for better organization

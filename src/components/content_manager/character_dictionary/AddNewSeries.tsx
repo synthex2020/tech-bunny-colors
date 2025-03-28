@@ -1,7 +1,8 @@
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, FormEvent } from "react";
 
 //  NO Rules on adding series 
-
+/** 
+ * 
 interface Series {
 
     title: string;
@@ -27,14 +28,17 @@ interface Series {
     locations: [];
     characters: [];
 }
+ */
 
 function AddNewSeries() {
 
-    const defaultImages = [
+   /**
+    *  const defaultImages = [
         "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Samson_comic_page.jpg/640px-Samson_comic_page.jpg",
         "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/The_Outcasts_of_Poker_Flat_%281919%29_-_Ad_2.jpg/640px-The_Outcasts_of_Poker_Flat_%281919%29_-_Ad_2.jpg",
         "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Fantastic_Comics_1.jpg/640px-Fantastic_Comics_1.jpg"
     ];
+    */
 
     const [images, setImages] = useState<string[]>([]);
     const [formData, setFormData] = useState({
@@ -53,7 +57,7 @@ function AddNewSeries() {
         powerSystem: "",
         images : ""
     });
-    const handleMediaFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    /** const handleMediaFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
 
         if (event.target.files) {
             const arrayFiles = Array.from(event.target.files);
@@ -62,24 +66,26 @@ function AddNewSeries() {
         } else {
             setImages(defaultImages);
         }
-    };
+    }; */
 
-    const handleFormChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        //  ADD THE FORM ELEMENTS NEEDED 
-        let value : (typeof formData)[keyof typeof formData] = event.target.value;
+    const handleFormChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        // Type assertion to check if the event target is an HTMLInputElement
+        const target = event.target as HTMLInputElement;
         
-
-        if (event.target.files) {
-            const arrayFiles = Array.from(event.target.files);
+        let value: (typeof formData)[keyof typeof formData] = target.value;
+    
+        // Check if the input is a file input
+        if (target.type === 'file' && target.files) {
+            const arrayFiles = Array.from(target.files);
             const imageSrcs = arrayFiles.map((file) => URL.createObjectURL(file));
+            
             setImages((prev) => [...prev, ...imageSrcs]);
-
-            value = images.toString();
-            console.log("values: ", images);
+            value = imageSrcs.toString();
+            console.log("values: ", imageSrcs);
         }
-
-        setFormData({...formData, [event.target.id]: value});
-    }; // end handle form submit 
+    
+        setFormData({...formData, [target.id]: value});
+    };
 
     const onSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
