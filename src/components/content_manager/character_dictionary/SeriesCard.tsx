@@ -1,5 +1,14 @@
+import React, { useState } from 'react';
 import { useNavigate } from "react-router";
 import SeriesMoreDetailsModal from "./SeriesMoreDetailModal";
+import {
+    BookOpen,
+    Users,
+    MapPin,
+    Calendar,
+    PlusCircle,
+    Info
+} from 'lucide-react';
 
 interface Locations {
     title: string;
@@ -45,9 +54,7 @@ interface Character {
     anatomyMeasurements: string
 }
 
-//  style, 
 interface Series {
-    
     title: string;
     authors: string;
     artists: string;
@@ -76,80 +83,113 @@ interface SeriesCardProps {
     series: Series;
     index: number;
 }
-//  SELECT CHARACTERS BY SERIES 
 
-
-function SeriesCard(series : SeriesCardProps) {
+function SeriesCard({ series, index }: SeriesCardProps) {
     const navigate = useNavigate();
-    const seriesId = '';
+    const [seriesId] = useState('');
+
     return (
-        <div className="card card-compact bg-base-100 w-96 shadow-xl">
-            <figure>
-                {/** THUMBNAIL  */}
+        <div className="card w-96 bg-base-100 shadow-xl transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+            {/* Thumbnail Section */}
+            <figure className="relative">
                 <img
-                    src={series.series.thumbnail}
-                    alt={series.series.title + "" + "Thumbnail"} />
+                    src={series.thumbnail}
+                    alt={`${series.title} Thumbnail`}
+                    className="w-full h-48 object-cover"
+                />
+                <div className="absolute top-2 right-2 badge badge-primary">
+                    {series.genre}
+                </div>
             </figure>
+
+            {/* Card Body */}
             <div className="card-body">
-                {/** TITLE - author, artists, genre, published, status */}
-                <h2 className="card-title">{series.series.title}</h2>
-                <h3>Published : {series.series.published.toString()}</h3>
-                <h4>Status: {series.series.currentStatus}</h4>
-                <p>
-                    Authors: {series.series.authors} <br/> 
-                    Artists : {series.series.artists} <br />
-                    Auidence : {series.series.auidence}
-                </p>
-                {/** VIEW SERIES DETAILS  */}
-                <div className="flex flex-row justify-start gap-4">
-                    <SeriesMoreDetailsModal 
-                        series={series.series}
-                        modalId={series.index.toString()}
+                {/* Series Title and Status */}
+                <div className="flex justify-between items-center">
+                    <h2 className="card-title text-xl font-bold">{series.title}</h2>
+                    <div className={`badge ${series.published ? 'badge-success' : 'badge-warning'}`}>
+                        {series.currentStatus}
+                    </div>
+                </div>
+
+                {/* Series Details */}
+                <div className="space-y-2 mt-2">
+                    <div className="flex items-center space-x-2">
+                        <BookOpen size={16} className="text-primary" />
+                        <span>By {series.authors}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <Users size={16} className="text-primary" />
+                        <span>Audience: {series.auidence}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <Calendar size={16} className="text-primary" />
+                        <span>Issues: {series.issues} | Volumes: {series.volumes}</span>
+                    </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="card-actions flex flex-wrap gap-2 mt-4">
+                    {/* More Details Modal */}
+                    <SeriesMoreDetailsModal
+                        series={series}
+                        modalId={index.toString()}
                     />
 
-                    <button 
-                        className="btn btn-outline text-sm"
+                    {/* Add Character Button */}
+                    <button
+                        className="btn btn-outline text-sm" 
                         onClick={() => navigate('/characterDir/addNewCharacter', {
-                            state : {
-                                seriesId: seriesId
-                            }
+                            state: { seriesId: seriesId }
                         })}
-                    > 
+                    >
+                        <PlusCircle size={16} />
                         Add Character
                     </button>
-                </div>
-                <div className="card-actions justify-end">
-                    {/** ACCESS TO TABLES - LOCATION, CHARACTERS, EVENTS  */}
-                    <button 
-                        className="btn btn-ghost"
-                        onClick={() => navigate('/characterDir/locationsTable', {
-                            state : series.series.locations
-                        })}
-                        >
-                            Locations
+
+                    {/* Add New Series Button */}
+                    <button
+                        className="btn btn-outline text-sm"
+                        onClick={() => navigate('/characterDir/addNewSeries')}
+                    >
+                        <PlusCircle size={16} />
+                        New Series
                     </button>
-                    <button 
-                        className="btn btn-ghost"
-                        onClick={() => navigate('/characterDir/charactersTable', {
-                            state : series.series.characters
+                </div>
+
+                {/* Navigation Buttons */}
+                <div className="grid grid-cols-3 gap-2 mt-4">
+                    <button
+                        className="btn btn-ghost btn-sm flex flex-col items-center"
+                        onClick={() => navigate('/characterDir/locationsTable', {
+                            state: series.locations
                         })}
                     >
+                        <MapPin size={16} />
+                        Locations
+                    </button>
+                    <button
+                        className="btn btn-ghost btn-sm flex flex-col items-center"
+                        onClick={() => navigate('/characterDir/charactersTable', {
+                            state: series.characters
+                        })}
+                    >
+                        <Users size={16} />
                         Characters
                     </button>
-                    <button 
-                        className="btn btn-ghost"
+                    <button
+                        className="btn btn-ghost btn-sm flex flex-col items-center"
                         onClick={() => navigate('/characterDir/importantEvents', {
-                            state : series.series.timeline
+                            state: series.timeline
                         })}
                     >
+                        <Calendar size={16} />
                         Events
                     </button>
-
-
                 </div>
             </div>
         </div>
     );
-} // end series card 
+}
 
 export default SeriesCard;

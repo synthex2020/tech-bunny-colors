@@ -7,7 +7,6 @@ import Twitter from "../../../assets/icons/twitter.svg?react"
 import Youtube from "../../../assets/icons/youtube.svg?react"
 import { useNavigate } from "react-router"
 
-//  INTEREFACE
 interface Posts {
     title: string,
     thumbnail: string,
@@ -17,9 +16,8 @@ interface Posts {
     mentions: string,
     adCost: string,
     adRun: boolean,
-
 }
-//  INTERFACE 
+
 interface Project {
     title: string,
     media: string,
@@ -42,128 +40,107 @@ interface ProjectProps {
     project: Project;
 }
 
-function socialMediaButton(buttonValue: string, project: Project) {
-    const navigate = useNavigate();
-
-    if (buttonValue == 'facebook') {
-        return (
-            <a onClick={() => navigate('/socialDir/projectsTable', {
-                state: { "posts": project.facebook }
-            })}>
-                <Facebook />
-            </a>
-
-        );
-    } // end if 
-
-    if (buttonValue == 'instagram') {
-        return (
-            <a onClick={() => navigate('/socialDir/projectsTable', {
-                state: { "posts": project.instagram }
-            })}>
-                <Instagram />
-            </a>);
-    } // end if 
-
-    if (buttonValue == 'linkedin') {
-        return (
-            <a onClick={() => navigate('/socialDir/projectsTable', {
-                state: { "posts": project.linkedIn }
-            })}>
-                <LinkedIn />
-            </a>);
-    } // end if 
-
-    if (buttonValue == 'medium') {
-        return (
-            <a onClick={() => navigate('/socialDir/projectsTable', {
-                state: { "posts": project.medium }
-            })}>
-                <Medium />
-            </a>);
-    } // end if 
-
-    if (buttonValue == 'tiktok') {
-        return (
-            <a onClick={() => navigate('/socialDir/projectsTable', {
-                state: { "posts": project.tiktok }
-            })}>
-                <Tiktok />
-            </a>
-        );
-    } // end if 
-
-    if (buttonValue == 'twitter') {
-        return (
-            <a onClick={() => navigate('/socialDir/projectsTable', {
-                state: { "posts": project.twitter }
-            })}>
-                <Twitter />
-            </a>);
-    } // end if 
-
-    if (buttonValue == 'youtube') {
-        return (
-            <a onClick={() => navigate('/socialDir/projectsTable', {
-                state: { "posts": project.youtube }
-            })}>
-                <Youtube />
-            </a>
-        );
-    } // end if 
-
-    if (buttonValue == 'add') {
-        return (
-            <div
-                    className="btn btn-primary"
-                    onClick={() => {
-                        console.log('clicked');
-                        navigate('/socialDir/addNewPost', {
-                            state: {
-                                "title": project.title
-                            }
-                        });
-                    }}
-                >
-                    Add new post
-                </div>
-        );
-    }
-    return (
-        <button className="btn btn-primary">View</button>
-    );
-}
-
+// Define a type for valid social media platforms
+type SocialMediaPlatform = 'facebook' | 'instagram' | 'linkedin' | 'medium' | 'tiktok' | 'twitter' | 'youtube' | 'add';
 
 function ProjectCard({ project }: ProjectProps) {
+    const navigate = useNavigate();
+
+    // Type-safe social media action mapping
+    const socialMediaActions: Record<SocialMediaPlatform, () => void> = {
+        'facebook': () => navigate('/socialDir/projectsTable', { state: { "posts": project.facebook } }),
+        'instagram': () => navigate('/socialDir/projectsTable', { state: { "posts": project.instagram } }),
+        'linkedin': () => navigate('/socialDir/projectsTable', { state: { "posts": project.linkedIn } }),
+        'medium': () => navigate('/socialDir/projectsTable', { state: { "posts": project.medium } }),
+        'tiktok': () => navigate('/socialDir/projectsTable', { state: { "posts": project.tiktok } }),
+        'twitter': () => navigate('/socialDir/projectsTable', { state: { "posts": project.twitter } }),
+        'youtube': () => navigate('/socialDir/projectsTable', { state: { "posts": project.youtube } }),
+        'add': () => navigate('/socialDir/addNewPost', { state: { "title": project.title } })
+    };
+
+    // Type-safe social media icons mapping
+    const socialIcons: Record<Exclude<SocialMediaPlatform, 'add'>, React.ReactNode> = {
+        'facebook': <Facebook className="w-6 h-6 hover:scale-110 transition-transform" />,
+        'instagram': <Instagram className="w-6 h-6 hover:scale-110 transition-transform" />,
+        'linkedin': <LinkedIn className="w-6 h-6 hover:scale-110 transition-transform" />,
+        'medium': <Medium className="w-6 h-6 hover:scale-110 transition-transform" />,
+        'tiktok': <Tiktok className="w-6 h-6 hover:scale-110 transition-transform" />,
+        'twitter': <Twitter className="w-6 h-6 hover:scale-110 transition-transform" />,
+        'youtube': <Youtube className="w-6 h-6 hover:scale-110 transition-transform" />
+    };
+
+    // Type-safe social media button rendering
+    const renderSocialMediaButton = (platform: SocialMediaPlatform) => {
+        if (platform === 'add') {
+            return (
+                <button
+                    className="btn btn-primary w-full hover:bg-blue-600 transition-colors"
+                    onClick={socialMediaActions['add']}
+                >
+                    Add New Post
+                </button>
+            );
+        }
+
+        return (
+            <a
+                onClick={socialMediaActions[platform]}
+                className="cursor-pointer hover:opacity-75 transition-opacity"
+            >
+                {socialIcons[platform]}
+            </a>
+        );
+    };
 
     return (
-        <div className="card card-compact bg-base-100 w-96 shadow-xl">
-            <figure>
-                {/** TODO: FIGURE OUT MEDIA TYPE AND ACT ACCORDNIGLY */}
+        <div className="card card-compact bg-base-100 w-96 shadow-2xl rounded-xl overflow-hidden transform transition-all hover:scale-105 hover:shadow-3xl">
+            <figure className="relative h-48 overflow-hidden">
                 <img
                     src={project.media}
-                    alt="Project Thumbnail" />
+                    alt="Project Thumbnail"
+                    className="w-full h-full object-cover"
+                />
+                <div className="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded-full text-xs">
+                    {project.adRun ? 'Ad Running' : 'Ad Paused'}
+                </div>
             </figure>
-            <div className="card-body">
-                <h2 className="card-title">{project.title}</h2>
-                {/** CAPTION + TAGS + HASHTAGS + ADRUN */}
-                <p>{project.caption}</p>
-                <h3 className="text text-sm">Typical {project.tags}</h3>
-                <h4 className="text text-xs">Typical {project.hashtags}</h4>
-                <p className="text text-lg">Ad budget : {project.budget}</p>
-                {/** ADD NEW SOCIAL MEDIA POST FOR THE PROJECT  */}
-                {socialMediaButton('add', project)}
-                <div className="card-actions justify-end gap-4">
-                    {/** A ROW OF BUTTONS BASED OF ACCESSIBLE SOCIALS */}
-                    {socialMediaButton('facebook', project)}
-                    {socialMediaButton('instagram', project)}
-                    {socialMediaButton('youtube', project)}
-                    {socialMediaButton('twitter', project)}
+            <div className="card-body space-y-3">
+                <h2 className="card-title text-xl font-bold text-gray-800">{project.title}</h2>
+
+                <div className="space-y-1">
+                    <p className="text-gray-600 line-clamp-2">{project.caption}</p>
+                    <div className="flex justify-between text-sm">
+                        <span className="text-gray-500 font-medium">Tags: {project.tags}</span>
+                        <span className="text-gray-500 font-medium">#{project.hashtags}</span>
+                    </div>
+                </div>
+
+                <div className="flex items-center justify-between bg-gray-100 p-2 rounded-lg">
+                    <span className="text-lg font-semibold text-primary">Budget: {project.budget}</span>
+                    <span className="text-sm text-gray-600">Target: {project.targetAudience}</span>
+                </div>
+
+                <div className="space-y-2">
+                    {renderSocialMediaButton('add')}
+                    <button
+                        className="btn btn-primary w-full hover:bg-blue-600 transition-colors"
+                        onClick={() => {
+                            navigate('/socialDir/projectsTable')
+                        }}
+                    >
+                        View Posts
+                    </button>
+                    <div className="card-actions justify-center gap-4 bg-gray-50 p-3 rounded-lg">
+                        {(['facebook', 'instagram', 'youtube', 'twitter'] as const).map((platform) => (
+                            <div key={platform} className="tooltip" data-tip={platform.charAt(0).toUpperCase() + platform.slice(1)}>
+                                {renderSocialMediaButton(platform)}
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>
     );
-} // end project card 
+}
 
 export default ProjectCard;

@@ -2,11 +2,6 @@ import React, { useState } from 'react';
 import chroma from 'chroma-js';
 import { saveAs } from 'file-saver';
 
-//  USER CHOOSES BETWEEN 
-// BUILDING A GRADIENT, 
-// THEME PACK (FLUTTER / REACT ),
-// TEXT FONT PACK (FLUTTER / REACT )
-// ICON SVG PACK (FLUTTER - DART FILE WITH SVGS)
 const initialColors = {
   "color-text-500": "#000000",
   "color-text-secondary-500": "#ffffff",
@@ -58,7 +53,6 @@ const initialColors = {
   "color-danger-secondary-500": "#DC3545"
 };
 
-
 const generateGradient = (baseColor: string) => {
   try {
     const scale = chroma.scale(['#fff', baseColor, '#000']).mode('lab');
@@ -105,15 +99,13 @@ const ColorGradientForm: React.FC = () => {
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Color Gradient Generator</h1>
-      <br/>
-      <div className='flex flex-row gap-8 '>
-        <div>
-          {/**  ENTRY INPUT AND GENERATE BUTTON */}
-          <div className="space-y-4">
+      
+      <div className='grid md:grid-cols-2 gap-8'>
+        <div className='flex flex-col h-full'>
+          <div className="flex-grow space-y-4 overflow-auto">
             {Object.entries(colors).map(([key, value]) => (
               <div key={key} className="flex items-center space-x-4">
                 <label className="w-48 font-semibold">{key.replace('-500', '')}</label>
-                <br />
                 <input
                   type="text"
                   value={value}
@@ -126,50 +118,56 @@ const ColorGradientForm: React.FC = () => {
                 ></div>
               </div>
             ))}
-            <button
+          </div>
+          <button
             onClick={handleGenerate}
-            className="mt-6 bg-blue-500 text-white px-4 py-2 rounded"
+            className="mt-6 bg-blue-500 text-white px-4 py-2 rounded self-start"
           >
             Generate Gradients
           </button>
-          </div>
         </div>
-        <div>
-          {/**  GENERATED OUTPUT AND DOWNLOAD BUTTON */}
-          {Object.keys(generatedGradients).length > 0 && (
-            <div>
-              <h2 className="text-xl font-bold mb-4">Generated Gradients</h2>
-              <table className="table-auto w-full border-collapse border border-gray-200">
-                <thead>
-                  <tr>
-                    <th className="border border-gray-300 p-2">Color</th>
-                    {[100, 200, 300, 400, 500, 600, 700, 800, 900].map(shade => (
-                      <th key={shade} className="border border-gray-300 p-2">{shade}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {Object.keys(initialColors).map((key) => {
-                    const label = key.replace('-500', '');
-                    return (
-                      <tr key={label}>
-                        <td className="border border-gray-300 p-2 font-semibold">{label}</td>
-                        {[100, 200, 300, 400, 500, 600, 700, 800, 900].map(shade => (
-                          <td key={shade} className="border border-gray-300 p-2" style={{ backgroundColor: generatedGradients[`${label}-${shade}`] }}>
-                            {generatedGradients[`${label}-${shade}`]}
-                          </td>
-                        ))}
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+
+        <div className='flex flex-col h-full'>
+          {Object.keys(generatedGradients).length > 0 ? (
+            <>
+              <div className="flex-grow overflow-auto">
+                <h2 className="text-xl font-bold mb-4">Generated Gradients</h2>
+                <table className="table-auto w-full border-collapse border border-gray-200">
+                  <thead>
+                    <tr>
+                      <th className="border border-gray-300 p-2">Color</th>
+                      {[100, 200, 300, 400, 500, 600, 700, 800, 900].map(shade => (
+                        <th key={shade} className="border border-gray-300 p-2">{shade}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Object.keys(initialColors).map((key) => {
+                      const label = key.replace('-500', '');
+                      return (
+                        <tr key={label}>
+                          <td className="border border-gray-300 p-2 font-semibold">{label}</td>
+                          {[100, 200, 300, 400, 500, 600, 700, 800, 900].map(shade => (
+                            <td key={shade} className="border border-gray-300 p-2" style={{ backgroundColor: generatedGradients[`${label}-${shade}`] }}>
+                              {generatedGradients[`${label}-${shade}`]}
+                            </td>
+                          ))}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
               <button
                 onClick={handleDownload}
-                className="mt-6 bg-green-500 text-white px-4 py-2 rounded"
+                className="mt-6 bg-green-500 text-white px-4 py-2 rounded self-start"
               >
                 Download JSON
               </button>
+            </>
+          ) : (
+            <div className="flex items-center justify-center h-full text-gray-500">
+              Generated gradients will appear here
             </div>
           )}
         </div>
