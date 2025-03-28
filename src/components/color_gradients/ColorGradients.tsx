@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import chroma from 'chroma-js';
 import { saveAs } from 'file-saver';
 
+//  USER CHOOSES BETWEEN 
+// BUILDING A GRADIENT, 
+// THEME PACK (FLUTTER / REACT ),
+// TEXT FONT PACK (FLUTTER / REACT )
+// ICON SVG PACK (FLUTTER - DART FILE WITH SVGS)
 const initialColors = {
   "color-text-500": "#000000",
   "color-text-secondary-500": "#ffffff",
