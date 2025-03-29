@@ -32,26 +32,25 @@ function ProjectPopUpModal(project: PopUpProps) {
         <dialog id={modelName} className="modal">
             <div className="modal-box w-11/12 max-w-5xl">
                 <h3 className="font-bold text-lg">{projectTitle}</h3>
-
-                <div>
-                    {/** ROW WITH MEDIA ON THE LEFT AND ENTRIES ON THE RIGHT  */}
-                    <div className="hero">
-                        <div className="hero-content flex-col lg:flex-row">
-                            {/** IN THE FUTURE OPTIMIZE FOR VIDEO AS WELL */}
-                            <img
-                            src={projectMedia}
-                                className="max-w-sm rounded-lg shadow-2xl" />
-                            <div>
-                                <h1 className="text-2xl font-bold">{projectAuidence}</h1>
-                                <p className="text text-lg">
-                                    Ad Run : {projectAdRun.toString()} <br/> Cost: ${projectCost}
-                                </p>
+                <div className="border-2 border-solid">
+                    <div>
+                        {/** ROW WITH MEDIA ON THE LEFT AND ENTRIES ON THE RIGHT  */}
+                        <div className="hero">
+                            <div className="hero-content flex-col lg:flex-row">
+                                {/** IN THE FUTURE OPTIMIZE FOR VIDEO AS WELL */}
+                                <img
+                                    src={projectMedia}
+                                    className="max-w-sm rounded-lg shadow-2xl" />
+                                <div>
+                                    <h1 className="text-2xl font-bold">{projectAuidence}</h1>
+                                    <p className="text text-lg">
+                                        Ad Run : {projectAdRun.toString()} <br /> Cost: ${projectCost}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div className="border-2 border-solid">
                     {/** PROJECT COMPLETE CAPTION + HASHTAGS  */}
                     <p className="text text-lg pt-2 pb-2 pr-2 pl-2">
                         {projectCaption} <br /> {projectHashtags} <br /> {projectTags}
