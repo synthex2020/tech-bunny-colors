@@ -1,4 +1,3 @@
-import React from 'react';
 import ProjectUpdatePosts from "./ProjectUpdatePosts";
 
 // Separate data into its own file for better organization
@@ -230,26 +229,30 @@ const projectPosts = [
 // Extracted data for cleaner component
 function SocialMediaDirectory() {
   return (
-    <div className="container mx-auto px-4 py-6">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          Creative Project Showcase
-        </h1>
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          Explore our collection of unique creative projects, each representing a distinct narrative world.
-          Every card below is a standalone project, meticulously crafted with its own unique theme,
-          target audience, and multi-platform marketing strategy. From cyberpunk adventures to mythological
-          reimaginings, each project tells a compelling story across different social media channels.
-        </p>
-      </div>
+    <div>
+      <div className="container mx-auto px-4 py-6">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold mb-4">
+            Our Projects 
+          </h1>
+          
+          <p className="text-sm max-w-2xl mx-auto">
+            Explore our collection of unique creative projects, each representing a distinct narrative world.
+            Every card below is a standalone project, meticulously crafted with its own unique theme,
+            target audience, and multi-platform marketing strategy. From cyberpunk adventures to mythological
+            reimaginings, each project tells a compelling story across different social media channels.
+          </p>
+        </div>
 
-      <div className="space-y-4">
-        <ProjectUpdatePosts
-          projects={projectPosts}
-        />
-      </div>
+        <div className="space-y-4">
+          <ProjectUpdatePosts
+            projects={projectPosts}
+          />
+        </div>
 
+      </div>
     </div>
+
   );
 }
 

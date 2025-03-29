@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { useNavigate } from "react-router";
 import SeriesMoreDetailsModal from "./SeriesMoreDetailModal";
 import {
@@ -7,7 +7,7 @@ import {
     MapPin,
     Calendar,
     PlusCircle,
-    Info
+    
 } from 'lucide-react';
 
 interface Locations {

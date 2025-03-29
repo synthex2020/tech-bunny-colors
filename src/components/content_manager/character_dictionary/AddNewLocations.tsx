@@ -1,6 +1,7 @@
 //  TO ADD A NEW LOCATION THERE MUST BE AN EXISTING SERIES 
 
-interface Locations {
+/**
+ * interface Locations {
     title: string;
     type: string;
     geoLocation: string;
@@ -8,6 +9,7 @@ interface Locations {
     images: string[];
 }
 
+ */
 function AddNewLocation () {}
 
 export default AddNewLocation;

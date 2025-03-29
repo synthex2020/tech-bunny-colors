@@ -105,31 +105,24 @@ function ProjectCard({ project }: ProjectProps) {
                 </div>
             </figure>
             <div className="card-body space-y-3">
-                <h2 className="card-title text-xl font-bold text-gray-800">{project.title}</h2>
+                <h2 className="card-title text-xl font-bold">{project.title}</h2>
 
                 <div className="space-y-1">
-                    <p className="text-gray-600 line-clamp-2">{project.caption}</p>
-                    <div className="flex justify-between text-sm">
-                        <span className="text-gray-500 font-medium">Tags: {project.tags}</span>
-                        <span className="text-gray-500 font-medium">#{project.hashtags}</span>
+                    <p className="line-clamp-2">{project.caption}</p>
+                    <div className="flex flex-col justify-between text-sm">
+                        <span className="font-medium">Tags: {project.tags}</span>
+                        <span className="font-medium">#{project.hashtags}</span>
                     </div>
                 </div>
 
-                <div className="flex items-center justify-between bg-gray-100 p-2 rounded-lg">
+                <div className="flex items-center justify-between p-2 rounded-lg">
                     <span className="text-lg font-semibold text-primary">Budget: {project.budget}</span>
-                    <span className="text-sm text-gray-600">Target: {project.targetAudience}</span>
+                    <span className="text-sm">Target: {project.targetAudience}</span>
                 </div>
 
                 <div className="space-y-2">
                     {renderSocialMediaButton('add')}
-                    <button
-                        className="btn btn-primary w-full hover:bg-blue-600 transition-colors"
-                        onClick={() => {
-                            navigate('/socialDir/projectsTable')
-                        }}
-                    >
-                        View Posts
-                    </button>
+
                     <div className="card-actions justify-center gap-4 bg-gray-50 p-3 rounded-lg">
                         {(['facebook', 'instagram', 'youtube', 'twitter'] as const).map((platform) => (
                             <div key={platform} className="tooltip" data-tip={platform.charAt(0).toUpperCase() + platform.slice(1)}>
