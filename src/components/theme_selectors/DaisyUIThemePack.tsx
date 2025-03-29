@@ -86,9 +86,9 @@ const DaisyUIThemePack: React.FC = () => {
       <h1 className="text-2xl font-bold mb-4">DaisyUI Theme Converter</h1>
       
       <div className='grid md:grid-cols-2 gap-8'>
-        <div>
+        <div className='flex flex-col h-full'>
           <h2 className="text-xl font-semibold mb-4">Input Hex Colors</h2>
-          <div className="space-y-4">
+          <div className="flex-grow space-y-4 overflow-auto">
             {Object.entries(colors).map(([key, value]) => (
               <div key={key} className="flex items-center space-x-4">
                 <label className="w-32 font-medium">{key}</label>
@@ -105,41 +105,47 @@ const DaisyUIThemePack: React.FC = () => {
                 ></div>
               </div>
             ))}
-            <button
-              onClick={handleConvert}
-              className="mt-6 bg-primary text-primary-content px-4 py-2 rounded"
-            >
-              Convert to OKLCH
-            </button>
           </div>
+          <button
+            onClick={handleConvert}
+            className="mt-6 bg-primary text-primary-content px-4 py-2 rounded self-start"
+          >
+            Convert to OKLCH
+          </button>
         </div>
 
-        <div>
-          {Object.keys(convertedTheme).length > 0 && (
-            <div>
+        <div className='flex flex-col h-full'>
+          {Object.keys(convertedTheme).length > 0 ? (
+            <>
               <h2 className="text-xl font-semibold mb-4">Converted Theme</h2>
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr>
-                    <th className="border p-2 text-left">Color Key</th>
-                    <th className="border p-2 text-left">OKLCH Value</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Object.entries(convertedTheme).map(([key, value]) => (
-                    <tr key={key}>
-                      <td className="border p-2">{key}</td>
-                      <td className="border p-2">{value}</td>
+              <div className="flex-grow overflow-auto">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr>
+                      <th className="border p-2 text-left">Color Key</th>
+                      <th className="border p-2 text-left">OKLCH Value</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {Object.entries(convertedTheme).map(([key, value]) => (
+                      <tr key={key}>
+                        <td className="border p-2">{key}</td>
+                        <td className="border p-2">{value}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
               <button
                 onClick={handleDownload}
-                className="mt-6 bg-success text-success-content px-4 py-2 rounded"
+                className="mt-6 bg-success text-success-content px-4 py-2 rounded self-start"
               >
                 Download Theme JSON
               </button>
+            </>
+          ) : (
+            <div className="flex items-center justify-center h-full text-gray-500">
+              Converted theme will appear here
             </div>
           )}
         </div>

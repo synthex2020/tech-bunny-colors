@@ -1,8 +1,8 @@
+import React, { useState } from 'react';
 import { useNavigate } from "react-router";
-import SeriesCard from "./SeriesCard";
+import SeriesCard from './SeriesCard';
 
-
-// SHOW SERIES CARDS FIRST AND THEY LEAD TO CHARACTER TABLE
+// Interfaces (kept from original code)
 interface Locations {
   title: string;
   type: string;
@@ -47,9 +47,7 @@ interface Character {
   anatomyMeasurements: string
 }
 
-//  style, 
 interface Series {
-
   title: string;
   authors: string;
   artists: string;
@@ -74,9 +72,8 @@ interface Series {
   characters: Character[];
 }
 
-
 function CharacterDirectory() {
-  const series = [
+  const [series] = useState<Series[]>([
     {
       "title": "Chronicles of Etheria",
       "authors": "J.D. Blackwood",
@@ -110,16 +107,6 @@ function CharacterDirectory() {
             "https://picsum.photos/802/600",
             "https://picsum.photos/803/600"
           ]
-        },
-        {
-          "title": "Rise of the Chosen One",
-          "date": "Year 1025",
-          "importance": "Critical",
-          "description": "A mysterious warrior is foretold to end the war and bring peace.",
-          "images": [
-            "https://picsum.photos/804/600",
-            "https://picsum.photos/805/600"
-          ]
         }
       ],
       "locations": [
@@ -131,16 +118,6 @@ function CharacterDirectory() {
           "images": [
             "https://picsum.photos/806/600",
             "https://picsum.photos/807/600"
-          ]
-        },
-        {
-          "title": "The Forbidden Forest",
-          "type": "Mystical Forest",
-          "geoLocation": "38.6789° N, 110.2345° W",
-          "description": "A dense, enchanted forest where time flows differently.",
-          "images": [
-            "https://picsum.photos/808/600",
-            "https://picsum.photos/809/600"
           ]
         }
       ],
@@ -177,71 +154,47 @@ function CharacterDirectory() {
           "characterSheet": "https://picsum.photos/814/600",
           "bodyModifications": "Celestial markings on arms",
           "anatomyMeasurements": "5'9\", athletic build"
-        },
-        {
-          "name": "Draven Shadowborn",
-          "titles": "The Exiled Prince",
-          "sex": "Male",
-          "gender": "Man",
-          "species": "Dark Elf",
-          "personality": "Brooding, Intelligent, Fiercely Loyal",
-          "family": ["Unknown"],
-          "hair": "Black",
-          "fashion": "Dark leather armor, red cape",
-          "quirks": "Always seen with a raven companion",
-          "relationship": "Single",
-          "orientation": "Straight",
-          "race": "Dark Elven",
-          "age": "250",
-          "images": [
-            "https://picsum.photos/815/600",
-            "https://picsum.photos/816/600"
-          ],
-          "powers": "Shadow Magic, Illusions",
-          "martialArts": "Dual Dagger Combat",
-          "hobbies": "Alchemy, Playing the lute",
-          "equipment": "Twin Shadow Daggers, Enchanted Cloak",
-          "backstory": "Once a prince of the Dark Elves, exiled for refusing to partake in a dark ritual.",
-          "references": "Tales of the Shadowborn",
-          "referenceImages": [
-            "https://picsum.photos/817/600",
-            "https://picsum.photos/818/600"
-          ],
-          "characterSheet": "https://picsum.photos/819/600",
-          "bodyModifications": "Ritual scars on his back",
-          "anatomyMeasurements": "6'1\", lean but muscular build"
         }
       ]
     }
-  ];
-
-  const navigate = useNavigate();
+  ]);
 
   return (
-    <div className="flex flex-col">
-      <div>
-        <button 
-          className="btn btn-primary"
-          onClick={() => navigate('/characterDir/addNewSeries')}
+    <div className="container mx-auto px-4 py-8">
+      <header className="text-center mb-12">
+        <h1 className="text-4xl font-bold mb-4">Story Universe Explorer</h1>
+        <p className="text-xl text-gray-600">
+          Dive into immersive worlds and discover fascinating characters
+        </p>
+      </header>
+
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
+        {series.map((item, index) => (
+          <SeriesCard
+            key={index}
+            series={item}
+            index={index}
+          />
+        ))}
+      </section>
+
+      <section className="text-center mt-12">
+        <h2 className="text-2xl font-semibold mb-4">Expanding Universes</h2>
+        <p className="text-gray-500 max-w-2xl mx-auto">
+          Our collection of stories continues to grow. Stay tuned for new series, 
+          characters, and exciting narrative worlds waiting to be explored.
+        </p>
+        <div className="mt-6">
+          <button 
+            className="btn btn-outline btn-secondary"
+            onClick={() => {/* Future: Newsletter signup or notification */}}
           >
-            Add New Series
-        </button>
-      </div>
-
-      <div className="flex flex-wrap gap-2">
-
-        {series.map((item, index) => {
-          return (
-            <SeriesCard
-              series={item}
-              index={index}
-            />
-          );
-        })}
-      </div>
-
+            Get Universe Updates
+          </button>
+        </div>
+      </section>
     </div>
   );
-} // end character directory 
+}
 
 export default CharacterDirectory;
