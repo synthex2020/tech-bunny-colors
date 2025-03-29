@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { useNavigate } from "react-router";
+import { useState } from 'react';
 import SeriesCard from './SeriesCard';
 
 // Interfaces (kept from original code)

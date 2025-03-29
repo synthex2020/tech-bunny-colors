@@ -2,8 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router';
 import './App.css';
 
-// Project Card Sample Data (could be moved to a separate file)
-
+// Project Card Sample Data (could be moved to a separate file
 
 // Card Configuration Type
 interface DirectoryCardProps {
