@@ -19,6 +19,7 @@ interface Posts {
 }
 
 interface Project {
+    id : string,
     title: string,
     media: string,
     caption: string,
@@ -55,7 +56,7 @@ function ProjectCard({ project }: ProjectProps) {
         'tiktok': () => navigate('/socialDir/projectsTable', { state: { "posts": project.tiktok } }),
         'twitter': () => navigate('/socialDir/projectsTable', { state: { "posts": project.twitter } }),
         'youtube': () => navigate('/socialDir/projectsTable', { state: { "posts": project.youtube } }),
-        'add': () => navigate('/socialDir/addNewPost', { state: { "title": project.title } })
+        'add': () => navigate('/socialDir/addNewPost', { state: { "title": project.title, "projectId" : project.id } })
     };
 
     // Type-safe social media icons mapping
