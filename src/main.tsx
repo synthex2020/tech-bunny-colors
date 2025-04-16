@@ -15,6 +15,7 @@ import AddNewSeries from './components/content_manager/character_dictionary/AddN
 import AddNewCharacter from './components/content_manager/character_dictionary/AddNewCharacter.tsx'
 import GradientInit from './components/color_gradients/GradientInit.tsx'
 import DaisyUIThemePack from './components/theme_selectors/DaisyUIThemePack.tsx'
+import UploadContentPage from './components/content_manager/content_managment/AddContent.tsx'
 
 
 createRoot(document.getElementById('root')!).render(
@@ -23,6 +24,7 @@ createRoot(document.getElementById('root')!).render(
       <Route path='/' element={<App/>}/>
       <Route path='/socialDir/projectsTable' element={<ProjectsDisplayTable />}/>
       <Route path='/socialDir/addNewPost' element={<AddNewSocialMediaPost />}   />
+      <Route path='/socialDir/addContent' element={<UploadContentPage />} />
       <Route path='brandingKit' element={<BrandingKit/>}/>
       <Route path='characterDir' element={<CharacterDirectory />}/>
       <Route path='/characterDir/charactersTable' element={<CharacterTable />} />

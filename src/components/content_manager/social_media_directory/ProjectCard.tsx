@@ -19,7 +19,7 @@ interface Posts {
 }
 
 interface Project {
-    id : string,
+    id: string,
     title: string,
     media: string,
     caption: string,
@@ -56,7 +56,7 @@ function ProjectCard({ project }: ProjectProps) {
         'tiktok': () => navigate('/socialDir/projectsTable', { state: { "posts": project.tiktok } }),
         'twitter': () => navigate('/socialDir/projectsTable', { state: { "posts": project.twitter } }),
         'youtube': () => navigate('/socialDir/projectsTable', { state: { "posts": project.youtube } }),
-        'add': () => navigate('/socialDir/addNewPost', { state: { "title": project.title, "projectId" : project.id } })
+        'add': () => navigate('/socialDir/addNewPost', { state: { "title": project.title, "projectId": project.id } })
     };
 
     // Type-safe social media icons mapping
@@ -74,12 +74,28 @@ function ProjectCard({ project }: ProjectProps) {
     const renderSocialMediaButton = (platform: SocialMediaPlatform) => {
         if (platform === 'add') {
             return (
-                <button
-                    className="btn btn-primary w-full hover:bg-blue-600 transition-colors"
-                    onClick={socialMediaActions['add']}
-                >
-                    Add New Post
-                </button>
+                <div className="flex flex-col gap-2">
+
+                    <button
+                        className="btn btn-primary w-full hover:bg-blue-600 transition-colors"
+                        onClick={socialMediaActions['add']}
+                    >
+                        Add New Post
+                    </button>
+
+                    <button
+                        className="btn btn-primary w-full hover:bg-blue-600 transition-colors"
+                        onClick={() => navigate('/socialDir/addContent', {
+                            state: {
+                                projectId: project.id
+                            }
+                        })}
+                    >
+                        Add New Content File
+                    </button>
+
+
+                </div>
             );
         }
 
@@ -125,7 +141,7 @@ function ProjectCard({ project }: ProjectProps) {
                     {renderSocialMediaButton('add')}
 
                     <div className="card-actions justify-center gap-4 bg-gray-50 p-3 rounded-lg">
-                        {(['facebook', 'instagram', 'youtube', 'twitter'] as const).map((platform) => (
+                        {(['facebook', 'instagram', 'youtube', 'twitter', 'tiktok'] as const).map((platform) => (
                             <div key={platform} className="tooltip" data-tip={platform.charAt(0).toUpperCase() + platform.slice(1)}>
                                 {renderSocialMediaButton(platform)}
                             </div>

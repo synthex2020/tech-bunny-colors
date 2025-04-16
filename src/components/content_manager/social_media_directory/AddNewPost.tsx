@@ -2,6 +2,8 @@ import { useLocation } from "react-router";
 import { useState, ChangeEvent, FormEvent } from "react";
 import { supabase } from "../../../persistence/SupabaseClientPeristence";
 import { send_post_for_generation } from "../../../persistence/GenerationPerisistence";
+import { ClipLoader } from "react-spinners";
+import { fetchContentBank, ContentItem } from "../../../persistence/ContentBankPerisistence";
 
 interface GenerationPostRequest {
     title: string;
@@ -11,16 +13,14 @@ interface GenerationPostRequest {
 }
 
 function AddNewSocialMediaPost() {
-    const defaultImages = [
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Samson_comic_page.jpg/640px-Samson_comic_page.jpg",
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/The_Outcasts_of_Poker_Flat_%281919%29_-_Ad_2.jpg/640px-The_Outcasts_of_Poker_Flat_%281919%29_-_Ad_2.jpg",
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Fantastic_Comics_1.jpg/640px-Fantastic_Comics_1.jpg"
-    ];
+    const defaultThumbnail = 'https://mkcijqngeshomivhjrbe.supabase.co/storage/v1/object/public/image-bucket/uploads/1744670450501.00-bannerError.png';
 
     const [images, setImages] = useState<string[]>([]);
     const [videos, setVideos] = useState<string[]>([]);
+    const [isLibraryModalOpen, setIsLibraryModalOpen] = useState(false);
+    const [contentItems, setContentItems] = useState<ContentItem[]>([]);
     const [mediaType, setMediaType] = useState(true);
-    const [isLoadingPrecheck, setIsLoadingPrecheck] = useState(null);
+    const [isLoadingPrecheck, setIsLoadingPrecheck] = useState(false);
     const [uploadedVideos, setUploadedVideos] = useState<string[]>([]);
     const [uploadedImages, setUploadedImages] = useState<string[]>([]);
     const [imageFiles, setImageFiles] = useState<File[]>([]);
@@ -160,33 +160,40 @@ function AddNewSocialMediaPost() {
         //  Upload images 
         if (mediaType != true) {
             await uploadVideosToSupabase();
-            console.log("video upload triggered");
+            //console.log("video upload triggered");
         } else {
             await uploadImageFilesToSupabase();
-            console.log("image upload triggered");
+            //console.log("image upload triggered");
         } // end if-else 
 
 
         // Trigger the precheck after setting formData
+        alert('Generating Preview , please wait, it might take up to 2 mins. You will be informed when the preview is complete');
+        setIsLoadingPrecheck(true)
         handleGenerationRequest(newFormData);
     };
 
-    const handleConfirmation = async (projectId : string) => {
+    const handleConfirmation = async (projectId: string) => {
 
-        const { data, error } = await supabase.rpc('req_add_new_project_post', {
-            p_projectid : projectId,
-            p_type : chosenMediaSite,
-            p_title: formDataCurrent.title,
-            p_thumbnail: uploadedImages[0] ?? '',
-            p_media: uploadedVideos[0] ?? '',
-            p_caption: precheckResult ?? precheckResult.status.split("#")[0],
-            p_hashtags: formDataCurrent.hashtags,
-            p_mentions: '',
-            p_adcost: formDataCurrent.adBudget,
-            p_adrun: formDataCurrent.isAd
-        });
-        console.log(data);
-        console.log(error);
+        try {
+            const { data, error } = await supabase.rpc('req_add_new_project_post', {
+                p_projectid: projectId,
+                p_type: chosenMediaSite,
+                p_title: formDataCurrent.title,
+                p_thumbnail: uploadedImages[0] ?? (uploadedVideos[0] ?? defaultThumbnail),
+                p_media: uploadedVideos[0] ?? '',
+                p_caption: precheckResult ?? precheckResult.status.split("#")[0],
+                p_hashtags: formDataCurrent.hashtags,
+                p_mentions: '',
+                p_adcost: formDataCurrent.adBudget,
+                p_adrun: formDataCurrent.isAd
+            });
+            console.log(error);
+            alert('Sumbmission is succesful at : ' + data.post_created_at + '')
+        } catch (error) {
+            console.log(error)
+            alert('An error occured, failed to upload request' + error + '')
+        }
     }
 
     const handleGenerationRequest = async (data: GenerationPostRequest) => {
@@ -199,10 +206,14 @@ function AddNewSocialMediaPost() {
             });
 
             console.log("Precheck successful:", generationResponse);
+            alert('Preview Generation Successful')
+            setIsLoadingPrecheck(false)
             // Optionally, show modal here for user to confirm before final submission
 
         } catch (error) {
             console.error("Precheck failed:", error);
+            alert('Preview generation failed : ' + error + '')
+            setIsLoadingPrecheck(false)
         }
     };
 
@@ -210,65 +221,65 @@ function AddNewSocialMediaPost() {
         if (mediaType) {
             return (
                 <>
-                     {images.map((image, index) => (
-                            <div
-                                id={`slide${index + 1}`}
-                                key={index}
-                                className="carousel-item relative w-full"
-                            >
-                                <img
-                                    src={image}
-                                    className="w-full object-contain"
-                                    alt={`Slide ${index + 1}`}
-                                />
-                                <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-                                    <a
-                                        href={`#slide${index === 0 ? images.length : index}`}
-                                        className="btn btn-circle"
-                                    >
-                                        ❮
-                                    </a>
-                                    <a
-                                        href={`#slide${index === images.length - 1 ? 1 : index + 2}`}
-                                        className="btn btn-circle"
-                                    >
-                                        ❯
-                                    </a>
-                                </div>
+                    {images.map((image, index) => (
+                        <div
+                            id={`slide${index + 1}`}
+                            key={index}
+                            className="carousel-item relative w-full"
+                        >
+                            <img
+                                src={image}
+                                className="w-full object-contain"
+                                alt={`Slide ${index + 1}`}
+                            />
+                            <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                                <a
+                                    href={`#slide${index === 0 ? images.length : index}`}
+                                    className="btn btn-circle"
+                                >
+                                    ❮
+                                </a>
+                                <a
+                                    href={`#slide${index === images.length - 1 ? 1 : index + 2}`}
+                                    className="btn btn-circle"
+                                >
+                                    ❯
+                                </a>
                             </div>
-                        ))}
+                        </div>
+                    ))}
                 </>
             );
-        }else{
+        } else {
             return (
                 <>
-                     {videos.map((image, index) => (
-                            <div
-                                id={`slide${index + 1}`}
-                                key={index}
-                                className="carousel-item relative w-full"
-                            >
-                                <video
-                                    src={image}
-                                    controls
-                                    className="w-full object-contain"
-                                />
-                                <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-                                    <a
-                                        href={`#slide${index === 0 ? videos.length : index}`}
-                                        className="btn btn-circle"
-                                    >
-                                        ❮
-                                    </a>
-                                    <a
-                                        href={`#slide${index === videos.length - 1 ? 1 : index + 2}`}
-                                        className="btn btn-circle"
-                                    >
-                                        ❯
-                                    </a>
-                                </div>
+                    {videos.map((image, index) => (
+                        <div
+                            id={`slide${index + 1}`}
+                            key={index}
+                            className="carousel-item relative w-full"
+                        >
+                            <video
+                                src={image}
+                                controls
+                                className="w-full object-contain"
+                            />
+                            <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                                <a
+                                    href={`#slide${index === 0 ? videos.length : index}`}
+                                    className="btn btn-circle"
+                                >
+                                    ❮
+                                </a>
+                                <a
+                                    href={`#slide${index === videos.length - 1 ? 1 : index + 2}`}
+                                    className="btn btn-circle"
+                                >
+                                    ❯
+                                </a>
                             </div>
-                        ))}
+                        </div>
+                    ))}
                 </>
             );
         }// end if else 
@@ -286,7 +297,7 @@ function AddNewSocialMediaPost() {
 
                     {/* MEDIA CAROUSEL */}
                     <div className="carousel w-full">
-                       {checkMediaType()}
+                        {checkMediaType()}
                     </div>
 
                     {/* FILE UPLOAD BUTTONS */}
@@ -322,8 +333,49 @@ function AddNewSocialMediaPost() {
                                 multiple
                             />
                         </div>
+
+                        {/** Choose from content bank  */}
+                        <div>
+                            <button className="btn btn-accent" onClick={async () => {
+                                const items = await fetchContentBank();
+                                setContentItems(items);
+                                setIsLibraryModalOpen(true);
+                                (document.getElementById('content_modal') as HTMLDialogElement).showModal();
+                                console.log(items);
+                            }}>
+                                Content Bank
+                            </button>
+                        </div>
+
                     </div>
                 </div>
+
+                <dialog className="modal" id="content_modal">
+                    <div>
+                        <div className="modal-box">
+                            <h3 className="font-bold text-lg">Select Content</h3>
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-2">
+                                {contentItems.map((item, index) => (
+                                    <div key={index} className="cursor-pointer" onClick={() => {
+                                        setVideos(prev => [...prev, item.media]);
+                                        setUploadedVideos(prev => [...prev, item.media]);
+                                        setMediaType(false);
+                                        setIsLibraryModalOpen(false);
+                                    }}>
+                                        <video src={item.media} controls className="rounded shadow w-full h-48 object-cover" />
+                                        <p>{item.title} -- {item.category}</p>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="modal-action">
+                                <form method="dialog">
+                                    <button className="btn">Close</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </dialog>
+
 
 
                 {/* FORM */}
@@ -386,8 +438,11 @@ function AddNewSocialMediaPost() {
                     {isLoadingPrecheck ? (
                         // Loading Spinner
                         <div className="flex justify-center items-center h-32">
-                            <span className="loading loading-spinner loading-lg text-primary" />
-                        </div>
+                            <ClipLoader
+                                color="#ffffff"
+                                loading={isLoadingPrecheck}
+                            />
+                            =                        </div>
                     ) : (
                         <>
                             <br />
@@ -395,16 +450,6 @@ function AddNewSocialMediaPost() {
                                 Note: You can also resubmit using the form above, if you wish to edit
                                 what you submitted
                             </h3>
-
-                            {/* Summary Text */}
-                            <pre className="whitespace-pre-wrap mb-4">
-                                {"Date:\n" +
-                                    precheckResult.date +
-                                    "\n\nResponse:\n" +
-                                    precheckResult.status +
-                                    "\n\nTimestamp:\n" +
-                                    precheckResult.timestamp}
-                            </pre>
 
                             {/* Uploaded Media Display */}
                             <div className="mb-4">
@@ -429,6 +474,16 @@ function AddNewSocialMediaPost() {
                                     ))}
                                 </div>
                             </div>
+
+                            {/* Summary Text */}
+                            <pre className="whitespace-pre-wrap mb-4">
+                                {"Date:\n" +
+                                    precheckResult.date +
+                                    "\n\nResponse:\n" +
+                                    precheckResult.status +
+                                    "\n\nTimestamp:\n" +
+                                    precheckResult.timestamp}
+                            </pre>
 
                             {/* Action Buttons */}
                             <div className="flex flex-row gap-4">
