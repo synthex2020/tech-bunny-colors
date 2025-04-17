@@ -20,6 +20,7 @@ interface PostPopUpModalProps {
 function PostsPopUpModal(post: PostPopUpModalProps) {
     const description = post.post.caption;
     const formattedDescription = JSON.parse(description)
+    console.log(post.post.thumbnail + "")
     return (
         <dialog id={post.modalId} className="modal">
             <div className="modal-box w-11/12 max-w-5xl ">

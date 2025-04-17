@@ -1,8 +1,14 @@
 import { useState } from "react";
 import { useLocation } from "react-router";
-import { supabase } from "../../../persistence/SupabaseClientPeristence";
 import { uploadImageFilesToSupabase, uploadVideosToSupabase } from "../../../persistence/MediaPersistence";
 import { addContentItem } from "../../../persistence/ContentBankPerisistence";
+
+//  WHEN WE ADD THE CONTENT FILE - ADD TRANSCRIPT AND  TYPE FIELD ( ANNOUCEMENT, UPDATE, INTRODUCTION ) and 
+//  SEND TO SERVER FOR AI VIDEO RENDERING PROCESSING AND EDITING (ADD TEXT TO SPEECH , ADD THUMBNAIL )
+//  USE LOCAL IF POSSIBLE OR GOOGLE COLLAB WITH A NOTEBOOK (ON SERVER)
+
+//  ADD TO FORM - TRANSCRIPT + TYPE , ADD OPTION TO CHOOSE EXISTING TEMPLATE TO IMAGES 
+
 
 interface ContentForm {
     title: string;
