@@ -15,6 +15,7 @@ interface GenerationPostRequest {
 function AddNewSocialMediaPost() {
     const defaultThumbnail = 'https://mkcijqngeshomivhjrbe.supabase.co/storage/v1/object/public/image-bucket/uploads/1744670450501.00-bannerError.png';
 
+    const [contentThumbnail, setContentThumbnail] = useState<string>('');
     const [images, setImages] = useState<string[]>([]);
     const [videos, setVideos] = useState<string[]>([]);
     const [isLibraryModalOpen, setIsLibraryModalOpen] = useState(false);
@@ -180,13 +181,13 @@ function AddNewSocialMediaPost() {
                 p_projectid: projectId,
                 p_type: chosenMediaSite,
                 p_title: formDataCurrent.title,
-                p_thumbnail: uploadedImages[0] ?? (uploadedVideos[0] ?? defaultThumbnail),
+                p_thumbnail: uploadedImages[0] ?? ( (contentThumbnail ?? uploadedVideos[0]) ?? defaultThumbnail),
                 p_media: uploadedVideos[0] ?? '',
                 p_caption: precheckResult ?? precheckResult.status.split("#")[0],
                 p_hashtags: formDataCurrent.hashtags,
                 p_mentions: '',
                 p_adcost: formDataCurrent.adBudget,
-                p_adrun: formDataCurrent.isAd
+                p_adrun:  formDataCurrent.adBudget != ''
             });
             console.log(error);
             alert('Sumbmission is succesful at : ' + data.post_created_at + '')
@@ -359,6 +360,7 @@ function AddNewSocialMediaPost() {
                                     <div key={index} className="cursor-pointer" onClick={() => {
                                         setVideos(prev => [...prev, item.media]);
                                         setUploadedVideos(prev => [...prev, item.media]);
+                                        setContentThumbnail(item.thumbnail);
                                         setMediaType(false);
                                         setIsLibraryModalOpen(false);
                                     }}>

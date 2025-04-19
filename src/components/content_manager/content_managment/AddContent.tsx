@@ -2,13 +2,7 @@ import { useState } from "react";
 import { useLocation } from "react-router";
 import { uploadImageFilesToSupabase, uploadVideosToSupabase } from "../../../persistence/MediaPersistence";
 import { addContentItem } from "../../../persistence/ContentBankPerisistence";
-
-//  WHEN WE ADD THE CONTENT FILE - ADD TRANSCRIPT AND  TYPE FIELD ( ANNOUCEMENT, UPDATE, INTRODUCTION ) and 
-//  SEND TO SERVER FOR AI VIDEO RENDERING PROCESSING AND EDITING (ADD TEXT TO SPEECH , ADD THUMBNAIL )
-//  USE LOCAL IF POSSIBLE OR GOOGLE COLLAB WITH A NOTEBOOK (ON SERVER)
-
-//  ADD TO FORM - TRANSCRIPT + TYPE , ADD OPTION TO CHOOSE EXISTING TEMPLATE TO IMAGES 
-
+import { runContentGeneration } from "../../../persistence/ContentBankPerisistence";
 
 interface ContentForm {
     title: string;
@@ -29,13 +23,15 @@ export default function UploadContentPage() {
     });
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
-    const [previewUrls, setPreviewUrls] = useState<{
-        thumbnail: string | null;
-        media: string | null;
-    }>({
-        thumbnail: null,
-        media: null,
+    const [previewUrls, setPreviewUrls] = useState({
+        thumbnail: null as string | null,
+        media: null as string | null,
     });
+
+    const [generatedThumbnail, setGeneratedThumbnail] = useState<File | null>(null);
+    const [generatedVideo, setGeneratedVideo] = useState<File | null>(null);
+    const [showPreview, setShowPreview] = useState(false);
+    const [uploading, setUploading] = useState(false);
 
     const validate = () => {
         const newErrors: { [key: string]: string } = {};
@@ -47,15 +43,11 @@ export default function UploadContentPage() {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-    ) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value, files } = e.target as any;
-
         if (files) {
             const file = files[0];
             setForm({ ...form, [name]: file });
-
             const url = URL.createObjectURL(file);
             setPreviewUrls({ ...previewUrls, [name]: url });
         } else {
@@ -63,42 +55,55 @@ export default function UploadContentPage() {
         }
     };
 
-    const uploadToSupabase = async (file: File): Promise<string> => {
-        // Empty stub – you will implement actual upload logic here
-        const files = [file];
-        const result = await uploadImageFilesToSupabase(files);
-        console.log(result);
-        return result + '';
-    };
-
-    const uploadVideoToSupabase = async (file: File): Promise<string> => {
-        const files = [file];
-        const result = await uploadVideosToSupabase(files);
-        console.log(result);
-        return result + '';
-    }
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!validate()) return;
 
-        const thumbnailUrl = await uploadToSupabase(form.thumbnail!);
-        const mediaUrl = await uploadVideoToSupabase(form.media!);
+        setUploading(true);
+        try {
+            const query = {
+                transcript: "Preview voiceover from user transcript, this is our first attempt and we are excited", // You can enhance this
+                platform: "instagram",
+                template: "instagram-update",
+                video: form.media!,
+            };
 
-        const payload = {
-            project_id: projectId,
-            content_title: form.title,
-            content_category: form.category,
-            content_thumbnail: thumbnailUrl,
-            content_media: mediaUrl,
-        };
+            const result = await runContentGeneration(query);
+            setGeneratedThumbnail(result.thumbnail_file);
+            setGeneratedVideo(result.video_file);
+            setShowPreview(true);
+        } catch (err) {
+            console.error("Error generating content preview", err);
+            alert("Failed to generate video content.");
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const confirmUpload = async () => {
+        if (!generatedThumbnail || !generatedVideo) return alert("Missing preview files");
 
         try {
-            await addContentItem(payload)
-            alert('Content Added to the Database');
+            setUploading(true);
+            const thumbnailUrl = await uploadImageFilesToSupabase([generatedThumbnail]);
+            const videoUrl = await uploadVideosToSupabase([generatedVideo]);
+
+            const payload = {
+                project_id: projectId,
+                content_title: form.title,
+                content_category: form.category,
+                content_thumbnail: thumbnailUrl!,
+                content_media: videoUrl!,
+            };
+
+            await addContentItem(payload);
+            alert("Content successfully uploaded and added.");
+            setShowPreview(false); // reset
         } catch (error) {
-            console.log(error)
-            alert('An error occured, failed to upload request' + error + '')
+            console.error("Final upload failed", error);
+            alert("Upload failed: " + error);
+        } finally {
+            setUploading(false);
         }
     };
 
@@ -107,6 +112,7 @@ export default function UploadContentPage() {
             <h2 className="text-2xl font-bold mb-4">Upload New Content</h2>
 
             <form className="space-y-5" onSubmit={handleSubmit}>
+                {/* Form inputs same as before... */}
                 <div>
                     <label className="label">Title</label>
                     <input
@@ -186,11 +192,40 @@ export default function UploadContentPage() {
                         <p className="text-error text-sm">{errors.media}</p>
                     )}
                 </div>
+                {/* Your existing input fields go here */}
+                {/* ... */}
 
-                <button type="submit" className="btn btn-primary w-full">
-                    Upload
+                <button type="submit" className="btn btn-primary w-full" disabled={uploading}>
+                    {uploading ? "Processing..." : "Generate Preview"}
                 </button>
             </form>
+
+            {showPreview && (
+                <div className="mt-8 p-4 border rounded-lg bg-base-200">
+                    <h3 className="text-xl font-semibold mb-2">Preview Generated Content</h3>
+                    {generatedThumbnail && (
+                        <img
+                            src={URL.createObjectURL(generatedThumbnail)}
+                            alt="Generated Thumbnail"
+                            className="w-full max-h-64 object-contain rounded-lg shadow-md mb-4"
+                        />
+                    )}
+                    {generatedVideo && (
+                        <video
+                            src={URL.createObjectURL(generatedVideo)}
+                            controls
+                            className="w-full max-h-64 object-contain rounded-lg shadow-md"
+                        />
+                    )}
+                    <button
+                        className="btn btn-success w-full mt-4"
+                        onClick={confirmUpload}
+                        disabled={uploading}
+                    >
+                        {uploading ? "Uploading..." : "Confirm & Upload"}
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
