@@ -1,5 +1,6 @@
 import { useLocation } from "react-router";
-import { useState, ChangeEvent, FormEvent } from "react";
+import LoadingBar, { LoadingBarRef } from "react-top-loading-bar";
+import { useState, ChangeEvent, FormEvent, useRef } from "react";
 import { supabase } from "../../../persistence/SupabaseClientPeristence";
 import { send_post_for_generation } from "../../../persistence/GenerationPerisistence";
 import { ClipLoader } from "react-spinners";
@@ -46,6 +47,8 @@ function AddNewSocialMediaPost() {
     });
 
     const [precheckResult, setPrecheckResult] = useState<any>(null);
+    const ref = useRef<LoadingBarRef>(null);
+
 
     const handleMediaFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
         if (!event.target.files) return;
@@ -157,7 +160,7 @@ function AddNewSocialMediaPost() {
         };
 
         setFormData(newFormData);
-
+        ref.current?.continuousStart();
         //  Upload images 
         if (mediaType != true) {
             await uploadVideosToSupabase();
@@ -166,12 +169,13 @@ function AddNewSocialMediaPost() {
             await uploadImageFilesToSupabase();
             //console.log("image upload triggered");
         } // end if-else 
-
+        
 
         // Trigger the precheck after setting formData
         alert('Generating Preview , please wait, it might take up to 2 mins. You will be informed when the preview is complete');
         setIsLoadingPrecheck(true)
-        handleGenerationRequest(newFormData);
+        await handleGenerationRequest(newFormData);
+        ref.current?.complete();
     };
 
     const handleConfirmation = async (projectId: string) => {
@@ -291,6 +295,7 @@ function AddNewSocialMediaPost() {
 
     return (
         <div className="p-10">
+            <LoadingBar color="#f11946" ref={ref} shadow={true}/>
             <div className="flex flex-col lg:flex-row gap-4">
                 {/* MEDIA ENTRY */}
                 <div className="flex flex-col gap-2">
@@ -353,18 +358,18 @@ function AddNewSocialMediaPost() {
 
                 <dialog className="modal" id="content_modal">
                     <div>
-                        <div className="modal-box">
+                        <div className="modal-box w-full">
                             <h3 className="font-bold text-lg">Select Content</h3>
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-2">
                                 {contentItems.map((item, index) => (
-                                    <div key={index} className="cursor-pointer" onClick={() => {
+                                    <div key={index} className="cursor-pointer border-white border-solid" onClick={() => {
                                         setVideos(prev => [...prev, item.media]);
                                         setUploadedVideos(prev => [...prev, item.media]);
                                         setContentThumbnail(item.thumbnail);
                                         setMediaType(false);
                                         setIsLibraryModalOpen(false);
                                     }}>
-                                        <video src={item.media} controls className="rounded shadow w-full h-48 object-cover" />
+                                        <video src={item.media} controls className="rounded shadow w-full h-48 object-cover" onClick={(e) => e.stopPropagation()} />
                                         <p>{item.title} -- {item.category}</p>
                                     </div>
                                 ))}
