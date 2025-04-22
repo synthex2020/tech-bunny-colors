@@ -16,7 +16,7 @@ import AddNewCharacter from './components/content_manager/character_dictionary/A
 import GradientInit from './components/color_gradients/GradientInit.tsx'
 import DaisyUIThemePack from './components/theme_selectors/DaisyUIThemePack.tsx'
 import UploadContentPage from './components/content_manager/content_managment/AddContent.tsx'
-
+import ReactNativeElementsCustom from './components/theme_selectors/ReactNativeElementsCustomThemes.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
@@ -35,6 +35,7 @@ createRoot(document.getElementById('root')!).render(
       <Route path='/themes' element={<GradientInit />} />
       <Route path='/themes/colorGradient' element={<ColorGradientForm />}/>
       <Route path='/themes/daisyui' element={<DaisyUIThemePack />} />
+      <Route path='/themes/react-native-elements' element={<ReactNativeElementsCustom />} />
       <Route path='socialDir' element={<SocialMediaDiretory />}>
       </Route>
     
