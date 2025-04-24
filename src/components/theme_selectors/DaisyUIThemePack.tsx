@@ -88,6 +88,7 @@ const DaisyUIThemePack: React.FC = () => {
       <div className='grid md:grid-cols-2 gap-8'>
         <div className='flex flex-col h-full'>
           <h2 className="text-xl font-semibold mb-4">Input Hex Colors</h2>
+
           <div className="flex-grow space-y-4 overflow-auto">
             {Object.entries(colors).map(([key, value]) => (
               <div key={key} className="flex items-center space-x-4">
@@ -106,6 +107,7 @@ const DaisyUIThemePack: React.FC = () => {
               </div>
             ))}
           </div>
+          
           <button
             onClick={handleConvert}
             className="mt-6 bg-primary text-primary-content px-4 py-2 rounded self-start"
