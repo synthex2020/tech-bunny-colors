@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
-import themes from "../../assets/themes/daisyThemes.json";
+import lightThemes from "../../assets/themes/light-mode-themes.json";
+import darkThemes from "../../assets/themes/dark-mode-themes.json"
 import { oklch, rgb } from 'culori';
 import { HexColorPicker } from "react-colorful";
 import { Button } from "../ui/button";
 import ThemePreview from "./react-native-elements/buttons-preview";
-// Add this import for color conversion
+import { saveThemesToJson } from "../../logic/theme-handlers";
+import ColorSelector from "./react-native-elements/color-selector";
+// Add this import for color conversion 
+// business and fantasy 
 
 type FormatA = {
-    // Light mode colors
+    // Light                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          mode colors
     lightColors: {
         primary: string;// Primary purple
         secondary: string; // Teal accent
@@ -119,14 +123,224 @@ function convertFormatBToA(formatB: FormatB): FormatA {
         }
         return result;
     };
-
     return {
         lightColors: formatB.lightColors,
         darkColors: formatB.darkColors,
-        components: unflatten(formatB.lightComponents),
+        components: parseReturnJson(unflatten(formatB.lightComponents)),
     };
 }
 
+function parseReturnJson(formatB: any) {
+    return {
+        Button: {
+            raised: true,
+            buttonStyle: {
+                backgroundColor: formatB.Button.buttonStyle.backgroundColor || "#6200EE",
+                height: 50,
+                width: "100%",
+                borderRadius: 8,
+                paddingHorizontal: 16,
+            },
+            disabledStyle: {
+                backgroundColor: formatB.Button.disabledStyle.backgroundColor || "#E0E0E0",
+            },
+            disabledTitleStyle: {
+                color: formatB.Button.disabledTitleStyle.color || "#9E9E9E",
+            },
+            titleStyle: {
+                fontSize: 16,
+                fontWeight: "bold",
+                letterSpacing: 0.5,
+            },
+            containerStyle: {
+                marginVertical: 8,
+            },
+        },
+        // Add more components as needed, following the same structure
+        // Text styling
+        Text: {
+            style: {
+                color: formatB.Text.style.color || "#212121",
+                fontSize: 16,
+                fontWeight: "normal",
+                lineHeight: 24,
+            },
+            h1Style: {
+                fontSize: 32,
+                fontWeight: "bold",
+                marginBottom: 16,
+            },
+            h2Style: {
+                fontSize: 24,
+                fontWeight: "bold",
+                marginBottom: 12,
+            },
+            h3Style: {
+                fontSize: 20,
+                fontWeight: "bold",
+                marginBottom: 8,
+            },
+            h4Style: {
+                fontSize: 18,
+                fontWeight: "bold",
+                marginBottom: 8,
+            },
+        },
+        // Input styling
+        Input: {
+            containerStyle: {
+                paddingHorizontal: 0,
+                marginBottom: 16,
+            },
+            inputContainerStyle: {
+                borderBottomWidth: 1,
+                borderColor: formatB.Input.inputContainerStyle.borderColor || "#E0E0E0",
+            },
+            inputStyle: {
+                fontSize: 16,
+                color: formatB.Input.inputStyle.color || "#212121",
+                minHeight: 48,
+            },
+            labelStyle: {
+                fontSize: 14,
+                color: formatB.Input.labelStyle.color || "#757575",
+                marginBottom: 4,
+            },
+            errorStyle: {
+                fontSize: 12,
+                color: formatB.Input.errorStyle.color || "#B00020",
+                marginTop: 4,
+            },
+        },
+        // Card styling
+        Card: {
+            containerStyle: {
+                borderRadius: 8,
+                padding: 16,
+                margin: 8,
+                borderWidth: 0,
+                shadowColor: formatB.Card.containerStyle.shadowColor || "#000",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+                elevation: 2,
+            },
+        },
+        // Avatar styling
+        Avatar: {
+            containerStyle: {
+                backgroundColor: formatB.Avatar.containerStyle.backgroundColor || "#E0E0E0",
+            },
+            titleStyle: {
+                color: formatB.Avatar.titleStyle.color || "#212121",
+            },
+            overlayContainerStyle: {
+                backgroundColor: "transparent",
+            },
+        },
+        // Icon styling
+        Icon: {
+            size: 24,
+            color: formatB.Icon.color || "#6200EE",
+        },
+        // ListItem styling
+        ListItem: {
+            containerStyle: {
+                borderBottomWidth: 1,
+                borderBottomColor: formatB.ListItem.containerStyle.borderBottomColor || "#E0E0E0",
+                paddingVertical: 12,
+            },
+        },
+        // CheckBox styling
+        CheckBox: {
+            containerStyle: {
+                backgroundColor: "transparent",
+                borderWidth: 0,
+                padding: 0,
+                marginLeft: 0,
+                marginRight: 0,
+            },
+            textStyle: {
+                fontSize: 16,
+                fontWeight: "normal",
+            },
+            checkedColor: formatB.CheckBox.checkedColor || "#6200EE",
+            uncheckedColor: formatB.CheckBox.uncheckedColor || "#757575",
+        },
+        // Badge styling
+        Badge: {
+            badgeStyle: {
+                borderRadius: 12,
+                height: 24,
+                minWidth: 24,
+                paddingHorizontal: 8,
+            },
+            textStyle: {
+                fontSize: 12,
+                fontWeight: "bold",
+            },
+        },
+        // Overlay styling
+        Overlay: {
+            overlayStyle: {
+                borderRadius: 8,
+                padding: 24,
+                backgroundColor: formatB.Overlay.overlayStyle.backgroundColor || "#FFFFFF",
+            },
+        },
+        // SearchBar styling
+        SearchBar: {
+            containerStyle: {
+                backgroundColor: "transparent",
+                borderBottomWidth: 0,
+                borderTopWidth: 0,
+                paddingHorizontal: 0,
+            },
+            inputContainerStyle: {
+                backgroundColor: formatB.SearchBar.inputContainerStyle.backgroundColor || "#F5F5F5",
+                borderRadius: 8,
+                height: 48,
+            },
+            inputStyle: {
+                fontSize: 16,
+                color: formatB.SearchBar.inputStyle || "#212121",
+            },
+            searchIcon: {
+                size: 24,
+                color: formatB.SearchBar.searchIcon.color || "#757575",
+            },
+            clearIcon: {
+                size: 24,
+                color: formatB.SearchBar.clearIcon.color || "#757575",
+            },
+        },
+        // Bottom Sheet styling
+        BottomSheet: {
+            containerStyle: {
+                borderTopLeftRadius: 16,
+                borderTopRightRadius: 16,
+            },
+        },
+        // Divider styling
+        Divider: {
+            style: {
+                backgroundColor: formatB.Divider.style.backgroundColor || "#E0E0E0",
+                height: 1,
+                marginVertical: 8,
+            },
+        },
+        // Tab styling
+        Tab: {
+            indicatorStyle: {
+                backgroundColor: "red",
+                height: 3,
+            },
+            containerStyle: {
+                backgroundColor: formatB.Tab.containerStyle.backgroundColor || "#FFFFFF",
+            },
+        },
+    };
+}
 
 // Apply the selected theme CSS dynamically
 function applyThemeCSS(css: string) {
@@ -194,13 +408,24 @@ function oklchToHex(oklchStr: string): string {
 }
 
 // Parse the DaisyUI theme into React Native Elements colors
-function parseDaisyThemeToRN(css: string) {
+function parseDaisyThemeToRN(css: string, dark: string) {
+    //  TODO: ADD THEMES FOR LIGHT AND DARK FROM DAISY-UI 
     const colors: Record<string, string> = {};
+    const darkColors: Record<string, string> = {};
+
     const regex = /--color-(.*?):\s*(oklch\(.*?\));/g;
     let match;
+
     while ((match = regex.exec(css)) !== null) {
         const [_, key, value] = match;
-        colors[key] = convertToHex(value); // Convert oklch to hex
+        // Convert oklch to hex
+        colors[key] = convertToHex(value);
+    }
+
+    while ((match = regex.exec(dark)) !== null) {
+        const [_, key, value] = match;
+        // Convert oklch to hex
+        darkColors[key] = convertToHex(value);
     }
 
     return {
@@ -215,20 +440,20 @@ function parseDaisyThemeToRN(css: string) {
             warning: colors["warning"] || "#FFC107",
         },
         darkColors: {
-            primary: colors["primary"] || "#BB86FC",
-            secondary: colors["secondary"] || "#03DAC6",
-            background: colors["base-100"] || "#121212",
-            error: colors["error"] || "#CF6679",
+            primary: darkColors["primary"] || "#BB86FC",
+            secondary: darkColors["secondary"] || "#03DAC6",
+            background: darkColors["base-100"] || "#121212",
+            error: darkColors["error"] || "#CF6679",
             disabled: "#757575",
             divider: "#2D2D2D",
-            success: colors["success"] || "#81C784",
-            warning: colors["warning"] || "#FFD54F",
+            success: darkColors["success"] || "#81C784",
+            warning: darkColors["warning"] || "#FFD54F",
         },
         components: {
             Button: {
                 raised: true,
                 buttonStyle: {
-                    backgroundColor: colors["primary"] || "#6200EE",
+                    backgroundColor: darkColors["primary"] || "#6200EE",
                     height: 50,
                     width: "100%",
                     borderRadius: 8,
@@ -439,77 +664,18 @@ function parseDaisyThemeToRN(css: string) {
 
 // Theme selection and preview component
 export default function ReactNativeElementsCustom() {
-    const initialColors = {
-        lightColors: {
-            primary: "#6200EE",
-            secondary: "#03DAC6",
-            background: "#FFFFFF",
-            error: "#B00020",
-            disabled: "#9E9E9E",
-            divider: "#EEEEEE",
-            success: "#4CAF50",
-            warning: "#FFC107",
-        },
-        darkColors: {
-            primary: "#BB86FC",
-            secondary: "#03DAC6",
-            background: "#121212",
-            error: "#CF6679",
-            disabled: "#757575",
-            divider: "#2D2D2D",
-            success: "#81C784",
-            warning: "#FFD54F",
-        },
-        lightComponents: {
-            buttonStyle_backgroundColor: "#6200EE",
-            disabledStyle_backgroundColor: "#E0E0E0",
-            disabledTitleStyle_color: "#9E9E9E",
-            textStyle_color: "#212121",
-            input_inputContainerStyle_borderColor: "#E0E0E0",
-            inputStyle_color: "#212121",
-            labelStyle_color: "#757575",
-            errorStyle_color: "#B00020",
-            card_containerStyle_shadowColor: "#000",
-            avatar_containerStyle_backgroundColor: "#E0E0E0",
-            avatar_titleStyle_color: "#212121",
-            avatar_overlayContainerStyle_backgroundColor: "transparent",
-            icon_color: "#6200EE",
-            listItem_containerStyle_borderBottomColor: "#E0E0E0",
-            checkBox_containerStyle_backgroundColor: "transparent",
-            checkBox_checkedColor: "#6200EE",
-            checkBox_uncheckedColor: "#757575",
-            overlay_overlayStyle_backgroundColor: "#FFFFFF",
-        },
-        darkComponents: {
-            buttonStyle_backgroundColor: "#6200EE",
-            disabledStyle_backgroundColor: "#E0E0E0",
-            disabledTitleStyle_color: "#9E9E9E",
-            textStyle_color: "#212121",
-            input_inputContainerStyle_borderColor: "#E0E0E0",
-            inputStyle_color: "#212121",
-            labelStyle_color: "#757575",
-            errorStyle_color: "#B00020",
-            card_containerStyle_shadowColor: "#000",
-            avatar_containerStyle_backgroundColor: "#E0E0E0",
-            avatar_titleStyle_color: "#212121",
-            avatar_overlayContainerStyle_backgroundColor: "transparent",
-            icon_color: "#6200EE",
-            listItem_containerStyle_borderBottomColor: "#E0E0E0",
-            checkBox_containerStyle_backgroundColor: "transparent",
-            checkBox_checkedColor: "#6200EE",
-            checkBox_uncheckedColor: "#757575",
-            overlay_overlayStyle_backgroundColor: "#FFFFFF",
-        }
-    };
+    const initialColors = parseDaisyThemeToRN(lightThemes[0].content, darkThemes[0].content);
 
-    const [selectedTheme, setSelectedTheme] = useState(themes[0]);
-    const [formColors, setFormColors] = useState(initialColors);
-    const [parsedTheme, setParsedTheme] = useState(() => parseDaisyThemeToRN(themes[0].content));
+    const [cssResultant, setCssResultant] = useState(() => saveThemesToJson(convertFormatBToA(convertFormatAToB(initialColors)), lightThemes[0].name, darkThemes[0].name));
+    const [selectedTheme, setSelectedTheme] = useState(lightThemes[0]);
+    const [selectedDarkTheme, setSelectedDarkTheme] = useState(darkThemes[0]);
+    const [formColors, setFormColors] = useState(() => convertFormatAToB(initialColors));
+    const [parsedTheme, setParsedTheme] = useState(() => parseDaisyThemeToRN(lightThemes[0].content, darkThemes[0].content));
 
     useEffect(() => {
-        if (themes.length > 0) {
+        if (lightThemes.length > 0) {
             applyThemeCSS(selectedTheme.content);
-            setParsedTheme(parseDaisyThemeToRN(selectedTheme.content));
+            setParsedTheme(parseDaisyThemeToRN(selectedTheme.content, selectedDarkTheme.content));
         }
     }, [selectedTheme]);
 
@@ -534,10 +700,17 @@ export default function ReactNativeElementsCustom() {
         }));
     };
 
-    const handleSubmit = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const handleSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();
         setParsedTheme(convertFormatBToA(formColors));
 
+    };
+
+    const handleJsonSave = () => {
+
+        const cssResult = saveThemesToJson(convertFormatBToA(formColors), selectedTheme.name, selectedDarkTheme.name)
+        setCssResultant(cssResult);
+        (document.getElementById('my_modal_1') as HTMLDialogElement).showModal();
     };
 
     return (
@@ -545,24 +718,54 @@ export default function ReactNativeElementsCustom() {
             <h1 className="text-2xl font-bold">React Native Elements Theme Generator</h1>
 
             {/* Theme selection */}
-            <div className="form-control w-full max-w-xs">
-                <label className="label">
-                    <span className="label-text">Select DaisyUI Theme</span>
-                </label>
-                <select
-                    className="select select-bordered"
-                    value={selectedTheme.name}
-                    onChange={(e) => {
-                        const theme = themes.find((t) => t.name === e.target.value);
-                        if (theme) setSelectedTheme(theme);
-                    }}
-                >
-                    {themes.map((theme) => (
-                        <option key={theme.name} value={theme.name}>
-                            {theme.name}
-                        </option>
-                    ))}
-                </select>
+            <div className="flex flex-row gap-8 p-8 justify-between">
+                {/** Light Themes */}
+                <div className="form-control w-full max-w-xs">
+                    <label className="label">
+                        <span className="label-text">Select Light Theme Base</span>
+                    </label>
+                    <select
+                        className="select select-bordered"
+                        value={selectedTheme.name}
+                        onChange={(e) => {
+                            const theme = lightThemes.find((t) => t.name === e.target.value);
+                            if (theme) setSelectedTheme(theme);
+                            const daisyResult = parseDaisyThemeToRN(theme?.content!, selectedDarkTheme.content);
+                            setParsedTheme(daisyResult);
+                            setFormColors(() => convertFormatAToB(daisyResult));
+                        }}
+                    >
+                        {lightThemes.map((theme) => (
+                            <option key={theme.name} value={theme.name}>
+                                {theme.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                {/** Dark Themes  */}
+                <div className="form-control w-full max-w-xs">
+                    <label className="label">
+                        <span className="label-text">Select Dark Theme Base</span>
+                    </label>
+                    <select
+                        className="select select-bordered"
+                        value={selectedDarkTheme.name}
+                        onChange={(e) => {
+                            const theme = darkThemes.find((t) => t.name === e.target.value);
+                            if (theme) setSelectedDarkTheme(theme);
+                            const daisyResult = parseDaisyThemeToRN(selectedTheme.content, theme?.content!);
+                            setParsedTheme(daisyResult);
+                            setFormColors(() => convertFormatAToB(daisyResult));
+                        }}
+                    >
+                        {darkThemes.map((theme) => (
+                            <option key={theme.name} value={theme.name}>
+                                {theme.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
             </div>
 
             {/* Theme preview */}
@@ -588,7 +791,7 @@ export default function ReactNativeElementsCustom() {
                                                 onChange={(e) => handleChange(mode, key, e.target.value)}
                                                 className="input input-bordered"
                                             />
-                                            <HexColorPicker color={value} onChange={(result) => handleChange(mode, key, result)} />
+                                            <ColorSelector index={key} color={value} onChange={(result) => handleChange(mode, key, result)} />
                                         </div>
                                     ))}
                                 </div>
@@ -605,24 +808,136 @@ export default function ReactNativeElementsCustom() {
             {/* Display and copy JSON */}
             <div>
                 <h2 className="text-xl font-semibold mb-2">React Native Elements Theme (JSON)</h2>
-                <pre className="bg-base-300 text-sm p-4 rounded overflow-x-auto">
-                    {JSON.stringify(parsedTheme, null, 2)}
-                </pre>
 
-                <button
-                    className="btn btn-outline"
-                    onClick={() => {
-                        navigator.clipboard.writeText(JSON.stringify(parsedTheme, null, 2));
-                    }}
-                >
-                    Copy to Clipboard
-                </button>
-                <button
-                    className="btn btn-outline"
-                    onClick={downloadJSON}
-                >
-                    Download JSON
-                </button>
+                <div className="bg-base-100 border-base-300 collapse border">
+                    <input type="checkbox" className="peer" />
+                    <div
+                        className="collapse-title bg-primary peer-checked:bg-secondary peer-checked:text-white text-white"
+                    >
+                        View Preview
+                    </div>
+                    <div
+                        className="collapse-content bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content"
+                    >
+                        <pre className="bg-base-300 text-sm p-4 rounded overflow-x-auto text-white">
+                            {JSON.stringify(parsedTheme, null, 2)}
+                        </pre>
+                    </div>
+                </div>
+
+                <div className="flex flex-row gap-8 p-8 ">
+                    <button
+                        className="btn btn-outline"
+                        onClick={() => {
+                            navigator.clipboard.writeText(JSON.stringify(parsedTheme, null, 2));
+                        }}
+                    >
+                        Copy to Clipboard
+                    </button>
+                    <button
+                        className="btn btn-outline"
+                        onClick={downloadJSON}
+                    >
+                        Download JSON
+                    </button>
+
+                    <div>
+                        <button
+                            className="btn btn-outline"
+                            onClick={() => handleJsonSave()}>
+                            Save Theme
+                        </button>
+                        <dialog id="my_modal_1" className="modal">
+                            <div className="modal-box  w-11/12 max-w-5xl">
+                                <h3 className="font-bold text-lg">Save Theme in relevant files</h3>
+                                <p className="py-4">Below is the theme elements you need, simply copy and pase to the relevant file in assets/themes/</p>
+
+                                {/** LIGHT MODE  */}
+                                <div>
+                                    <div className="bg-base-100 border-base-300 collapse border">
+                                        <input type="checkbox" className="peer" />
+                                        <div
+                                            className="collapse-title bg-primary peer-checked:bg-secondary peer-checked:text-white text-white"
+                                        >
+                                            View Theme
+                                        </div>
+                                        <div
+                                            className="collapse-content bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content"
+                                        >
+                                            <div className="card bg-neutral text-neutral-content w-11/12">
+                                                <div className="card-body items-center text-left">
+                                                    <h2 className="card-title">light-mode-themes.json</h2>
+                                                    <p>Copy the contents to /light-mode-themes.json</p>
+                                                    <br />
+                                                    {cssResultant.light.map((element, index) => {
+                                                        return (
+                                                            <p
+                                                                id={index.toString()}
+                                                                className="text-sm text-white"
+                                                            >
+                                                                {JSON.stringify(element, null, 2)}
+                                                            </p>
+                                                        );
+                                                    })}
+                                                    <div className="card-actions justify-end">
+                                                        <button className="btn btn-primary">Copy</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                {/** DARK MODE  */}
+                                <div>
+                                    <div className="bg-base-100 border-base-300 collapse border">
+                                        <input type="checkbox" className="peer" />
+                                        <div
+                                            className="collapse-title bg-primary peer-checked:bg-secondary peer-checked:text-white text-white"
+                                        >
+                                            View Theme
+                                        </div>
+                                        <div
+                                            className="collapse-content bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content"
+                                        >
+                                            <div>
+                                                <div className="card bg-neutral text-neutral-content w-11/12">
+                                                    <div className="card-body items-center text-left">
+                                                        <h2 className="card-title">dark-mode-themes.json</h2>
+                                                        <p>Copy the contents to /dark-mode-themes.json</p>
+                                                        <br />
+                                                        {cssResultant.dark.map((element, index) => {
+                                                            return (
+                                                                <p
+                                                                    id={index.toString()}
+                                                                    className="text-sm text-white"
+                                                                >
+                                                                    {JSON.stringify(element, null, 2)}
+                                                                </p>
+                                                            );
+                                                        })}
+                                                        <div className="card-actions justify-end">
+                                                            <button className="btn btn-primary">Copy</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div className="modal-action">
+                                    <form method="dialog">
+                                        {/* if there is a button in form, it will close the modal */}
+                                        <button className="btn">Close</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </dialog>
+                    </div>
+                </div>
 
             </div>
         </div>
