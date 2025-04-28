@@ -78,24 +78,24 @@ export default function ThemePreview({ formColors }: { formColors: any }) {
     ];
 
     const componentColorKeys = [
-        "buttonStyle_backgroundColor",
-        "disabledStyle_backgroundColor",
-        "disabledTitleStyle_color",
-        "textStyle_color",
-        "input_inputContainerStyle_borderColor",
-        "inputStyle_color",
-        "labelStyle_color",
-        "errorStyle_color",
-        "card_containerStyle_shadowColor",
-        "avatar_containerStyle_backgroundColor",
-        "avatar_titleStyle_color",
-        "avatar_overlayContainerStyle_backgroundColor",
-        "icon_color",
-        "listItem_containerStyle_borderBottomColor",
-        "checkBox_containerStyle_backgroundColor",
-        "checkBox_checkedColor",
-        "checkBox_uncheckedColor",
-        "overlay_overlayStyle_backgroundColor",
+        "Button_buttonStyle_backgroundColor",
+        "Button_disabledStyle_backgroundColor",
+        "Button_disabledTitleStyle_color",
+        "TextStyle_color",
+        "Input_inputContainerStyle_borderColor",
+        "InputStyle_color",
+        "LabelStyle_color",
+        "ErrorStyle_color",
+        "Card_containerStyle_shadowColor",
+        "Avatar_containerStyle_backgroundColor",
+        "Avatar_titleStyle_color",
+        "Avatar_overlayContainerStyle_backgroundColor",
+        "Icon_color",
+        "ListItem_containerStyle_borderBottomColor",
+        "CheckBox_containerStyle_backgroundColor",
+        "CheckBox_checkedColor",
+        "CheckBox_uncheckedColor",
+        "Overlay_overlayStyle_backgroundColor",
     ];
 
     const colors = themeMode === "light" ? formColors.lightColors : formColors.darkColors;
@@ -127,8 +127,8 @@ export default function ThemePreview({ formColors }: { formColors: any }) {
             {componentColorKeys.map((key) => {
                 const bg =
                     key === "primary"
-                        ? components["buttonStyle_backgroundColor"]
-                        : components[key.toLowerCase()] || "#ccc";
+                        ? components["Button_buttonStyle_backgroundColor"]
+                        : components[key] || "#ccc";
                 const label = key.charAt(0).toUpperCase() + key.slice(1);
                 return (
                     <button
