@@ -260,9 +260,11 @@ export function saveThemesToJson(selectedTheme: FormatA, light : string, dark: s
     const applicationTheme =  parseJsonToTheme(selectedTheme);
 
     //  SAVE IN LIGHT MODES 
-    lightModeThemes.push(applicationTheme.lightTheme);
+    //lightModeThemes.push(applicationTheme.lightTheme);
+    lightModeThemes[0].content = applicationTheme.lightTheme.content;
     //  SAVE IN DARK MODES 
-    darkModeThemes.push(applicationTheme.darkTheme);
+    //darkModeThemes.push(applicationTheme.darkTheme);
+    darkModeThemes[0].content = applicationTheme.darkTheme.content;
 
     return {
         light : lightModeThemes,

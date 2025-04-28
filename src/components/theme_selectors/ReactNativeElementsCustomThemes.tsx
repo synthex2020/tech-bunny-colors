@@ -3,10 +3,8 @@ import lightThemes from "../../assets/themes/light-mode-themes.json";
 import darkThemes from "../../assets/themes/dark-mode-themes.json"
 import { oklch, rgb } from 'culori';
 import { HexColorPicker } from "react-colorful";
-import { Button } from "../ui/button";
 import ThemePreview from "./react-native-elements/buttons-preview";
 import { saveThemesToJson } from "../../logic/theme-handlers";
-import ColorSelector from "./react-native-elements/color-selector";
 // Add this import for color conversion 
 // business and fantasy 
 
