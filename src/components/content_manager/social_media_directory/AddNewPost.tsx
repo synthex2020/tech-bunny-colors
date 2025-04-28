@@ -393,7 +393,7 @@ function AddNewSocialMediaPost() {
                             <input type="text" className="input input-bordered text-sm w-full" placeholder="Post Title" id="title" /><br />
 
                             <label className="fieldset-label text-2xl font-bold">Post Hashtags</label><br />
-                            <input type="text" className="input input-bordered w-full text-xs" placeholder="#blackvalleycomics#eelpower#error404" id="hashtags" /><br />
+                            <input type="text" className="input input-bordered w-full text-xs" placeholder="" id="hashtags" /><br />
 
                             <label className="fieldset-label text-2xl font-bold">Post Target Audience</label><br />
                             <input type="text" className="input input-bordered w-full text-sm" placeholder="Scifi watchers, young adult" id="audience" /><br />

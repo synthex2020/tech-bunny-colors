@@ -142,26 +142,31 @@ export default function UploadContentPage() {
                 {/* Category */}
                 <div>
                     <label className="label">Category</label>
-                    <input
-                        type="text"
-                        name="category"
-                        value={form.category}
-                        onChange={handleChange}
-                        className="input input-bordered w-full"
-                    />
+                    <select name="category" value={form.category} onChange={handleChange} className="select select-bordered w-full">
+                        <option value="">Select Category</option>
+                        <option value="Video">Video</option>
+                        <option value="Image">Image</option>
+                        <option value="3D-file">3D File</option>
+                        <option value="Sound-Clip">Sound Clip</option>
+                    </select>
+
                     {errors.category && <p className="text-error text-sm">{errors.category}</p>}
+
                 </div>
 
                 {/* Platform */}
+
                 <div>
                     <label className="label">Platform</label>
-                    <input
-                        type="text"
-                        name="platform"
-                        value={form.platform}
-                        onChange={handleChange}
-                        className="input input-bordered w-full"
-                    />
+                    <select name="platform" value={form.platform} onChange={handleChange} className="select select-bordered w-full">
+                        <option value="">Select Platform</option>
+                        <option value="Instagram">Instagram</option>
+                        <option value="Youtube">Youtube</option>
+                        <option value="Tiktok">TikTok</option>
+                        <option value="Medium">Medium</option>
+                        <option value="LinkedIn">LinkedIn</option>
+                    </select>
+
                     {errors.platform && <p className="text-error text-sm">{errors.platform}</p>}
                 </div>
 
@@ -223,25 +228,7 @@ export default function UploadContentPage() {
                     {errors.transcript && <p className="text-error text-sm">{errors.transcript}</p>}
                 </div>
 
-                {/* Thumbnail Upload */}
-                <div>
-                    <label className="label">Thumbnail</label>
-                    {previewUrls.thumbnail && (
-                        <img
-                            src={previewUrls.thumbnail}
-                            alt="Thumbnail Preview"
-                            className="rounded-lg shadow-md w-full max-h-64 object-contain mb-2"
-                        />
-                    )}
-                    <input
-                        type="file"
-                        name="thumbnail"
-                        accept="image/*"
-                        onChange={handleChange}
-                        className="file-input file-input-bordered w-full"
-                    />
-                    {errors.thumbnail && <p className="text-error text-sm">{errors.thumbnail}</p>}
-                </div>
+
 
                 {/* Media Upload */}
                 <div>

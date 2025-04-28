@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import lightThemes from "../../assets/themes/light-mode-themes.json";
 import darkThemes from "../../assets/themes/dark-mode-themes.json"
 import { oklch, rgb } from 'culori';
@@ -690,8 +690,19 @@ export default function ReactNativeElementsCustom() {
     };
 
     const handleChange = (mode: "lightColors" | "darkColors" | "lightComponents" | "darkComponents", key: string, value: string) => {
-
+        console.log(mode);
         setFormColors((prev) => ({
+            ...prev,
+            [mode]: {
+                ...prev[mode],
+                [key]: value,
+            },
+        }));
+    };
+
+    const handleChangeDialog = (mode: "lightColors" | "darkColors" | "lightComponents" | "darkComponents", key: string, value: string) => {
+        
+        return setFormColors((prev) => ({
             ...prev,
             [mode]: {
                 ...prev[mode],
@@ -775,28 +786,53 @@ export default function ReactNativeElementsCustom() {
             <div className="p-4 space-y-8">
                 <form>
                     {(["lightColors", "darkColors", "lightComponents", "darkComponents"] as const).map((mode) => (
-                        <div>
-                            <div key={mode} className="bg-base-200 p-4 rounded-box shadow pb-6">
-                                <h2 className="text-xl font-bold mb-4 capitalize">{mode.replace("Colors", " Mode").replace("Components", " mode Components")}</h2>
+                        <div className="pt-8 pb-6">
+                            <div className="bg-base-100 border-base-300 collapse border">
+                                <input type="checkbox" className="peer" />
+                                <div
+                                    className="collapse-title bg-primary peer-checked:bg-secondary peer-checked:text-white text-white"
+                                >
+                                    {mode.replace("Colors", " Mode").replace("Components", " mode Components").charAt(0).toUpperCase() + mode.replace("Colors", " Mode").replace("Components", " mode Components").slice(1)}
+                                </div>
+                                <div
+                                    className="collapse-content bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content"
+                                >
+                                    <pre className="bg-base-300 text-sm p-4 rounded overflow-x-auto text-white">
+                                        <div key={mode} className="bg-base-200 p-4 rounded-box shadow pb-6">
+                                            <h2 className="text-xl font-bold mb-4 capitalize">{mode.replace("Colors", " Mode").replace("Components", " mode Components")}</h2>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                                    {Object.entries(formColors[mode]).map(([key, value]) => (
-                                        <div key={key} className="form-control">
-                                            <label className="label">
-                                                <span className="label-text capitalize">{key}</span>
-                                            </label>
-                                            <input
-                                                type="text"
-                                                value={value}
-                                                onChange={(e) => handleChange(mode, key, e.target.value)}
-                                                className="input input-bordered"
-                                            />
-                                            <ColorSelector index={key} color={value} onChange={(result) => handleChange(mode, key, result)} />
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                                                {Object.entries(formColors[mode]).map(([key, value]) => (
+                                                    <div key={key} className="form-control">
+                                                        <label className="label">
+                                                            <span className="label-text capitalize">{key}</span>
+                                                        </label>
+                                                        <HexColorPicker color={value} onChange={(result) => {
+                                                            setFormColors((prev) => ({
+                                                                ...prev,
+                                                                [mode]: {
+                                                                    ...prev[mode],
+                                                                    [key]: result,
+                                                                },
+                                                            }));
+                                                        }} />
+
+                                                        <input
+                                                            type="text"
+                                                            value={value}
+                                                            onChange={(e) => handleChange(mode, key, e.target.value)}
+                                                            className="input input-bordered"
+                                                        />
+                                                        
+                                                    </div>
+                                                ))}
+                                            </div>
                                         </div>
-                                    ))}
+                                        <br />
+                                    </pre>
                                 </div>
                             </div>
-                            <br />
+
                         </div>
                     ))}
 

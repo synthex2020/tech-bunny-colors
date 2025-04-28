@@ -128,7 +128,7 @@ export default function ThemePreview({ formColors }: { formColors: any }) {
                 const bg =
                     key === "primary"
                         ? components["buttonStyle_backgroundColor"]
-                        : components[key] || "#ccc";
+                        : components[key.toLowerCase()] || "#ccc";
                 const label = key.charAt(0).toUpperCase() + key.slice(1);
                 return (
                     <button
