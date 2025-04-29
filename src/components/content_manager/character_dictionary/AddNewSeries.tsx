@@ -55,7 +55,7 @@ function AddNewSeries() {
         physics : "",
         world: "",
         powerSystem: "",
-        images : ""
+        images : "",
     });
     /** const handleMediaFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
 

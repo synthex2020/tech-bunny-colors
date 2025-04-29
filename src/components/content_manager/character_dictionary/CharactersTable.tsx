@@ -1,35 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "react-router";
-import CharacterPopModal from "./CharacterPopModal";
-
-interface Character {
-    name: string;
-    titles: string;
-    sex: string;
-    gender: string;
-    species: string;
-    personality: string;
-    family: string[];
-    hair: string;
-    fashion: string;
-    quirks: string;
-    relationship: string;
-    orientation: string;
-    race: string;
-    age: string;
-    images: string[];
-    powers: string;
-    martialArts: string;
-    hobbies: string;
-    equipment: string;
-    backstory: string;
-    references: string;
-    referenceImages: string[];
-    characterSheet: string;
-    bodyModifications: string;
-    anatomyMeasurements: string;
-}
-
+import { CharacterTableCard } from "../../ui/character-table-card";
+import { Character } from "../../../types";
 
 
 
@@ -108,59 +80,17 @@ function CharacterTable() {
     }
     console.log(display);
     return (
-        <div className="overflow-x-hidden">
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th>Index</th>
-                        <th>Thumbnail</th>
-                        <th>Personality</th>
-                        <th>Family</th>
-                        <th>Hair</th>
-                        <th>Fashion</th>
-                        <th>Quirks</th>
-                        <th>Relationships</th>
-                        <th>Powers</th>
-                        <th>Martial Arts</th>
-                        <th>Hobbies</th>
-                        <th>Equipment</th>
-                        <th>Body Modifications</th>
-                        <th>Anatomy Measurements</th>
-                        <th>Backstory</th>
-                        <th>Details</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {characters.map((character: Character, index : number) => (
-                        <tr key={index}>
-                            <td>{index + 1}</td>
-                            <td>
-                                <CharacterMedia character={character} />
-                            </td>
-                            <td>{character.personality}</td>
-                            <td>{character.family.join(", ")}</td>
-                            <td>{character.hair}</td>
-                            <td>{character.fashion}</td>
-                            <td>{character.quirks}</td>
-                            <td>{character.relationship}</td>
-                            <td>{character.powers}</td>
-                            <td>{character.martialArts}</td>
-                            <td>{character.hobbies}</td>
-                            <td>{character.equipment}</td>
-                            <td>{character.bodyModifications}</td>
-                            <td>{character.anatomyMeasurements}</td>
-                            <td>{character.backstory}</td>
-                            <td>
-                                <CharacterPopModal 
-                                    character={character}
-                                    modalId={character.name}
-                                 />
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+       <div>
+         {characters.map((character: Character, index: number) => {
+            return (
+                <div key={index}>
+                    <CharacterTableCard {
+                    ...character
+                }/>
+                </div>
+            );
+         })}
+       </div>
     );
 }
 
