@@ -22,6 +22,16 @@ export type Series = {
     characters : [];
     locations : [];
     timeline : [];
+    media : [];
+};
+
+export type SeriesMedia = {
+    id : string;
+    created_at : string;
+    media : string;
+    type : string;
+    series_id : string;
+
 };
 
 export type Character = {
@@ -50,8 +60,9 @@ export type Character = {
     bodyMods : string;
     anatomy : string;
     model : string;
-    family? : [];
-    referenceMedia? : []
+    family : [];
+    referenceMedia : [];
+    media : [];
 };
 
 export type SeriesEvent = {

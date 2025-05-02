@@ -9,75 +9,7 @@ import {
     PlusCircle,
     
 } from 'lucide-react';
-
-interface Locations {
-    title: string;
-    type: string;
-    geoLocation: string;
-    description: string;
-    images: string[];
-}
-
-interface ImportantEvents {
-    title: string;
-    date: string;
-    importance: string;
-    description: string;
-    images: string[];
-}
-
-interface Character {
-    name: string;
-    titles: string;
-    sex: string;
-    gender: string;
-    species: string;
-    personality: string;
-    family: string[];
-    hair: string;
-    fashion: string;
-    quirks: string;
-    relationship: string;
-    orientation: string;
-    race: string;
-    age: string;
-    images: string[];
-    powers: string;
-    martialArts: string;
-    hobbies: string;
-    equipment: string;
-    backstory: string;
-    references: string;
-    referenceImages: string[];
-    characterSheet: string;
-    bodyModifications: string;
-    anatomyMeasurements: string
-}
-
-interface Series {
-    title: string;
-    authors: string;
-    artists: string;
-    genre: string;
-    age: string;
-    thumbnail: string;
-    description: string;
-    plot: string;
-    auidence: string;
-    history: string;
-    physics: string;
-    world: string;
-    issues: number;
-    volumes: number;
-    merchandised: boolean;
-    published: boolean;
-    currentStatus: string;
-    powerSystem: string[];
-    images: string[];
-    timeline: ImportantEvents[];
-    locations: Locations[];
-    characters: Character[];
-}
+import { Series } from '../../../types';
 
 interface SeriesCardProps {
     series: Series;
@@ -87,7 +19,6 @@ interface SeriesCardProps {
 function SeriesCard({ series, index }: SeriesCardProps) {
     const navigate = useNavigate();
     const [seriesId] = useState('');
-
     return (
         <div className="card w-96 bg-base-100 shadow-xl transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
             {/* Thumbnail Section */}
@@ -108,7 +39,7 @@ function SeriesCard({ series, index }: SeriesCardProps) {
                 <div className="flex justify-between items-center">
                     <h2 className="card-title text-xl font-bold">{series.title}</h2>
                     <div className={`badge ${series.published ? 'badge-success' : 'badge-warning'}`}>
-                        {series.currentStatus}
+                        {series.status}
                     </div>
                 </div>
 
@@ -120,7 +51,7 @@ function SeriesCard({ series, index }: SeriesCardProps) {
                     </div>
                     <div className="flex items-center space-x-2">
                         <Users size={16} className="text-primary" />
-                        <span>Audience: {series.auidence}</span>
+                        <span>Audience: {series.audience}</span>
                     </div>
                     <div className="flex items-center space-x-2">
                         <Calendar size={16} className="text-primary" />
@@ -171,7 +102,9 @@ function SeriesCard({ series, index }: SeriesCardProps) {
                     <button
                         className="btn btn-ghost btn-sm flex flex-col items-center"
                         onClick={() => navigate('/characterDir/charactersTable', {
-                            state: series.characters
+                            state: {
+                                characters : series.characters
+                            }
                         })}
                     >
                         <Users size={16} />

@@ -1,10 +1,11 @@
 import { Character } from "../../types";
 import { CharacterEditModal } from "./character-edit-modal";
 
-export function CharacterTableCard(character: Character) {
-    
+export default function CharacterTableCard(character: Character) {
+    console.log(character);
     return (
         <div className="card card-side bg-base-100 shadow-sm border">
+            <h3>Hello</h3>
             <figure>
                 {/** Character sheet and reference images  */}
                 <img
