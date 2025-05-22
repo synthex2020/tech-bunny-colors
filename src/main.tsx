@@ -15,7 +15,8 @@ import AddNewSeries from './components/content_manager/character_dictionary/AddN
 import AddNewCharacter from './components/content_manager/character_dictionary/AddNewCharacter.tsx'
 import GradientInit from './components/color_gradients/GradientInit.tsx'
 import DaisyUIThemePack from './components/theme_selectors/DaisyUIThemePack.tsx'
-
+import UploadContentPage from './components/content_manager/content_managment/AddContent.tsx'
+import ReactNativeElementsCustom from './components/theme_selectors/ReactNativeElementsCustomThemes.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
@@ -23,9 +24,10 @@ createRoot(document.getElementById('root')!).render(
       <Route path='/' element={<App/>}/>
       <Route path='/socialDir/projectsTable' element={<ProjectsDisplayTable />}/>
       <Route path='/socialDir/addNewPost' element={<AddNewSocialMediaPost />}   />
+      <Route path='/socialDir/addContent' element={<UploadContentPage />} />
       <Route path='brandingKit' element={<BrandingKit/>}/>
       <Route path='characterDir' element={<CharacterDirectory />}/>
-      <Route path='/characterDir/charactersTable' element={<CharacterTable />} />
+      <Route path='/characterDir/charactersTable/:id' element={<CharacterTable />} />
       <Route path='/characterDir/locationsTable' element={<LocationsTable />} />
       <Route path='/characterDir/importantEvents' element={<ImportantEventsTable />} />
       <Route path='/characterDir/addNewSeries' element={<AddNewSeries />} />
@@ -33,6 +35,7 @@ createRoot(document.getElementById('root')!).render(
       <Route path='/themes' element={<GradientInit />} />
       <Route path='/themes/colorGradient' element={<ColorGradientForm />}/>
       <Route path='/themes/daisyui' element={<DaisyUIThemePack />} />
+      <Route path='/themes/react-native-elements' element={<ReactNativeElementsCustom />} />
       <Route path='socialDir' element={<SocialMediaDiretory />}>
       </Route>
     

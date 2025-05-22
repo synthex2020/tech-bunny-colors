@@ -32,13 +32,15 @@ function AddNewCharacter() {
         referenceImages: "",
         bodyModifications: "",
         anatomy: "",
-        seriesId: ""
+        seriesId: "",
+        characterSheet: "",
+        model: ""
     });
 
     const location = useLocation();
     const seriesId = location.state.seriesId;
 
-    const handleFormChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleFormChange = (event: ChangeEvent<HTMLInputElement> |  ChangeEvent<HTMLTextAreaElement>) => {
         //  ADD THE FORM ELEMENTS NEEDED 
         let value: (typeof formData)[keyof typeof formData] = event.target.value;
 
@@ -72,40 +74,93 @@ function AddNewCharacter() {
                 <div className="flex flex-col">
                     <h1 className="text text-4xl font-bold "> Create a new Character</h1>
 
-                    {/** MEDIA ENTRY AND PREVIEW  */}
-                    <div className="carousel w-full">
-                        {images.map((image, index) => (
-                            <div
-                                id={`slide${index + 1}`}
-                                key={index}
-                                className="carousel-item relative w-full"
-                            >
-                                <img src={image} className="w-full object-contain" alt={`Slide ${index + 1}`} />
-                                <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-                                    <a
-                                        href={`#slide${index === 0 ? images.length : index}`}
-                                        className="btn btn-circle"
-                                    >
-                                        ❮
-                                    </a>
-                                    <a
-                                        href={`#slide${index === images.length - 1 ? 1 : index + 2}`}
-                                        className="btn btn-circle"
-                                    >
-                                        ❯
-                                    </a>
+                    <div>
+                        {/** MEDIA ENTRY AND PREVIEW  */}
+                        <div className="carousel w-full">
+                            {images.map((image, index) => (
+                                <div
+                                    id={`slide${index + 1}`}
+                                    key={index}
+                                    className="carousel-item relative w-full"
+                                >
+                                    <img src={image} className="w-full object-contain" alt={`Slide ${index + 1}`} />
+                                    <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                                        <a
+                                            href={`#slide${index === 0 ? images.length : index}`}
+                                            className="btn btn-circle"
+                                        >
+                                            ❮
+                                        </a>
+                                        <a
+                                            href={`#slide${index === images.length - 1 ? 1 : index + 2}`}
+                                            className="btn btn-circle"
+                                        >
+                                            ❯
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
+
+
+                        {/** FILE UPLOAD BUTTON  */}
+                        <label
+                                className="fieldset-label text-3xl font-bold"
+                            >
+                                Character Sheet
+                            </label><br />
+                        <input
+                            type="file"
+                            className="file-input input-bordered text-sm w-full"
+                            id="images"
+                            onChange={handleFormChange}
+                            multiple
+                        />
                     </div>
-                    {/** FILE UPLOAD BUTTON  */}
-                    <input
-                        type="file"
-                        className="file-input input-bordered text-sm w-full"
-                        id="images"
-                        onChange={handleFormChange}
-                        multiple
-                    />
+
+                    <div>
+                        {/** MEDIA ENTRY AND PREVIEW  */}
+                        <div className="carousel w-full">
+                            {images.map((image, index) => (
+                                <div
+                                    id={`slide${index + 1}`}
+                                    key={index}
+                                    className="carousel-item relative w-full"
+                                >
+                                    <img src={image} className="w-full object-contain" alt={`Slide ${index + 1}`} />
+                                    <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                                        <a
+                                            href={`#slide${index === 0 ? images.length : index}`}
+                                            className="btn btn-circle"
+                                        >
+                                            ❮
+                                        </a>
+                                        <a
+                                            href={`#slide${index === images.length - 1 ? 1 : index + 2}`}
+                                            className="btn btn-circle"
+                                        >
+                                            ❯
+                                        </a>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+
+                        {/** FILE UPLOAD BUTTON  */}
+                        <label
+                                className="fieldset-label text-3xl font-bold"
+                            >
+                                Upload Character 3D model
+                            </label><br />
+                        <input
+                            type="file"
+                            className="file-input input-bordered text-sm w-full"
+                            id="model"
+                            onChange={handleFormChange}
+                            multiple
+                        />
+                    </div>
                 </div>
                 {/** TEXT ENTRIES  */}
                 <div className="flex flex-col justify-center lg: flex-none">
@@ -403,7 +458,7 @@ function AddNewCharacter() {
                         >
                             Character's Backstory
                         </label><br />
-                        <input
+                        <textarea
                             className="textarea textarea-bordered text-sm w-full h-1/4"
                             placeholder="What is the Character's Backstory, their origin and future roles"
                             id="backstory"
