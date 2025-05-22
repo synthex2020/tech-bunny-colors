@@ -1,7 +1,7 @@
-import React, { useState, useEffect, ChangeEvent } from "react";
+import React, { useState, useEffect } from "react";
 import lightThemes from "../../assets/themes/light-mode-themes.json";
 import darkThemes from "../../assets/themes/dark-mode-themes.json"
-import { oklch, rgb } from 'culori';
+import { rgb } from 'culori';
 import { HexColorPicker } from "react-colorful";
 import ThemePreview from "./react-native-elements/buttons-preview";
 import { saveThemesToJson } from "../../logic/theme-handlers";
@@ -698,16 +698,7 @@ export default function ReactNativeElementsCustom() {
         }));
     };
 
-    const handleChangeDialog = (mode: "lightColors" | "darkColors" | "lightComponents" | "darkComponents", key: string, value: string) => {
-
-        return setFormColors((prev) => ({
-            ...prev,
-            [mode]: {
-                ...prev[mode],
-                [key]: value,
-            },
-        }));
-    };
+    
 
     const handleSubmit = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();

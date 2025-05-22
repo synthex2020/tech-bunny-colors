@@ -1,71 +1,7 @@
-import React, { useState } from "react";
+import{ useState } from "react";
 
 export default function ThemePreview({ formColors }: { formColors: any }) {
     const [themeMode, setThemeMode] = useState<"light" | "dark">("light");
-
-    const initialColors = {
-
-        lightColors: {
-            primary: "#6200EE",
-            secondary: "#03DAC6",
-            background: "#FFFFFF",
-            error: "#B00020",
-            disabled: "#9E9E9E",
-            divider: "#EEEEEE",
-            success: "#4CAF50",
-            warning: "#FFC107",
-        },
-        darkColors: {
-            primary: "#BB86FC",
-            secondary: "#03DAC6",
-            background: "#121212",
-            error: "#CF6679",
-            disabled: "#757575",
-            divider: "#2D2D2D",
-            success: "#81C784",
-            warning: "#FFD54F",
-        },
-        lightComponents: {
-            buttonStyle_backgroundColor: "#6200EE",
-            disabledStyle_backgroundColor: "#E0E0E0",
-            disabledTitleStyle_color: "#9E9E9E",
-            textStyle_color: "#212121",
-            input_inputContainerStyle_borderColor: "#E0E0E0",
-            inputStyle_color: "#212121",
-            labelStyle_color: "#757575",
-            errorStyle_color: "#B00020",
-            card_containerStyle_shadowColor: "#000",
-            avatar_containerStyle_backgroundColor: "#E0E0E0",
-            avatar_titleStyle_color: "#212121",
-            avatar_overlayContainerStyle_backgroundColor: "transparent",
-            icon_color: "#6200EE",
-            listItem_containerStyle_borderBottomColor: "#E0E0E0",
-            checkBox_containerStyle_backgroundColor: "transparent",
-            checkBox_checkedColor: "#6200EE",
-            checkBox_uncheckedColor: "#757575",
-            overlay_overlayStyle_backgroundColor: "#FFFFFF",
-        },
-        darkComponents: {
-            buttonStyle_backgroundColor: "#6200EE",
-            disabledStyle_backgroundColor: "#E0E0E0",
-            disabledTitleStyle_color: "#9E9E9E",
-            textStyle_color: "#212121",
-            input_inputContainerStyle_borderColor: "#E0E0E0",
-            inputStyle_color: "#212121",
-            labelStyle_color: "#757575",
-            errorStyle_color: "#B00020",
-            card_containerStyle_shadowColor: "#000",
-            avatar_containerStyle_backgroundColor: "#E0E0E0",
-            avatar_titleStyle_color: "#212121",
-            avatar_overlayContainerStyle_backgroundColor: "transparent",
-            icon_color: "#6200EE",
-            listItem_containerStyle_borderBottomColor: "#E0E0E0",
-            checkBox_containerStyle_backgroundColor: "transparent",
-            checkBox_checkedColor: "#6200EE",
-            checkBox_uncheckedColor: "#757575",
-            overlay_overlayStyle_backgroundColor: "#FFFFFF",
-        }
-    };
 
     const colorKeys = [
         "primary",

@@ -33,7 +33,7 @@ export default function CharacterTableCard(character: Character) {
                 <div className="card-actions justify-end">
                     <CharacterEditModal 
                         character={character}
-                        onSave={(updatedChar) => {}}
+                        onSave={() => {}}
                     />
                 </div>
             </div>

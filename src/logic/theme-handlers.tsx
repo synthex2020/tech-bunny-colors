@@ -1,4 +1,4 @@
-import { oklch, rgb } from 'culori';
+import { oklch } from 'culori';
 import lightModeThemes from "../assets/themes/light-mode-themes.json";
 import darkModeThemes from "../assets/themes/dark-mode-themes.json";
 
@@ -345,6 +345,7 @@ function adjustBrightness(hex: string, brightnessDelta: number, saturationDelta:
     const b = parseInt(hex.slice(5, 7), 16);
 
     const factor = 1 + brightnessDelta / 100;
+    console.log(saturationDelta);
 
     // Clamp values between 0-255
     const newR = Math.min(255, Math.max(0, Math.round(r * factor)));

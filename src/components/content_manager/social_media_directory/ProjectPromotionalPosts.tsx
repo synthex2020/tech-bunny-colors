@@ -14,6 +14,7 @@ interface Posts {
 }
 //  INTERFACE 
 interface Project {
+    id : string;
     title: string,
     media: string,
     caption: string,

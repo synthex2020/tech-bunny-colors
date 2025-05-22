@@ -38,7 +38,7 @@ function CharacterDirectory() {
           {availableSeries.map((item, index) => {
             
             return (
-              <SeriesCard key={index} series={item} index={index} />
+              <SeriesCard key={index} series={item} index={index} seriesId={item.id}/>
             );
           })}
         </section>
