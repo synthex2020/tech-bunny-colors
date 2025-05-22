@@ -1,77 +1,6 @@
 //  SHOW MORE DETAILS ON SERIES  - INCLUDE IN-WORLD LOCATIONS AND EVENTS OF IMPORTANCE
 import { useState } from "react";
-
-
-interface Locations {
-    title: string;
-    type: string;
-    geoLocation: string;
-    description: string;
-    images: string[];
-}
-
-interface ImportantEvents {
-    title: string;
-    date: string;
-    importance: string;
-    description: string;
-    images: string[];
-}
-
-interface Character {
-    name: string;
-    titles: string;
-    sex: string;
-    gender: string;
-    species: string;
-    personality: string;
-    family: string[];
-    hair: string;
-    fashion: string;
-    quirks: string;
-    relationship: string;
-    orientation: string;
-    race: string;
-    age: string;
-    images: string[];
-    powers: string;
-    martialArts: string;
-    hobbies: string;
-    equipment: string;
-    backstory: string;
-    references: string;
-    referenceImages: string[];
-    characterSheet: string;
-    bodyModifications: string;
-    anatomyMeasurements: string
-}
-
-//  style, 
-interface Series {
-
-    title: string;
-    authors: string;
-    artists: string;
-    genre: string;
-    age: string;
-    thumbnail: string;
-    description: string;
-    plot: string;
-    auidence: string;
-    history: string;
-    physics: string;
-    world: string;
-    issues: number;
-    volumes: number;
-    merchandised: boolean;
-    published: boolean;
-    currentStatus: string;
-    powerSystem: string[];
-    images: string[];
-    timeline: ImportantEvents[];
-    locations: Locations[];
-    characters: Character[];
-}
+import { Series, SeriesMedia } from "../../../types";
 
 interface SeriesProps {
     series: Series;
@@ -82,9 +11,11 @@ interface SeriesProps {
 function SeriesMoreDetailsModal(seriesProps: SeriesProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    const  MediaCarousel = () =>  {
-        const images = seriesProps.series.images;
-
+    const MediaCarousel = () => {
+        const imagesRaw = seriesProps.series.media;
+        const images: SeriesMedia[] = Array.isArray(imagesRaw) ? imagesRaw : [];
+    
+    
         const prevSlide = () => {
             setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
         };
@@ -93,26 +24,28 @@ function SeriesMoreDetailsModal(seriesProps: SeriesProps) {
             setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
         };
     
+        if (images.length === 0) return <div>No media found</div>;
+    
         return (
             <div className="carousel w-1/2 relative">
                 {images.map((src, index) => (
                     <div
                         key={index}
-                        className={`carousel-item absolute w-1/2 transition-opacity duration-700 ${index === currentIndex ? "opacity-100" : "opacity-0"
-                            }`}
+                        className={`carousel-item absolute w-1/2 transition-opacity duration-700 ${
+                            index === currentIndex ? "opacity-100" : "opacity-0"
+                        }`}
                     >
-                        <img src={src} alt={`Slide ${index + 1}`} />
+                        <img src={src.media} alt={`Slide ${index + 1}`} />
                     </div>
                 ))}
-    
                 <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
                     <button onClick={prevSlide} className="btn btn-circle">❮</button>
                     <button onClick={nextSlide} className="btn btn-circle">❯</button>
                 </div>
             </div>
         );
+    };
     
-    }
     
     return (
         <div>
@@ -138,11 +71,11 @@ function SeriesMoreDetailsModal(seriesProps: SeriesProps) {
                                 <h4 className="text-2xl">{seriesProps.series.genre}</h4>
                                 <h5 className="text-sm">{seriesProps.series.powerSystem.toString()}</h5>
                                 <p className="py-6 overflow-clip">
-                                    {seriesProps.series.age} Years | {seriesProps.series.auidence} <br/>
+                                    Made : {seriesProps.series.createdAt}  | {seriesProps.series.audience} <br/>
                                     {seriesProps.series.issues} Issues | {seriesProps.series.volumes} Volumes <br/>
-                                    Was merchandised : {seriesProps.series.merchandised.toString()}<br/>
+                                    Was merchandised : {seriesProps.series.merchandise.toString()}<br/>
                                     Published : {seriesProps.series.published.toString()}<br/>
-                                    Status : {seriesProps.series.currentStatus} <br/>
+                                    Status : {seriesProps.series.status} <br/>
                                     {seriesProps.series.plot}
                                 </p>
 

@@ -17,7 +17,7 @@ function ProjectsDisplayTable() {
     const location = useLocation();
     const posts = location.state?.posts as Post[] || []; // Ensure an empty array if undefined
     const postCategory = location.state?.category as string; 
-    
+    console.log(posts);
     return (
         <div className="overflow-x-auto">
             <table className="table">
@@ -53,7 +53,7 @@ function ProjectsDisplayTable() {
                                             <div className="avatar">
                                                 <div className="mask mask-squircle h-12 w-12">
                                                     <img
-                                                        src={post.thumbnail}
+                                                        src={post.thumbnail.replace("url(", "").replace(")", "")}
                                                         alt={post.title} />
                                                 </div>
                                             </div>
@@ -63,7 +63,7 @@ function ProjectsDisplayTable() {
                                             </div>
                                         </div>
                                     </td>
-                                    <td>{post.caption}</td>
+                                    <td>{(JSON.parse(post.caption)).status}</td>
                                     <td>{post.mentions}</td>
                                     <td>${post.adCost}</td>
                                     <td>

@@ -33,7 +33,13 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
         <div className="card-actions">
           <button 
             className="btn btn-primary"
-            onClick={() => navigate(navigateTo)}
+            onClick={() => {
+              if (navigateTo.includes("http")){
+                window.location.href = navigateTo;
+              }else{
+                navigate(navigateTo);
+              }
+            }}
           >
             Explore {title}
           </button>
@@ -46,17 +52,24 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
 function GradientInit() {
   const themeCards: ThemeCardProps[] = [
     {
-      title: "Daisy UI",
+      title: "Website",
       description: "A lightweight, modular CSS framework with customizable color themes and components.",
       thumbnail: "https://picsum.photos/seed/daisyui/400/300",
-      navigateTo: '/themes/daisyui'
+      navigateTo: 'https://daisyui.com/theme-generator/'
     },
     {
       title: "Flutter",
       description: "Google's UI toolkit for building natively compiled applications for mobile, web, and desktop.",
       thumbnail: "https://picsum.photos/seed/flutter/400/300",
       navigateTo: '/themes/colorGradient'
-    }
+    },
+    {
+      title: "React Native",
+      description: "React native elements styling and text formats",
+      thumbnail: "https://picsum.photos/seed/react/400/300",
+      navigateTo: '/themes/react-native-elements'
+    },
+
   ];
 
   return (

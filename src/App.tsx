@@ -75,6 +75,7 @@ function App() {
       altText: "Branding Kit Thumbnail",
       navigateTo: '/branding'
     }
+    
   ];
 
   return (
