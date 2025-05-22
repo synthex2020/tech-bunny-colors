@@ -1,4 +1,3 @@
-import  { useState } from 'react';
 import { useNavigate } from "react-router";
 import SeriesMoreDetailsModal from "./SeriesMoreDetailModal";
 import {
@@ -7,18 +6,21 @@ import {
     MapPin,
     Calendar,
     PlusCircle,
-    
+
 } from 'lucide-react';
 import { Series } from '../../../types';
+
 
 interface SeriesCardProps {
     series: Series;
     index: number;
+    seriesId: string
+
 }
 
-function SeriesCard({ series, index }: SeriesCardProps) {
+function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
     const navigate = useNavigate();
-    const [seriesId] = useState('');
+
     return (
         <div className="card w-96 bg-base-100 shadow-xl transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
             {/* Thumbnail Section */}
@@ -69,7 +71,7 @@ function SeriesCard({ series, index }: SeriesCardProps) {
 
                     {/* Add Character Button */}
                     <button
-                        className="btn btn-outline text-sm" 
+                        className="btn btn-outline text-sm"
                         onClick={() => navigate('/characterDir/addNewCharacter', {
                             state: { seriesId: seriesId }
                         })}
@@ -101,11 +103,10 @@ function SeriesCard({ series, index }: SeriesCardProps) {
                     </button>
                     <button
                         className="btn btn-ghost btn-sm flex flex-col items-center"
-                        onClick={() => navigate('/characterDir/charactersTable', {
-                            state: {
-                                characters : series.characters
-                            }
-                        })}
+                        onClick={() => {
+                            
+                            navigate('/characterDir/charactersTable/${seriesId}');
+                        }}
                     >
                         <Users size={16} />
                         Characters

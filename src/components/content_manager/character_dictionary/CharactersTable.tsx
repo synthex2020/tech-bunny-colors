@@ -1,17 +1,26 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router";
+import { useParams } from "react-router";
 import CharacterTableCard from "../../ui/character-table-card";
 import { Character } from "../../../types";
+import useSeriesStore from "../../../store/SeriesStore";
 
 function CharacterTable() {
-    const location = useLocation();
-   
+    const {id} = useParams<{id: string}>();
+
     const [characters, setCharacters] = useState<Character[]>();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [mediaToShow, setMediaToShow] = useState<string[]>([]);
 
+    const currentSeries = useSeriesStore((state) => state.current);
+    const setCurrent = useSeriesStore((state) => state.setCurrent);
+    const fetchSeries = useSeriesStore((state) => state.fetchSeries);
+
+
     useEffect(() => {
-        setCharacters(location.state.characters);
+        const series = fetchSeries(id!)
+        console.log(series)
+        setCurrent(series!)
+        setCharacters(series?.characters);
     } , [characters]);
 
     const CharacterMedia = ({ character }: { character: Character }) => {
@@ -74,7 +83,7 @@ function CharacterTable() {
             <h3 className="text-xl font-bold mb-4">Characters</h3>
             {characters === undefined 
             ? <div></div>
-            :characters.map((character, index) => (
+            :currentSeries.characters.map((character : Character, index) => (
                 <div key={index} className="mb-8">
                     <CharacterTableCard {...character} />
                     <CharacterMedia character={character} />

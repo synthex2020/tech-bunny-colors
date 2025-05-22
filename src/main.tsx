@@ -27,7 +27,7 @@ createRoot(document.getElementById('root')!).render(
       <Route path='/socialDir/addContent' element={<UploadContentPage />} />
       <Route path='brandingKit' element={<BrandingKit/>}/>
       <Route path='characterDir' element={<CharacterDirectory />}/>
-      <Route path='/characterDir/charactersTable' element={<CharacterTable />} />
+      <Route path='/characterDir/charactersTable/:id' element={<CharacterTable />} />
       <Route path='/characterDir/locationsTable' element={<LocationsTable />} />
       <Route path='/characterDir/importantEvents' element={<ImportantEventsTable />} />
       <Route path='/characterDir/addNewSeries' element={<AddNewSeries />} />

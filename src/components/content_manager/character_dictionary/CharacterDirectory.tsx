@@ -1,17 +1,19 @@
 import { useEffect, useState } from 'react';
 import SeriesCard from './SeriesCard';
-import { Series } from '../../../types';
 import { fetch_available_series } from '../../../persistence/SeriesPerisistence';
+import useSeriesStore from '../../../store/SeriesStore';
 
 function CharacterDirectory() {
-  const [series, setSeries] = useState<Series[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const availableSeries = useSeriesStore((state) => state.series);
+  const setGloabSeries = useSeriesStore((state) => state.setSeries);
 
   useEffect(() => {
     const loadSeries = async () => {
       try {
         const data = await fetch_available_series();
-        setSeries(data);
+        setGloabSeries(data)
       } catch (error) {
         console.error('Failed to fetch series:', error);
       } finally {
@@ -33,9 +35,12 @@ function CharacterDirectory() {
         <div className="text-center text-lg">Loading series...</div>
       ) : (
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
-          {series.map((item, index) => (
-            <SeriesCard key={index} series={item} index={index} />
-          ))}
+          {availableSeries.map((item, index) => {
+            
+            return (
+              <SeriesCard key={index} series={item} index={index} />
+            );
+          })}
         </section>
       )}
 

@@ -1,7 +1,6 @@
 import { Series } from "../types";
 import { supabase } from "./SupabaseClientPeristence";
 
-
 //  ADD SERIES 
 export async function add_series(series: Omit<Series, 'id' | 'createdAt'>): Promise<boolean> {
     const { error } = await supabase.rpc('req_add_series', {
@@ -65,7 +64,7 @@ export async function update_series(series: Series): Promise<boolean> {
 //  FETCH SERIES 
 export async function fetch_available_series(): Promise<Series[]> {
     const { data, error } = await supabase.rpc('req_get_available_series');
-
+    
     if (error) {
         console.error('Error fetching projects:', error);
         return [];
@@ -73,7 +72,7 @@ export async function fetch_available_series(): Promise<Series[]> {
 
     if (!data) return [];
 
-    return data.map((project: any): Series => ({
+    const result = data.map((project: any): Series => ({
         id: project.id,
         createdAt: project.created_at,
         title: project.title,
@@ -98,6 +97,9 @@ export async function fetch_available_series(): Promise<Series[]> {
         timeline: project.events ?? [],
         media: project.media ?? []
     }));
+
+
+    return result;
 }
 
 //  FETCH SERIES CHARACTERS 

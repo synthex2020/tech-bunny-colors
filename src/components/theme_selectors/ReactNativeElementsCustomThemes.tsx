@@ -699,7 +699,7 @@ export default function ReactNativeElementsCustom() {
     };
 
     const handleChangeDialog = (mode: "lightColors" | "darkColors" | "lightComponents" | "darkComponents", key: string, value: string) => {
-        
+
         return setFormColors((prev) => ({
             ...prev,
             [mode]: {
@@ -721,6 +721,25 @@ export default function ReactNativeElementsCustom() {
         setCssResultant(cssResult);
         (document.getElementById('my_modal_1') as HTMLDialogElement).showModal();
     };
+
+    const saveThemeLightCopy = async () => {
+
+        try {
+            await navigator.clipboard.writeText(JSON.stringify(cssResultant.light, null, 2));
+        } catch (err) {
+            console.error('Failed to copy!', err);
+        }
+    }
+
+     const saveThemeDarkCopy = async () => {
+
+        try {
+            await navigator.clipboard.writeText(JSON.stringify(cssResultant.dark, null, 2));
+        } catch (err) {
+            console.error('Failed to copy!', err);
+        }
+    }
+
 
     return (
         <div className="p-4 space-y-6 bg-base-100 min-h-screen">
@@ -821,7 +840,7 @@ export default function ReactNativeElementsCustom() {
                                                             onChange={(e) => handleChange(mode, key, e.target.value)}
                                                             className="input input-bordered"
                                                         />
-                                                        
+
                                                     </div>
                                                 ))}
                                             </div>
@@ -914,7 +933,7 @@ export default function ReactNativeElementsCustom() {
                                                         );
                                                     })}
                                                     <div className="card-actions justify-end">
-                                                        <button className="btn btn-primary">Copy</button>
+                                                        <button className="btn btn-primary" onClick={() => saveThemeLightCopy()}>Copy</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -952,7 +971,12 @@ export default function ReactNativeElementsCustom() {
                                                             );
                                                         })}
                                                         <div className="card-actions justify-end">
-                                                            <button className="btn btn-primary">Copy</button>
+                                                            <button
+                                                                className="btn btn-primary"
+                                                                onClick={() => saveThemeDarkCopy()}
+                                                            >
+                                                                Copy
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -977,3 +1001,5 @@ export default function ReactNativeElementsCustom() {
         </div>
     );
 }
+
+
