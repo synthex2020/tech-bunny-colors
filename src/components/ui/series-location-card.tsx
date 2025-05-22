@@ -20,7 +20,7 @@ export function SeriesLocationCard(location: SeriesLocation) {
                 <div className="card-actions justify-end">
                     <SeriesLocationEditModal 
                         location={location}
-                        onSave={(updatedLocation) => {}}
+                        onSave={() => {}}
                     />
                 </div>
             </div>

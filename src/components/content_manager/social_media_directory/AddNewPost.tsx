@@ -293,6 +293,7 @@ function AddNewSocialMediaPost() {
     const projectName = location.state?.title || "";
     const projectId = location.state?.projectId || '';
 
+    console.log(isLibraryModalOpen);
     return (
         <div className="p-10">
             <LoadingBar color="#f11946" ref={ref} shadow={true}/>

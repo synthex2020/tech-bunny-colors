@@ -40,22 +40,30 @@ function AddNewCharacter() {
     const location = useLocation();
     const seriesId = location.state.seriesId;
 
-    const handleFormChange = (event: ChangeEvent<HTMLInputElement> |  ChangeEvent<HTMLTextAreaElement>) => {
-        //  ADD THE FORM ELEMENTS NEEDED 
-        let value: (typeof formData)[keyof typeof formData] = event.target.value;
+    const handleFormChange = (
+        event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
+        const { id, value, files } = event.target as HTMLInputElement;
 
-
-        if (event.target.files) {
-            const arrayFiles = Array.from(event.target.files);
+        // If input is a file input
+        if (files && files.length > 0) {
+            const arrayFiles = Array.from(files);
             const imageSrcs = arrayFiles.map((file) => URL.createObjectURL(file));
             setImages((prev) => [...prev, ...imageSrcs]);
 
-            value = images.toString();
-            console.log("values: ", images);
+            // You might want to store file URLs or raw file data in formData
+            setFormData((prev) => ({
+                ...prev,
+                [id]: imageSrcs.join(','),
+            }));
+        } else {
+            // For text/textarea fields
+            setFormData((prev) => ({
+                ...prev,
+                [id]: value,
+            }));
         }
-
-        setFormData({ ...formData, [event.target.id]: value });
-    }; // end handle form submit 
+    };
 
     const onSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -105,10 +113,10 @@ function AddNewCharacter() {
 
                         {/** FILE UPLOAD BUTTON  */}
                         <label
-                                className="fieldset-label text-3xl font-bold"
-                            >
-                                Character Sheet
-                            </label><br />
+                            className="fieldset-label text-3xl font-bold"
+                        >
+                            Character Sheet
+                        </label><br />
                         <input
                             type="file"
                             className="file-input input-bordered text-sm w-full"
@@ -149,10 +157,10 @@ function AddNewCharacter() {
 
                         {/** FILE UPLOAD BUTTON  */}
                         <label
-                                className="fieldset-label text-3xl font-bold"
-                            >
-                                Upload Character 3D model
-                            </label><br />
+                            className="fieldset-label text-3xl font-bold"
+                        >
+                            Upload Character 3D model
+                        </label><br />
                         <input
                             type="file"
                             className="file-input input-bordered text-sm w-full"

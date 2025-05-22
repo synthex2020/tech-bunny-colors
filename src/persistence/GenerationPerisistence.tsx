@@ -1,9 +1,4 @@
 
-interface GenerationRequest {
-    date : string;
-    status : string;
-    timestamp : any;
-}
 
 interface GenerationPostRequest {
     title : string;
