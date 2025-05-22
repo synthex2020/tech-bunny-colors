@@ -22,7 +22,7 @@ export function SeriesEventCard(seriesEvent: SeriesEvent) {
                 <div className="card-actions justify-end">
                     <SeriesEventsEditModal 
                         event={seriesEvent}
-                        onSave={(updatedEvent) => {}}
+                        onSave={() => {}}
                     />
                 </div>
             </div>

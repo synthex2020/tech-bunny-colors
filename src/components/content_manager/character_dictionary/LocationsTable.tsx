@@ -1,4 +1,3 @@
-import { SeriesLocation } from "../../../types";
 import { SeriesLocationCard } from "../../ui/series-location-card";
 
 const testData = [
