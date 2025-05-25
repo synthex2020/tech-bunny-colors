@@ -56,11 +56,12 @@ export type Character = {
     equipment : string;
     backstory : string;
     references : string;
-    characterSheet : string;
+    character_sheet : string;
     bodyMods : string;
     anatomy : string;
     model : string;
     family : [];
+    reference_images : string;
     referenceMedia : [];
     media : [];
 };

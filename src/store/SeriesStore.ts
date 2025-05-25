@@ -70,7 +70,8 @@ const initialCharacter: Character = {
     equipment: '',
     backstory: '',
     references: '',
-    characterSheet: '',
+    character_sheet: '',
+    reference_images : '',
     bodyMods: '',
     anatomy: '',
     model: '',
@@ -102,9 +103,9 @@ const useSeriesStore = create<SeriesState>((set, get) => ({
             characters: result.characters || [],
         }));
 
-        console.log('Series search list : ', series)
-        console.log('Search result : ', result)
-        console.log('Series Characters : ', result?.characters)
+        //console.log('Series search list : ', series)
+       // console.log('Search result : ', result)
+       // console.log('Series Characters : ', result?.characters)
         return result
     },
     removeSeries: () => set({ series: [initialState] }),
