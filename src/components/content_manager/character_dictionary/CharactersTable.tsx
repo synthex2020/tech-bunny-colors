@@ -12,15 +12,17 @@ function CharacterTable() {
     const [mediaToShow, setMediaToShow] = useState<string[]>([]);
 
     const currentSeries = useSeriesStore((state) => state.current);
-    const setCurrent = useSeriesStore((state) => state.setCurrent);
+    const seriesCharacters = useSeriesStore((state) => state.characters);
+
+    
     const fetchSeries = useSeriesStore((state) => state.fetchSeries);
+    const setCharactersInSeries = useSeriesStore((state) => state.setCharacters);
 
-
+    console.log(id)
     useEffect(() => {
-        const series = fetchSeries(id!)
-        console.log(series)
-        setCurrent(series!)
-        setCharacters(series?.characters);
+        fetchSeries(id!)
+        setCharactersInSeries(currentSeries.characters);
+        setCharacters(seriesCharacters);
     } , [characters]);
 
     const CharacterMedia = ({ character }: { character: Character }) => {

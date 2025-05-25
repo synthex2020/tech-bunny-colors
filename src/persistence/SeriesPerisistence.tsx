@@ -72,6 +72,12 @@ export async function fetch_available_series(): Promise<Series[]> {
 
     if (!data) return [];
 
+    const fix_json_structure = (json_string: string) => {
+        return JSON.parse(json_string);
+    };
+
+
+
     const result = data.map((project: any): Series => ({
         id: project.id,
         createdAt: project.created_at,
@@ -92,7 +98,7 @@ export async function fetch_available_series(): Promise<Series[]> {
         published: project.published,
         status: project.status,
         powerSystem: project.power_system,
-        characters: project.characters ?? [],
+        characters: fix_json_structure(project.characters) ?? [],
         locations: project.locations ?? [],
         timeline: project.events ?? [],
         media: project.media ?? []

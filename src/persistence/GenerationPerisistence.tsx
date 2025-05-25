@@ -13,7 +13,7 @@ interface GenerationTranslation {
     content : string;
 }
 
-const requestApiPost = 'http://127.0.0.1:8080/predict/post-inference';
+const requestApiPost = 'http://caleido-hope-ai.byfcbwdcazc9caey.eastus.azurecontainer.io:8080/predict/post-inference';
 const requestApiTranslate = '';
 
 export async function send_post_for_generation (post : GenerationPostRequest) {

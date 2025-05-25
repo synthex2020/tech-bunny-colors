@@ -4,12 +4,11 @@ import { CharacterEditModal } from "./character-edit-modal";
 export default function CharacterTableCard(character: Character) {
     console.log(character);
     return (
-        <div className="card card-side bg-base-100 shadow-sm border">
-            <h3>Hello</h3>
+        <div className="card card-side bg-base-100 shadow-sm border w-1/2">
             <figure>
                 {/** Character sheet and reference images  */}
                 <img
-                    src={character.characterSheet}
+                    src={character.characterSheet || 'https://mkcijqngeshomivhjrbe.supabase.co/storage/v1/object/public/image-bucket/images/default_sheet.jpeg'}
                     alt="character sheet" />
             </figure>
             <div className="card-body">
