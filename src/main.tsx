@@ -17,6 +17,7 @@ import GradientInit from './components/color_gradients/GradientInit.tsx'
 import DaisyUIThemePack from './components/theme_selectors/DaisyUIThemePack.tsx'
 import UploadContentPage from './components/content_manager/content_managment/AddContent.tsx'
 import ReactNativeElementsCustom from './components/theme_selectors/ReactNativeElementsCustomThemes.tsx'
+import CharacterCreator from './components/characterCreator/CharacterCreator.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
@@ -32,6 +33,7 @@ createRoot(document.getElementById('root')!).render(
       <Route path='/characterDir/importantEvents' element={<ImportantEventsTable />} />
       <Route path='/characterDir/addNewSeries' element={<AddNewSeries />} />
       <Route path='/characterDir/addNewCharacter' element={<AddNewCharacter />} />
+      <Route path='/characterDir/characterCreator' element={<CharacterCreator/>} />
       <Route path='/themes' element={<GradientInit />} />
       <Route path='/themes/colorGradient' element={<ColorGradientForm />}/>
       <Route path='/themes/daisyui' element={<DaisyUIThemePack />} />

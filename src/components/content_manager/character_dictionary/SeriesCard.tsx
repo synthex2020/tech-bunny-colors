@@ -92,6 +92,16 @@ function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
                         <PlusCircle size={16} />
                         New Series
                     </button>
+
+                    {/* Add New Series Button */}
+                    <button
+                        className="btn btn-outline text-sm"
+                        onClick={() => navigate('/characterDir/characterCreator')}
+                    >
+                        <PlusCircle size={16} />
+                        Generate New Character
+                    </button>
+
                 </div>
 
                 {/* Navigation Buttons */}
