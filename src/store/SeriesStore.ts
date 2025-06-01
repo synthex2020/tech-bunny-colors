@@ -44,7 +44,7 @@ const initialState: Series = {
     characters: [],
     locations: [],
     timeline: [],
-    media: []
+    media: ['']
 };
 
 const initialCharacter: Character = {
