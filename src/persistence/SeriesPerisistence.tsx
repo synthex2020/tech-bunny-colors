@@ -1,14 +1,25 @@
 import { Series } from "../types";
+import { uploadImageFilesToSupabase } from "./MediaPersistence";
 import { supabase } from "./SupabaseClientPeristence";
 
+interface AddSeriesProps {
+    series : Omit<Series, 'id' | 'createdAt'>;
+    imageFiles : File[];
+}
 //  ADD SERIES 
-export async function add_series(series: Omit<Series, 'id' | 'createdAt'>): Promise<boolean> {
+export async function add_series(seriesProps: AddSeriesProps): Promise<boolean> {
+    const series = seriesProps.series;
+    const imageFiles = seriesProps.imageFiles;
+
+    //  ADD IMAGES AND VIDEOS TO DATABASE 
+    const imageResult = await uploadImageFilesToSupabase(imageFiles);
+
     const { error } = await supabase.rpc('req_add_series', {
         series_title: series.title,
         series_authors: series.authors,
         series_artists: series.artists,
-        series_genre: series.genre,
-        series_thumbnail: series.thumbnail,
+        series_genre: series.genre ?? 'All',
+        series_thumbnail: imageResult,
         series_description: series.description,
         series_plot: series.plot,
         series_auidence: series.audience,

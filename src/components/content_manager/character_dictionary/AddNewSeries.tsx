@@ -1,4 +1,6 @@
 import { useState, FormEvent } from "react";
+import { add_series } from "../../../persistence/SeriesPerisistence";
+import { Series } from "../../../types";
 
 //  NO Rules on adding series 
 /** 
@@ -32,30 +34,31 @@ interface Series {
 
 function AddNewSeries() {
 
-   /**
-    *  const defaultImages = [
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Samson_comic_page.jpg/640px-Samson_comic_page.jpg",
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/The_Outcasts_of_Poker_Flat_%281919%29_-_Ad_2.jpg/640px-The_Outcasts_of_Poker_Flat_%281919%29_-_Ad_2.jpg",
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Fantastic_Comics_1.jpg/640px-Fantastic_Comics_1.jpg"
-    ];
-    */
+    /**
+     *  const defaultImages = [
+         "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Samson_comic_page.jpg/640px-Samson_comic_page.jpg",
+         "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/The_Outcasts_of_Poker_Flat_%281919%29_-_Ad_2.jpg/640px-The_Outcasts_of_Poker_Flat_%281919%29_-_Ad_2.jpg",
+         "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Fantastic_Comics_1.jpg/640px-Fantastic_Comics_1.jpg"
+     ];
+     */
 
     const [images, setImages] = useState<string[]>([]);
+    const [imageFiles, setImageFiles] = useState<File[]>([]);
     const [formData, setFormData] = useState({
 
         title: "",
-        authors : "",
-        artists : "",
+        authors: "",
+        artists: "",
         genre: "",
-        age : "",
+        age: "",
         description: "",
         plot: "",
-        audience : "",
-        history : "",
-        physics : "",
+        audience: "",
+        history: "",
+        physics: "",
         world: "",
         powerSystem: "",
-        images : "",
+        images: "",
     });
     /** const handleMediaFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
 
@@ -71,27 +74,69 @@ function AddNewSeries() {
     const handleFormChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         // Type assertion to check if the event target is an HTMLInputElement
         const target = event.target as HTMLInputElement;
-        
+
         let value: (typeof formData)[keyof typeof formData] = target.value;
-    
+
         // Check if the input is a file input
         if (target.type === 'file' && target.files) {
             const arrayFiles = Array.from(target.files);
             const imageSrcs = arrayFiles.map((file) => URL.createObjectURL(file));
-            
+
             setImages((prev) => [...prev, ...imageSrcs]);
+            setImageFiles((prev) => [...prev, ...arrayFiles]);
             value = imageSrcs.toString();
             console.log("values: ", imageSrcs);
         }
-    
-        setFormData({...formData, [target.id]: value});
+
+        setFormData({ ...formData, [target.id]: value });
     };
 
     const onSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         formData.images = images.toString();
-        console.log(formData);
-        console.log(images);
+        const series: Series = {
+            id: '',
+            createdAt: '',
+            title:formData.title,
+            authors: formData.authors,
+            artists: formData.artists,
+            genre:formData.genre,
+            thumbnail: formData.images,
+            description: formData.description,
+            plot: formData.plot,
+            audience: formData.audience,
+            history: formData.history,
+            physics: formData.physics,
+            world: formData.world,
+            issues: 0,
+            volumes: 0,
+            merchandise: false,
+            published: false,
+            status: 'Releasing',
+            powerSystem: formData.powerSystem,
+            characters: [],
+            locations: [],
+            timeline: [],
+            media: [formData.images],
+        };
+
+        const submission = {
+            series : series,
+            imageFiles : imageFiles
+        };
+
+        add_series(submission).then((value) => {
+            if (value){
+                console.log("Series added successfully");
+                //  LEAVE WINDOW 
+                alert("Series added successfully");
+                window.history.back();
+            }else{
+                console.log("Failed to add series");
+                alert("failed to add series")
+            }
+        });
+       
     }; // end on submit 
 
     return (
@@ -189,7 +234,7 @@ function AddNewSeries() {
                                 type="text"
                                 className="input input-bordered text-sm w-full"
                                 placeholder="Fantasy, Action, Horror"
-                                id="genres"
+                                id="genre"
                                 onChange={handleFormChange}
                             /><br />
 
@@ -198,12 +243,12 @@ function AddNewSeries() {
                             >
                                 Series Target Audience
                             </label><br />
-                            
+
                             <div>
-                            
+
                                 {/** AGE RATING, Rated E, 12+ , 16+ , 17+ , 18+ , R+ */}
-                                <select 
-                                    defaultValue="Pick an age rating" 
+                                <select
+                                    defaultValue="Pick an age rating"
                                     className="select select-bordered"
                                     id="age"
                                 >

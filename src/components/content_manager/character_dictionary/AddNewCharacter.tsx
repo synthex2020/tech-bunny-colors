@@ -1,5 +1,6 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useLocation } from "react-router";
+import AddNewSeries from "./AddNewSeries";
 
 //  TO ADD A NEW CHARACTER THERE MUST BE AN EXISTING SERIES 
 
@@ -69,8 +70,7 @@ function AddNewCharacter() {
         event.preventDefault();
         formData.referenceImages = images.toString();
         formData.seriesId = seriesId;
-        console.log(formData);
-        console.log(images);
+
     }; // end on submit
 
 

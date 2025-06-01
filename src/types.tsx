@@ -22,7 +22,7 @@ export type Series = {
     characters : [];
     locations : [];
     timeline : [];
-    media : [];
+    media : [string];
 };
 
 export type SeriesMedia = {
