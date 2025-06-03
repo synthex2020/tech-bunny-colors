@@ -1,7 +1,11 @@
 import { supabase } from "./SupabaseClientPeristence";
 import { Character } from "../types";
 
-
+interface CharacterProps {
+    character : Character;
+    referenceImages : File[];
+    characterSheet : File;
+}
 //  FETCH SERIES CHARACTERS 
 export async function fetch_series_characters(seriesId: string): Promise<Character[]> {
     const { data, error } = await supabase.rpc('req_get_series_characters', {
@@ -116,6 +120,14 @@ export async function update_character(character: Character): Promise<Character 
         referenceMedia: [], // Not returned in this RPC
         media: [] // Not returned in this RPC
     };
+}
+
+//  ADD NEW CHARACTER
+export async function add_new_character(characterProps : CharacterProps) {
+    //  ADD CHARACTER SHEET TO BACKEND 
+    //  ADD REFERENCE MEDIA TO BACKEND 
+    //  ADD DEFAULT CHARACTER MEDIA (CHARACTER SHEET IMAGE )
+    //  ADD CHARACTER TO BACKEND 
 }
 
 //  ADD CHARACTER MEDIA 

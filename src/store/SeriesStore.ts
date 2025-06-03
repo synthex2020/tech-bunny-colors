@@ -1,12 +1,19 @@
 //  The central place to manage state for Series 
 import { create } from 'zustand';
-import { Character, Series } from '../types';
+import { Character, Series, SeriesEvent, SeriesLocation } from '../types';
 
 interface SeriesState {
+    //  ADD LISTS FOR LOCATIONS, EVENTS AND MEDIA 
     series: Series[];
+    locations : SeriesLocation[];
+    events : SeriesEvent[];
     characters: Character[];
+
     current: Series;
     currentCharacter: Character;
+    currentEvent : SeriesEvent;
+    currrentLocations : SeriesLocation;
+
     //  FUNCTIONS TO MANIPULATE THE SERIES STATE 
 
     //  ADD CURRENT SERIES FOR THE CHARACTER TABLE DISPLAY
@@ -18,6 +25,15 @@ interface SeriesState {
     setCharacters: (payload: Character[]) => void;
     setCurrentCharacter: (payload: Character) => void;
     removeCharacters: () => void;
+
+    setSeriesLocations : (payload : SeriesLocation[]) => void;
+    setCurrentLocation : (payload : SeriesLocation) => void;
+    removeSeriesLocations : () => void;
+
+    setSeriesEvents : (payload : SeriesEvent[]) => void;
+    setCurrentSeriesEvent : (payload : SeriesEvent) => void;
+    removeSeriesEvent : () => void;
+
 
 };
 
@@ -80,11 +96,40 @@ const initialCharacter: Character = {
     media: []
 }
 
+const initalLocations : SeriesLocation = {
+
+    id : '',
+    createdAt : '',
+    title : '',
+    type : '',
+    geoLocation : '',
+    description : '',
+    locationMedia : []
+};
+
+const initialEvents : SeriesEvent = { 
+    id : '',
+    createdAt :  '',
+    title :  '',
+    date :  '',
+    importance :  '',
+    description :  '',
+    eventsMedia : []
+};
+
+
+
+
+
 const useSeriesStore = create<SeriesState>((set, get) => ({
     series: [initialState],
     current: initialState,
     characters: initialState.characters,
     currentCharacter: initialCharacter,
+    locations : [initalLocations],
+    events : [initialEvents],
+    currentEvent : initialEvents,
+    currrentLocations : initalLocations,
     setSeries: (payload: Series[]) => set((state) => ({ ...state, series: payload })),
     setCurrent: (payload: Series) => set(() => ({ current: payload })),
     fetchSeries: (id: string) => {
@@ -111,7 +156,15 @@ const useSeriesStore = create<SeriesState>((set, get) => ({
     removeSeries: () => set({ series: [initialState] }),
     setCharacters: (payload: Character[]) => set((state) => ({ ...state, characters: payload })),
     setCurrentCharacter: (payload: Character) => set(() => ({ currentCharacter: payload })),
-    removeCharacters: () => set({ characters: [initialCharacter] })
+    removeCharacters: () => set({ characters: [initialCharacter] }),
+
+    setSeriesEvents : (payload : SeriesEvent[]) => set((state) => ({...state, events: payload})),
+    setCurrentSeriesEvent : (payload : SeriesEvent) => set(() => ({currentEvent : payload}) ),
+    removeSeriesEvent : () => set({events : [initialEvents]}),
+
+    setSeriesLocations : (payload : SeriesLocation[]) => set((state) => ({...state, locations : payload})),
+    setCurrentLocation : (payload: SeriesLocation) => set(() => ({currrentLocations : payload})),
+    removeSeriesLocations : () => set({locations : [initalLocations]})
 }));
 
 export default useSeriesStore;

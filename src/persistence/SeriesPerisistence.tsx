@@ -19,7 +19,7 @@ export async function add_series(seriesProps: AddSeriesProps): Promise<boolean> 
         series_authors: series.authors,
         series_artists: series.artists,
         series_genre: series.genre ?? 'All',
-        series_thumbnail: imageResult,
+        series_thumbnail: imageResult[0],
         series_description: series.description,
         series_plot: series.plot,
         series_auidence: series.audience,

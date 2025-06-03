@@ -85,3 +85,16 @@ export type SeriesLocation = {
     description : string;
     locationMedia : string[];
 };
+
+export type SeriesEventMedia = {
+    id : string;
+    media : string;
+    eventId : string;
+};
+
+export type SeriesLocationMedia = {
+    id : string;
+    media : string;
+    type : string;
+};
+
