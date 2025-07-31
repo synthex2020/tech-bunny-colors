@@ -1,10 +1,13 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { useLocation } from "react-router";
 
-//  TO ADD A NEW CHARACTER THERE MUST BE AN EXISTING SERIES 
 
 
 function AddNewCharacter() {
+
+    //  TODO: ADD CHARACTER BY JSON FILE 
+    //      [IMAGE (URL), CHARACTER_DATA (JSON)]
+    //  todo : save the JSON content under character anatomy
 
     const [images, setImages] = useState<string[]>([]);
 
@@ -65,6 +68,40 @@ function AddNewCharacter() {
         }
     };
 
+    const handleJsonDataInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const json = JSON.parse(e.target?.result as string);
+
+                if (!json.character) {
+                    alert("Invalid JSON: Missing 'character' key.");
+                    return;
+                }
+
+                // Optional image URL to preview
+                if (json.image) {
+                    setImages((prev) => [...prev, json.image]);
+                }
+
+                // Merge existing form data with new character fields
+                setFormData((prevFormData) => ({
+                    ...prevFormData,
+                    ["anatomy"]: json.character
+                }));
+            } catch (err) {
+                console.error("Failed to parse JSON:", err);
+                alert("Invalid JSON file.");
+            }
+        };
+
+        reader.readAsText(file);
+    };
+
+
     const onSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         formData.referenceImages = images.toString();
@@ -79,9 +116,8 @@ function AddNewCharacter() {
 
             <div className="flex flex-col lg:flex-row gap-4 ">
                 {/** MEDIA PREVIEW AND ENTRY  - UPLOAD IMAGES SEPERATLY ONLY REFERENCE IMAGES*/}
-                <div className="flex flex-col">
-                    <h1 className="text text-4xl font-bold "> Create a new Character</h1>
-
+                <h1 className="text text-4xl font-bold "> Create a new Character</h1>
+                <div className="flex flex-row gap-8 justify-center">
                     <div>
                         {/** MEDIA ENTRY AND PREVIEW  */}
                         <div className="carousel w-full">
@@ -92,88 +128,30 @@ function AddNewCharacter() {
                                     className="carousel-item relative w-full"
                                 >
                                     <img src={image} className="w-full object-contain" alt={`Slide ${index + 1}`} />
-                                    <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-                                        <a
-                                            href={`#slide${index === 0 ? images.length : index}`}
-                                            className="btn btn-circle"
-                                        >
-                                            ❮
-                                        </a>
-                                        <a
-                                            href={`#slide${index === images.length - 1 ? 1 : index + 2}`}
-                                            className="btn btn-circle"
-                                        >
-                                            ❯
-                                        </a>
-                                    </div>
+                                   
                                 </div>
                             ))}
                         </div>
 
-
-                        {/** FILE UPLOAD BUTTON  */}
-                        <label
-                            className="fieldset-label text-3xl font-bold"
-                        >
-                            Character Sheet
-                        </label><br />
-                        <input
-                            type="file"
-                            className="file-input input-bordered text-sm w-full"
-                            id="images"
-                            onChange={handleFormChange}
-                            multiple
-                        />
-                    </div>
-
-                    <div>
-                        {/** MEDIA ENTRY AND PREVIEW  */}
-                        <div className="carousel w-full">
-                            {images.map((image, index) => (
-                                <div
-                                    id={`slide${index + 1}`}
-                                    key={index}
-                                    className="carousel-item relative w-full"
-                                >
-                                    <img src={image} className="w-full object-contain" alt={`Slide ${index + 1}`} />
-                                    <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-                                        <a
-                                            href={`#slide${index === 0 ? images.length : index}`}
-                                            className="btn btn-circle"
-                                        >
-                                            ❮
-                                        </a>
-                                        <a
-                                            href={`#slide${index === images.length - 1 ? 1 : index + 2}`}
-                                            className="btn btn-circle"
-                                        >
-                                            ❯
-                                        </a>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-
-
-                        {/** FILE UPLOAD BUTTON  */}
-                        <label
-                            className="fieldset-label text-3xl font-bold"
-                        >
-                            Upload Character 3D model
-                        </label><br />
-                        <input
-                            type="file"
-                            className="file-input input-bordered text-sm w-full"
-                            id="model"
-                            onChange={handleFormChange}
-                            multiple
-                        />
                     </div>
                 </div>
                 {/** TEXT ENTRIES  */}
                 <div className="flex flex-col justify-center lg: flex-none">
                     <form className="form" onSubmit={onSubmit}>
                         <fieldset className="fieldset space-y-2">
+                            <label
+                                className="fieldset-label text-3xl font-bold"
+                            >
+                                Anatomy File (JSON)
+                            </label><br />
+                            <input
+                                type="file"
+                                id="anatomy"
+                                accept=".json"
+                                onChange={handleJsonDataInputChange}
+                                className="file-input input-bordered text-sm w-full"
+                            /><br />
+
                             <label
                                 className="fieldset-label text-3xl font-bold"
                             >
@@ -252,18 +230,7 @@ function AddNewCharacter() {
                                 onChange={handleFormChange}
                             /><br />
 
-                            <label
-                                className="fieldset-label text-3xl font-bold"
-                            >
-                                Character's Anatomy
-                            </label><br />
-                            <input
-                                type="text"
-                                className="input input-bordered text-sm w-full"
-                                placeholder="Describe your character's anatomy "
-                                id="anatomy"
-                                onChange={handleFormChange}
-                            /><br />
+                            
 
                             {/** AGE, Orientation, SEX */}
                             <div className="flex flex-row gap-4 justify-center">

@@ -14,7 +14,7 @@ import { Series } from '../../../types';
 interface SeriesCardProps {
     series: Series;
     index: number;
-    seriesId: string
+    seriesId: string;
 
 }
 
@@ -69,9 +69,10 @@ function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
                         modalId={index.toString()}
                     />
 
-                    {/* Add Character Button */}
+                    {/* Add Character Button - use params to send over id */}
                     <button
                         className="btn btn-outline text-sm"
+                        
                         onClick={() => navigate('/characterDir/addNewCharacter', {
                             state: { seriesId: seriesId }
                         })}
@@ -104,8 +105,8 @@ function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
                     <button
                         className="btn btn-ghost btn-sm flex flex-col items-center"
                         onClick={() => {
-                            
-                            navigate('/characterDir/charactersTable/${seriesId}');
+                            const getUrl = "" + "/characterDir/charactersTable/" + seriesId + ""
+                            navigate(getUrl);
                         }}
                     >
                         <Users size={16} />

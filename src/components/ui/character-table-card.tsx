@@ -2,22 +2,33 @@ import { Character } from "../../types";
 import { CharacterEditModal } from "./character-edit-modal";
 
 export default function CharacterTableCard(character: Character) {
-    console.log(character);
+    let characterSheet = "https://media.istockphoto.com/id/1289220545/photo/beautiful-woman-smiling-with-crossed-arms.jpg?s=612x612&w=0&k=20&c=qmOTkGstKj1qN0zPVWj-n28oRA6_BHQN8uVLIXg0TF8=";
+    if (character) {
+        if (character.characterSheet === "") {
+            characterSheet = "https://media.istockphoto.com/id/1289220545/photo/beautiful-woman-smiling-with-crossed-arms.jpg?s=612x612&w=0&k=20&c=qmOTkGstKj1qN0zPVWj-n28oRA6_BHQN8uVLIXg0TF8=";
+        }
+    }
     return (
         <div className="card card-side bg-base-100 shadow-sm border">
             <h3>Hello</h3>
             <figure>
                 {/** Character sheet and reference images  */}
                 <img
-                    src={character.characterSheet}
+                    src={characterSheet}
                     alt="character sheet" />
             </figure>
             <div className="card-body">
-                <h2 className="card-title">{character.titles} {character.name}</h2>
+                <h2 className="card-title">{character.titles ?? ""} {character.name}</h2>
 
                 <p className="text text-sm">{character.species} | {character.race} | {character.age}</p>
                 <p className="text text-sm">{character.sex} | {character.gender} | {character.orientation}</p>
-                <p className="text">{character.family} | {character.relationships}</p>
+                <p className="text">
+                    {Array.isArray(character.family)
+                        ? character.family.map((f: any) => f.name).join(", ")
+                        : "No family"
+                    } | {character.relationships}
+                </p>
+
                 <div className="divider" />
 
                 <p className="text text-sm">{character.hair} | {character.fashion}</p>
@@ -26,14 +37,14 @@ export default function CharacterTableCard(character: Character) {
                 <p className="text text-sm">{character.martialArts}</p>
                 <p className="text text-sm">{character.powers}</p>
 
-                <div className="divider"/>
+                <div className="divider" />
                 <p className="text text-sm">{character.hobbies}</p>
                 <p className="text text-sm">{character.personality} | {character.anatomy}</p>
                 <p className="textarea textarea-bordered">{character.backstory}</p>
                 <div className="card-actions justify-end">
-                    <CharacterEditModal 
+                    <CharacterEditModal
                         character={character}
-                        onSave={() => {}}
+                        onSave={() => { }}
                     />
                 </div>
             </div>
