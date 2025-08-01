@@ -22,7 +22,7 @@ interface SeriesCardProps {
 
 function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
     const navigate = useNavigate();
-
+    
     return (
         <div className="card w-96 bg-base-100 shadow-xl transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
             {/* Thumbnail Section */}
@@ -87,6 +87,7 @@ function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
                         onClick={() => navigate('/characterDir/addFamily', {
                             state: { seriesId: seriesId }
                         })}
+                       
                     >
                         <PlusCircle size={16} />
                         Add Family
@@ -112,6 +113,16 @@ function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
                         <PlusCircle size={16} />
                         New Series
                     </button>
+
+                    {/* Add New Series Button */}
+                    <button
+                        className="btn btn-outline text-sm"
+                        onClick={() => navigate('/characterDir/characterCreator')}
+                    >
+                        <PlusCircle size={16} />
+                        Generate New Character
+                    </button>
+
                 </div>
 
                 {/* Navigation Buttons */}
@@ -136,6 +147,7 @@ function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
                         onClick={() => {
                             const getUrl = "" + "/characterDir/charactersTable/" + seriesId + ""
                             navigate(getUrl);
+
                         }}
                     >
                         <Users size={16} />

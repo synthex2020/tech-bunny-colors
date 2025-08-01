@@ -20,6 +20,7 @@ import ReactNativeElementsCustom from './components/theme_selectors/ReactNativeE
 import AddNewFamily from './components/content_manager/character_dictionary/AddNewFamily.tsx'
 import AddNewFamilyMember from './components/content_manager/character_dictionary/AddNewFamilyMember.tsx'
 
+
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
     <Routes>
@@ -36,6 +37,7 @@ createRoot(document.getElementById('root')!).render(
       <Route path='/characterDir/addNewCharacter/:id' element={<AddNewCharacter />} />
       <Route path='/characterDir/addFamily' element={<AddNewFamily />} />
       <Route path='/characterDir/addNewFamily/:id' element={<AddNewFamilyMember />} />
+
       <Route path='/themes' element={<GradientInit />} />
       <Route path='/themes/colorGradient' element={<ColorGradientForm />}/>
       <Route path='/themes/daisyui' element={<DaisyUIThemePack />} />

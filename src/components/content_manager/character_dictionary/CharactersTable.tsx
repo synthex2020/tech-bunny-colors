@@ -11,8 +11,10 @@ function CharacterTable() {
 
     const [loading, setLoading] = useState<boolean>();
 
+
     console.log("reload")
     useEffect(() => {
+
         const loadCharacters = async () => {
             try {
                 const data = await fetch_series_characters(id!);
@@ -47,6 +49,7 @@ function CharacterTable() {
                 )}
             </div>
             }
+            
         </div>
     );
 }

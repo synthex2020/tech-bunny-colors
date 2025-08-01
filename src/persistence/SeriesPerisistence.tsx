@@ -1,14 +1,25 @@
 import { Family, Series } from "../types";
+
 import { supabase } from "./SupabaseClientPeristence";
 
+interface AddSeriesProps {
+    series : Omit<Series, 'id' | 'createdAt'>;
+    imageFiles : File[];
+}
 //  ADD SERIES 
-export async function add_series(series: Omit<Series, 'id' | 'createdAt'>): Promise<boolean> {
+export async function add_series(seriesProps: AddSeriesProps): Promise<boolean> {
+    const series = seriesProps.series;
+    const imageFiles = seriesProps.imageFiles;
+
+    //  ADD IMAGES AND VIDEOS TO DATABASE 
+    const imageResult = await uploadImageFilesToSupabase(imageFiles);
+
     const { error } = await supabase.rpc('req_add_series', {
         series_title: series.title,
         series_authors: series.authors,
         series_artists: series.artists,
-        series_genre: series.genre,
-        series_thumbnail: series.thumbnail,
+        series_genre: series.genre ?? 'All',
+        series_thumbnail: imageResult[0],
         series_description: series.description,
         series_plot: series.plot,
         series_auidence: series.audience,
@@ -72,6 +83,12 @@ export async function fetch_available_series(): Promise<Series[]> {
 
     if (!data) return [];
 
+    const fix_json_structure = (json_string: string) => {
+        return JSON.parse(json_string);
+    };
+
+
+
     const result = data.map((project: any): Series => ({
         id: project.id,
         createdAt: project.created_at,
@@ -92,7 +109,7 @@ export async function fetch_available_series(): Promise<Series[]> {
         published: project.published,
         status: project.status,
         powerSystem: project.power_system,
-        characters: project.characters ?? [],
+        characters: fix_json_structure(project.characters) ?? [],
         locations: project.locations ?? [],
         timeline: project.events ?? [],
         media: project.media ?? []
