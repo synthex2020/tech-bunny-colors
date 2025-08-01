@@ -1,9 +1,8 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-import { useLocation, useParams } from "react-router";
+import { useParams } from "react-router";
 import { useEffect } from "react";
 import useFamilyStore from "../../../store/FamilyStore"; // adjust import path as needed
 import { fetch_series_families } from "../../../persistence/SeriesPerisistence";
-import { Character } from "../../../types";
 import { add_new_character } from "../../../persistence/CharactersPersistence";
 
 
@@ -140,6 +139,7 @@ function AddNewCharacter() {
         if (formData.family && formData.family.length > 0 && formData.family !== "[]") {
             formData.backstory = `[Familial Relations]: ${formData.family}\n[Backstory]: ${formData.backstory}`;
         }
+        console.log(formData.sex)
 
         const characterEntry = {
             createdAt: "",

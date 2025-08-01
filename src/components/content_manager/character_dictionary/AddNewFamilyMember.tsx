@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { Family, Relation } from "../../../types";
+import { Relation } from "../../../types";
 import useCharacterStore from "../../../store/CharacterStore";
 import useFamilyStore from "../../../store/FamilyStore";
 import { add_new_family_member } from "../../../persistence/FamilyPersistence";

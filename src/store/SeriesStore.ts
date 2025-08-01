@@ -86,7 +86,7 @@ const initialCharacter: Character = {
     equipment: '',
     backstory: '',
     references: '',
-    character_sheet: '',
+    characterSheet: '',
     reference_images : '',
     bodyMods: '',
     anatomy: '',

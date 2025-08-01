@@ -1,14 +1,6 @@
 import { supabase } from "./SupabaseClientPeristence";
 import { Character } from "../types";
-import { uploadImageFilesToSupabase } from "./MediaPersistence";
 
-interface CharacterProps {
-    character: Character;
-    referenceImages: File[];
-    characterSheet: File;
-    seriesId: string;
-
-}
 //  FETCH SERIES CHARACTERS 
 export async function fetch_series_characters(seriesId: string): Promise<Character[]> {
     const { data, error } = await supabase.rpc('req_get_series_characters', {
@@ -43,7 +35,7 @@ export async function fetch_series_characters(seriesId: string): Promise<Charact
         equipment: char.equipment,
         backstory: char.backstory,
         references: char.character_references,
-        character_sheet: char.character_sheet,
+        characterSheet: char.character_sheet,
         bodyMods: char.body_mods,
         anatomy: char.anatomy,
         model: char.model,
@@ -83,7 +75,7 @@ export async function update_character(character: Character): Promise<Character 
         char_equipment: character.equipment,
         char_backstory: character.backstory,
         char_references: character.references,
-        char_character_sheet: character.character_sheet,
+        char_character_sheet: character.characterSheet,
         char_body_mods: character.bodyMods,
         char_anatomy: character.anatomy,
         char_model: character.model,
@@ -121,11 +113,10 @@ export async function update_character(character: Character): Promise<Character 
         equipment: updated.equipment,
         backstory: updated.backstory,
         references: updated.character_references,
-        character_sheet: updated.character_sheet,
+        characterSheet: updated.character_sheet,
         bodyMods: updated.body_mods,
         anatomy: updated.anatomy,
         model: updated.model,
-        reference_images: updated.reference_images,
         family: [], // Not returned in this RPC
         referenceMedia: [], // Not returned in this RPC
         media: [] // Not returned in this RPC

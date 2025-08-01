@@ -105,7 +105,7 @@ export default function UploadContentPage() {
                 project_id: projectId,
                 content_title: form.title,
                 content_category: form.category,
-                content_thumbnail: thumbnailUrl!,
+                content_thumbnail: thumbnailUrl![0],
                 content_media: videoUrl!,
             };
 

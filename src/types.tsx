@@ -34,6 +34,12 @@ export type SeriesMedia = {
 
 };
 
+export type SeriesEventMedia = {
+    id : string;
+    media : string;
+    eventId : string;
+};
+
 export type Character = {
     id : string;
     createdAt : string;
@@ -56,7 +62,7 @@ export type Character = {
     equipment : string;
     backstory : string;
     references : string;
-    character_sheet : string;
+    characterSheet : string;
     bodyMods : string;
     anatomy : string;
     model : string;
@@ -86,6 +92,11 @@ export type SeriesLocation = {
     locationMedia : string[];
 };
 
+export type SeriesLocationMedia = {
+    id : string;
+    media : string;
+    type : string;
+}
 export type Family = {
     id : string;
     familyName : string;
