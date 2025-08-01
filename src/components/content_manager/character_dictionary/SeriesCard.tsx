@@ -14,13 +14,15 @@ import { Series } from '../../../types';
 interface SeriesCardProps {
     series: Series;
     index: number;
-    seriesId: string
+    seriesId: string;
 
 }
 
+//  TODO: CREATE A MAKE NEW FAMILY AND ADD TO FAMILY BUTTONS TO ADD TO FAMILY TABLES 
+
 function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
     const navigate = useNavigate();
-
+    
     return (
         <div className="card w-96 bg-base-100 shadow-xl transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
             {/* Thumbnail Section */}
@@ -63,21 +65,44 @@ function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
 
                 {/* Action Buttons */}
                 <div className="card-actions flex flex-wrap gap-2 mt-4">
-                    {/* More Details Modal */}
-                    <SeriesMoreDetailsModal
-                        series={series}
-                        modalId={index.toString()}
-                    />
+                   
 
-                    {/* Add Character Button */}
+                    {/* Add Character Button - use params to send over id */}
                     <button
                         className="btn btn-outline text-sm"
-                        onClick={() => navigate('/characterDir/addNewCharacter', {
-                            state: { seriesId: seriesId }
-                        })}
+                        
+                        onClick={() => {
+                            let routingRoute = "/characterDir/addNewCharacter/" + seriesId + "";
+                            navigate(routingRoute)
+                        }}
                     >
                         <PlusCircle size={16} />
                         Add Character
+                    </button>
+
+                    {/* Add Family Button  */}
+                    <button
+                        className="btn btn-outline text-sm"
+                        
+                        onClick={() => navigate('/characterDir/addFamily', {
+                            state: { seriesId: seriesId }
+                        })}
+                       
+                    >
+                        <PlusCircle size={16} />
+                        Add Family
+                    </button>
+
+                    {/* Add New Family Member Button */}
+                    <button
+                        className="btn btn-outline text-sm"
+                        onClick={() => {
+                            let routingRoute = "/characterDir/addNewFamily/" + seriesId + "";
+                            navigate(routingRoute)
+                        }}
+                    >
+                        <PlusCircle size={16} />
+                        New Family Member
                     </button>
 
                     {/* Add New Series Button */}
@@ -88,10 +113,26 @@ function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
                         <PlusCircle size={16} />
                         New Series
                     </button>
+
+                    {/* Add New Series Button */}
+                    <button
+                        className="btn btn-outline text-sm"
+                        onClick={() => navigate('/characterDir/characterCreator')}
+                    >
+                        <PlusCircle size={16} />
+                        Generate New Character
+                    </button>
+
                 </div>
 
                 {/* Navigation Buttons */}
                 <div className="grid grid-cols-3 gap-2 mt-4">
+                     {/* More Details Modal */}
+                    <SeriesMoreDetailsModal
+                        series={series}
+                        modalId={index.toString()}
+                    />
+                    
                     <button
                         className="btn btn-ghost btn-sm flex flex-col items-center"
                         onClick={() => navigate('/characterDir/locationsTable', {
@@ -104,8 +145,9 @@ function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
                     <button
                         className="btn btn-ghost btn-sm flex flex-col items-center"
                         onClick={() => {
-                            
-                            navigate('/characterDir/charactersTable/${seriesId}');
+                            const getUrl = "" + "/characterDir/charactersTable/" + seriesId + ""
+                            navigate(getUrl);
+
                         }}
                     >
                         <Users size={16} />
@@ -120,6 +162,7 @@ function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
                         <Calendar size={16} />
                         Events
                     </button>
+
                 </div>
             </div>
         </div>

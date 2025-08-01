@@ -3,6 +3,7 @@ import { supabase } from "./SupabaseClientPeristence";
 
   //      upload file to supabase 
   export const uploadImageFilesToSupabase = async (imageFiles : any) => {
+    let resultImages : string[] = [];
 
     for (const file of imageFiles) {
         const uniqueFileName = `${Date.now().toFixed(2)}-${file.name}`;
@@ -18,9 +19,11 @@ import { supabase } from "./SupabaseClientPeristence";
             console.log("Uploaded:", data);
             const stringPath = 'https://mkcijqngeshomivhjrbe.supabase.co/storage/v1/object/public/image-bucket/';
             const result = stringPath + "" + data.path;
-            return result;
+            resultImages.push(result);
         }
     }
+
+    return resultImages;
 };
 
 export const uploadVideosToSupabase = async (videoFiles : any) => {

@@ -3,6 +3,9 @@ import SeriesCard from './SeriesCard';
 import { fetch_available_series } from '../../../persistence/SeriesPerisistence';
 import useSeriesStore from '../../../store/SeriesStore';
 
+//  TODO: Only fetch the information to be displayed to the user in the immidiate vacinity 
+
+
 function CharacterDirectory() {
   const [loading, setLoading] = useState(true);
 
@@ -23,7 +26,7 @@ function CharacterDirectory() {
 
     loadSeries();
   }, []);
-
+  
   return (
     <div className="container mx-auto px-4 py-8">
       <header className="text-center mb-12">

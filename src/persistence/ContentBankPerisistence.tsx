@@ -34,7 +34,7 @@ export interface ContentGenerated {
   video_file: any;
 };
 
-const queryUrl = 'http://127.0.0.1:8080';
+const queryUrl = 'http://caleido-hope-ai.byfcbwdcazc9caey.eastus.azurecontainer.io:8080';
 export async function deleteContentItem(contentId: string) {
   const { data, error } = await supabase.rpc('req_delete_content', {
     content_id: contentId

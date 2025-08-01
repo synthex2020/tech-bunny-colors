@@ -1,6 +1,6 @@
 //  SHOW MORE DETAILS ON SERIES  - INCLUDE IN-WORLD LOCATIONS AND EVENTS OF IMPORTANCE
 import { useState } from "react";
-import { Series, SeriesMedia } from "../../../types";
+import { Series } from "../../../types";
 
 interface SeriesProps {
     series: Series;
@@ -12,8 +12,9 @@ function SeriesMoreDetailsModal(seriesProps: SeriesProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const MediaCarousel = () => {
-        const imagesRaw = seriesProps.series.media;
-        const images: SeriesMedia[] = Array.isArray(imagesRaw) ? imagesRaw : [];
+        //const imagesRaw = seriesProps.series.media;
+        //const images: SeriesMedia[] = Array.isArray(imagesRaw) ? imagesRaw : [''];
+        const images : string[]= [];
     
     
         const prevSlide = () => {
@@ -35,7 +36,7 @@ function SeriesMoreDetailsModal(seriesProps: SeriesProps) {
                             index === currentIndex ? "opacity-100" : "opacity-0"
                         }`}
                     >
-                        <img src={src.media} alt={`Slide ${index + 1}`} />
+                        <img src={src} alt={`Slide ${index + 1}`} />
                     </div>
                 ))}
                 <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
@@ -50,7 +51,7 @@ function SeriesMoreDetailsModal(seriesProps: SeriesProps) {
     return (
         <div>
             <button
-                className="btn btn-outline text-sm btn-primary"
+                className="btn btn-ghost btn-sm flex flex-col items-center"
                 onClick={() => (document.getElementById(seriesProps.modalId) as HTMLDialogElement)?.showModal()}
             >
                 View Series

@@ -22,7 +22,7 @@ export type Series = {
     characters : [];
     locations : [];
     timeline : [];
-    media : [];
+    media : [string];
 };
 
 export type SeriesMedia = {
@@ -56,13 +56,14 @@ export type Character = {
     equipment : string;
     backstory : string;
     references : string;
-    characterSheet : string;
+    character_sheet : string;
     bodyMods : string;
     anatomy : string;
     model : string;
-    family : [];
-    referenceMedia : [];
-    media : [];
+    family : string[];
+    referenceMedia : string[];
+    media : string[];
+
 };
 
 export type SeriesEvent = {
@@ -84,3 +85,18 @@ export type SeriesLocation = {
     description : string;
     locationMedia : string[];
 };
+
+export type Family = {
+    id : string;
+    familyName : string;
+    patron : string;
+    history : string;
+};
+
+export type Relation = {
+    characterId : string;
+    familyId : string;
+};
+
+export type FamilyRelations = {};
+
