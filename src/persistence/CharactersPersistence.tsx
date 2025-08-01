@@ -162,8 +162,8 @@ export async function add_new_character(char_props: AddCharacterProps): Promise<
             character_anatomy: JSON.stringify(character.anatomy),
             character_model: "n/a",
             character_name: character.name,
-            character_media_file: "n/a",
-            character_media_context: "n/a",
+            character_media_file: "https://mkcijqngeshomivhjrbe.supabase.co/storage/v1/object/public/image-bucket/defaults/avatar-2.jpg",
+            character_media_context: "default_image",
             character_family_id: familyId,
             parent_series_id: char_props.seriesId
         });
