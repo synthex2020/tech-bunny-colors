@@ -1,5 +1,5 @@
-import { Series } from "../types";
-import { uploadImageFilesToSupabase } from "./MediaPersistence";
+import { Family, Series } from "../types";
+
 import { supabase } from "./SupabaseClientPeristence";
 
 interface AddSeriesProps {
@@ -75,7 +75,7 @@ export async function update_series(series: Series): Promise<boolean> {
 //  FETCH SERIES 
 export async function fetch_available_series(): Promise<Series[]> {
     const { data, error } = await supabase.rpc('req_get_available_series');
-    
+
     if (error) {
         console.error('Error fetching projects:', error);
         return [];
@@ -120,3 +120,32 @@ export async function fetch_available_series(): Promise<Series[]> {
 }
 
 //  FETCH SERIES CHARACTERS 
+
+//  FETCH SERIES FAMILIES 
+export async function fetch_series_families(series_id: string): Promise<Family[]> {
+    try {
+        const { data, error } = await supabase.rpc('req_fetch_series_families' , {
+            parent_series_id : series_id
+        });
+
+        if (error) {
+            console.error('[ERROR] :: fetch_series_families', error);
+            return [];
+        }
+
+        if (!data) return [];
+
+        const result = data.map((family: any): Family => ({
+            id : family.family_id,
+            familyName : family.family_given_name,
+            patron : family.family_given_patron,
+            history : family.family_given_history
+        }));
+
+
+        return result;
+    } catch (error) {
+        console.log("[ERROR] :: fetch_series_families", error);
+        return [];
+    }
+}

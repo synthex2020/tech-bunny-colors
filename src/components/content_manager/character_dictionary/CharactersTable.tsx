@@ -1,40 +1,55 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import CharacterTableCard from "../../ui/character-table-card";
-import { Character } from "../../../types";
-import useSeriesStore from "../../../store/SeriesStore";
+import { fetch_series_characters } from "../../../persistence/CharactersPersistence";
+import useCharacterStore from "../../../store/CharacterStore";
 
+//  TODO: Only load relevent information to the page hence call characters from the database 
 function CharacterTable() {
-    const {id} = useParams<{id: string}>();
+    const { id } = useParams<{ id: string }>();
+    const { characters, setCharacters } = useCharacterStore();
 
-    const [characters, setCharacters] = useState<Character[]>();
+    const [loading, setLoading] = useState<boolean>();
 
-    const currentSeries = useSeriesStore((state) => state.current);
-    const seriesCharacters = useSeriesStore((state) => state.characters);
 
-    
-    const fetchSeries = useSeriesStore((state) => state.fetchSeries);
-    const setCharactersInSeries = useSeriesStore((state) => state.setCharacters);
-
+    console.log("reload")
     useEffect(() => {
-        fetchSeries(id!)
-        setCharactersInSeries(currentSeries.characters);
-        setCharacters(seriesCharacters);
-    } , [characters]);
 
+        const loadCharacters = async () => {
+            try {
+                const data = await fetch_series_characters(id!);
+                setCharacters(data);
+            } catch (error) {
+                console.error('Failed to fetch characters:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
+        loadCharacters();
+    }, [id]);
 
     return (
         <div>
             <h3 className="text-xl font-bold mb-4">Characters</h3>
-            {characters === undefined 
-            ? <div></div>
-            :currentSeries.characters.map((character : Character, index) => (
-                <div key={index} className="mb-8">
-                    <CharacterTableCard {...character} />
-                    
-                </div>
-            )) }
+
+            {loading 
+            ? <div>
+              <p className="flex justify-center text-center text-5xl">Please wait currently loading</p>  
+            </div>
+            : <div>
+                {Array.isArray(characters) && characters.length > 0 ? (
+                    characters.map((character, index) => (
+                        <div key={index} className="mb-8">
+                            <CharacterTableCard {...character} />
+                        </div>
+                    ))
+                ) : (
+                    <p>No characters available.</p>
+                )}
+            </div>
+            }
+            
         </div>
     );
 }

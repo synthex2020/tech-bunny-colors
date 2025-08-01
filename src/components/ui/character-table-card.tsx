@@ -3,38 +3,35 @@ import { CharacterEditModal } from "./character-edit-modal";
 import { MediaModal } from "./media-modal";
 
 export default function CharacterTableCard(character: Character) {
-    console.log(character);
-    
-
-    const fix_json_structure = (json_string: string) => {
-        return JSON.parse(json_string);
-    };
-
-    const characterReferenceImages = fix_json_structure(character.reference_images);
-    const characterSheet = [character.character_sheet];
-    const characterMedia = character.media;
-
-    console.log('Reference Images :', characterReferenceImages)
-    //console.log('Character Sheet :', characterSheet)
-    //console.log('Character Media  :', characterMedia)
-
+    let characterSheet = "https://media.istockphoto.com/id/1289220545/photo/beautiful-woman-smiling-with-crossed-arms.jpg?s=612x612&w=0&k=20&c=qmOTkGstKj1qN0zPVWj-n28oRA6_BHQN8uVLIXg0TF8=";
+    if (character) {
+        if (character.characterSheet === "") {
+            characterSheet = "https://media.istockphoto.com/id/1289220545/photo/beautiful-woman-smiling-with-crossed-arms.jpg?s=612x612&w=0&k=20&c=qmOTkGstKj1qN0zPVWj-n28oRA6_BHQN8uVLIXg0TF8=";
+        }else {
+            characterSheet = character.characterSheet;
+        }
+    }
     return (
-        <div className="card card-side bg-base-100 shadow-sm border w-1/2">
+        <div className="card card-side bg-base-100 shadow-sm border">
             <figure>
                 {/** Character sheet and reference images  */}
-                <div className="flex flex-col gap-6 justify-center p-6">
-                    <img
-                        src={character.character_sheet || 'https://mkcijqngeshomivhjrbe.supabase.co/storage/v1/object/public/image-bucket/images/default_sheet.jpeg'}
-                        alt="character sheet" />
-                    <MediaModal identity={character.id} images={[...characterSheet, ...characterMedia]} />
-                </div>
+                <img
+                    src={characterSheet}
+                    alt="character sheet" />
+  
             </figure>
             <div className="card-body">
-                <h2 className="card-title">{character.titles} {character.name}</h2>
+                <h2 className="card-title">{character.titles ?? ""} {character.name}</h2>
 
                 <p className="text text-sm">{character.species} | {character.race} | {character.age}</p>
                 <p className="text text-sm">{character.sex} | {character.gender} | {character.orientation}</p>
-                <p className="text">{character.family} | {character.relationships}</p>
+                <p className="text">
+                    {Array.isArray(character.family)
+                        ? character.family.map((f: any) => f.name).join(", ")
+                        : "No family"
+                    } | {character.relationships}
+                </p>
+
                 <div className="divider" />
 
                 <p className="text text-sm">{character.hair} | {character.fashion}</p>

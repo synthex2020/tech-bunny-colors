@@ -51,7 +51,7 @@ function SeriesMoreDetailsModal(seriesProps: SeriesProps) {
     return (
         <div>
             <button
-                className="btn btn-outline text-sm btn-primary"
+                className="btn btn-ghost btn-sm flex flex-col items-center"
                 onClick={() => (document.getElementById(seriesProps.modalId) as HTMLDialogElement)?.showModal()}
             >
                 View Series

@@ -14,9 +14,11 @@ import { Series } from '../../../types';
 interface SeriesCardProps {
     series: Series;
     index: number;
-    seriesId: string
+    seriesId: string;
 
 }
+
+//  TODO: CREATE A MAKE NEW FAMILY AND ADD TO FAMILY BUTTONS TO ADD TO FAMILY TABLES 
 
 function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
     const navigate = useNavigate();
@@ -63,25 +65,44 @@ function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
 
                 {/* Action Buttons */}
                 <div className="card-actions flex flex-wrap gap-2 mt-4">
-                    {/* More Details Modal */}
-                    <SeriesMoreDetailsModal
-                        series={series}
-                        modalId={index.toString()}
-                    />
+                   
 
-                    {/* Add Character Button */}
+                    {/* Add Character Button - use params to send over id */}
                     <button
                         className="btn btn-outline text-sm"
+                        
                         onClick={() => {
-
-                            navigate('/characterDir/addNewCharacter', {
-                                state: { seriesId: seriesId }
-                            });
-
+                            let routingRoute = "/characterDir/addNewCharacter/" + seriesId + "";
+                            navigate(routingRoute)
                         }}
                     >
                         <PlusCircle size={16} />
                         Add Character
+                    </button>
+
+                    {/* Add Family Button  */}
+                    <button
+                        className="btn btn-outline text-sm"
+                        
+                        onClick={() => navigate('/characterDir/addFamily', {
+                            state: { seriesId: seriesId }
+                        })}
+                       
+                    >
+                        <PlusCircle size={16} />
+                        Add Family
+                    </button>
+
+                    {/* Add New Family Member Button */}
+                    <button
+                        className="btn btn-outline text-sm"
+                        onClick={() => {
+                            let routingRoute = "/characterDir/addNewFamily/" + seriesId + "";
+                            navigate(routingRoute)
+                        }}
+                    >
+                        <PlusCircle size={16} />
+                        New Family Member
                     </button>
 
                     {/* Add New Series Button */}
@@ -106,6 +127,12 @@ function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
 
                 {/* Navigation Buttons */}
                 <div className="grid grid-cols-3 gap-2 mt-4">
+                     {/* More Details Modal */}
+                    <SeriesMoreDetailsModal
+                        series={series}
+                        modalId={index.toString()}
+                    />
+                    
                     <button
                         className="btn btn-ghost btn-sm flex flex-col items-center"
                         onClick={() => navigate('/characterDir/locationsTable', {
@@ -118,9 +145,9 @@ function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
                     <button
                         className="btn btn-ghost btn-sm flex flex-col items-center"
                         onClick={() => {
-                            const stringNaviagate = '/characterDir/charactersTable/' + seriesId + '';
-                            navigate(stringNaviagate);
-                        
+                            const getUrl = "" + "/characterDir/charactersTable/" + seriesId + ""
+                            navigate(getUrl);
+
                         }}
                     >
                         <Users size={16} />
@@ -135,6 +162,7 @@ function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
                         <Calendar size={16} />
                         Events
                     </button>
+
                 </div>
             </div>
         </div>
