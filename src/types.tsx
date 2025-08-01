@@ -60,9 +60,9 @@ export type Character = {
     bodyMods : string;
     anatomy : string;
     model : string;
-    family : [];
-    referenceMedia : [];
-    media : [];
+    family : string[];
+    referenceMedia : string[];
+    media : string[];
 };
 
 export type SeriesEvent = {
@@ -84,3 +84,17 @@ export type SeriesLocation = {
     description : string;
     locationMedia : string[];
 };
+
+export type Family = {
+    id : string;
+    familyName : string;
+    patron : string;
+    history : string;
+};
+
+export type Relation = {
+    characterId : string;
+    familyId : string;
+};
+
+export type FamilyRelations = {};

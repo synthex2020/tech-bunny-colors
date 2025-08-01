@@ -17,6 +17,8 @@ import GradientInit from './components/color_gradients/GradientInit.tsx'
 import DaisyUIThemePack from './components/theme_selectors/DaisyUIThemePack.tsx'
 import UploadContentPage from './components/content_manager/content_managment/AddContent.tsx'
 import ReactNativeElementsCustom from './components/theme_selectors/ReactNativeElementsCustomThemes.tsx'
+import AddNewFamily from './components/content_manager/character_dictionary/AddNewFamily.tsx'
+import AddNewFamilyMember from './components/content_manager/character_dictionary/AddNewFamilyMember.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
@@ -31,7 +33,9 @@ createRoot(document.getElementById('root')!).render(
       <Route path='/characterDir/locationsTable' element={<LocationsTable />} />
       <Route path='/characterDir/importantEvents' element={<ImportantEventsTable />} />
       <Route path='/characterDir/addNewSeries' element={<AddNewSeries />} />
-      <Route path='/characterDir/addNewCharacter' element={<AddNewCharacter />} />
+      <Route path='/characterDir/addNewCharacter/:id' element={<AddNewCharacter />} />
+      <Route path='/characterDir/addFamily' element={<AddNewFamily />} />
+      <Route path='/characterDir/addNewFamily/:id' element={<AddNewFamilyMember />} />
       <Route path='/themes' element={<GradientInit />} />
       <Route path='/themes/colorGradient' element={<ColorGradientForm />}/>
       <Route path='/themes/daisyui' element={<DaisyUIThemePack />} />

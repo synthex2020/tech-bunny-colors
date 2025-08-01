@@ -1,5 +1,10 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useParams } from "react-router";
+import { useEffect } from "react";
+import useFamilyStore from "../../../store/FamilyStore"; // adjust import path as needed
+import { fetch_series_families } from "../../../persistence/SeriesPerisistence";
+import { Character } from "../../../types";
+import { add_new_character } from "../../../persistence/CharactersPersistence";
 
 
 
@@ -9,12 +14,15 @@ function AddNewCharacter() {
     //      [IMAGE (URL), CHARACTER_DATA (JSON)]
     //  todo : save the JSON content under character anatomy
 
+    const { families, setFamilies } = useFamilyStore();
+    const { id } = useParams<{ id: string }>();
+
     const [images, setImages] = useState<string[]>([]);
 
     const [formData, setFormData] = useState({
         name: "",
         titles: "",
-        sex: "",
+        sex: "Male",
         gender: "",
         species: "",
         personality: "",
@@ -25,7 +33,7 @@ function AddNewCharacter() {
         relationships: "",
         orientation: "",
         race: "",
-        age: "",
+        age: "15",
         powers: "",
         arts: "",
         hobbies: "",
@@ -40,8 +48,18 @@ function AddNewCharacter() {
         model: ""
     });
 
-    const location = useLocation();
-    const seriesId = location.state.seriesId;
+    const [selectedFamilyId, setSelectedFamilyId] = useState<string>("");
+
+
+    const seriesId = id!;
+
+    
+
+    useEffect(() => {
+        if (seriesId) {
+            fetch_series_families(seriesId).then(setFamilies);
+        }
+    }, [seriesId, setFamilies, id]);
 
     const handleFormChange = (
         event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -104,12 +122,95 @@ function AddNewCharacter() {
 
     const onSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
         formData.referenceImages = images.toString();
         formData.seriesId = seriesId;
-        console.log(formData);
-        console.log(images);
-    }; // end on submit
 
+        //  Add selected family to the formData.family field
+        if (selectedFamilyId) {
+            const familyObj = families.find((f) => f.id === selectedFamilyId);
+            if (familyObj) {
+                formData.family = "" + familyObj.id + "," + familyObj.familyName;
+            }
+        } else {
+            formData.family = "[]";
+        }
+
+        //  Append the free-text family entry into the backstory
+        if (formData.family && formData.family.length > 0 && formData.family !== "[]") {
+            formData.backstory = `[Familial Relations]: ${formData.family}\n[Backstory]: ${formData.backstory}`;
+        }
+
+        const characterEntry = {
+            createdAt: "",
+            titles: formData.titles,
+            name: formData.name,
+            sex: formData.sex,
+            gender: formData.gender,
+            species: formData.species,
+            personality: formData.personality,
+            hair: formData.hair,
+            fashion: formData.fashion,
+            quirks: formData.quirks,
+            relationships: formData.relationships,
+            orientation: formData.orientation,
+            race: formData.race,
+            age: formData.age,
+            powers: formData.powers,
+            martialArts: formData.arts,
+            hobbies: formData.hobbies,
+            equipment: formData.equipment,
+            backstory: formData.backstory,
+            references: formData.references,
+            characterSheet: images[0],
+            bodyMods: formData.bodyModifications,
+            anatomy: formData.anatomy,
+            model: formData.model,
+            family: [selectedFamilyId],
+            referenceMedia: [""],
+            media: [""],
+        }
+        add_new_character(
+            {
+                character: characterEntry,
+                seriesId: seriesId
+            }
+        ).then((value: Boolean) => {
+            if (value) {
+                alert("Character Added");
+                setFormData({
+                    name: "",
+                    titles: "",
+                    sex: "",
+                    gender: "",
+                    species: "",
+                    personality: "",
+                    family: "",
+                    hair: "",
+                    fashion: "",
+                    quirks: "",
+                    relationships: "",
+                    orientation: "",
+                    race: "",
+                    age: "",
+                    powers: "",
+                    arts: "",
+                    hobbies: "",
+                    equipment: "",
+                    backstory: "",
+                    references: "",
+                    referenceImages: "",
+                    bodyModifications: "",
+                    anatomy: "",
+                    seriesId: "",
+                    characterSheet: "",
+                    model: ""
+                });
+            } else {
+                alert("Failed to upload character")
+            }
+        })
+    };
 
     return (
         <div className="p-10">
@@ -128,7 +229,7 @@ function AddNewCharacter() {
                                     className="carousel-item relative w-full"
                                 >
                                     <img src={image} className="w-full object-contain" alt={`Slide ${index + 1}`} />
-                                   
+
                                 </div>
                             ))}
                         </div>
@@ -230,9 +331,9 @@ function AddNewCharacter() {
                                 onChange={handleFormChange}
                             /><br />
 
-                            
 
-                            {/** AGE, Orientation, SEX */}
+
+                            {/** AGE, Orientation, SEX, family */}
                             <div className="flex flex-row gap-4 justify-center">
 
                                 {/** AGE RATING*/}
@@ -289,6 +390,25 @@ function AddNewCharacter() {
                                     </select>
                                 </div>
 
+                                {/** Family */}
+                                <div>
+                                    <label className="fieldset-label font-semibold">
+                                        Select a Family (optional)
+                                    </label><br />
+                                    <select
+                                        className="select select-bordered w-full"
+                                        value={selectedFamilyId}
+                                        onChange={(e) => setSelectedFamilyId(e.target.value)}
+                                    >
+                                        <option value="">-- Choose a Family --</option>
+                                        {families.map((family) => (
+                                            <option key={family.id} value={family.id}>
+                                                {family.familyName}
+                                            </option>
+                                        ))}
+                                    </select><br />
+
+                                </div>
                             </div>
 
                             {/** RACE */}

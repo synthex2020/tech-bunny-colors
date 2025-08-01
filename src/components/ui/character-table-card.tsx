@@ -6,11 +6,12 @@ export default function CharacterTableCard(character: Character) {
     if (character) {
         if (character.characterSheet === "") {
             characterSheet = "https://media.istockphoto.com/id/1289220545/photo/beautiful-woman-smiling-with-crossed-arms.jpg?s=612x612&w=0&k=20&c=qmOTkGstKj1qN0zPVWj-n28oRA6_BHQN8uVLIXg0TF8=";
+        }else {
+            characterSheet = character.characterSheet;
         }
     }
     return (
         <div className="card card-side bg-base-100 shadow-sm border">
-            <h3>Hello</h3>
             <figure>
                 {/** Character sheet and reference images  */}
                 <img

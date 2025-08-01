@@ -1,5 +1,6 @@
 import { supabase } from "./SupabaseClientPeristence";
 import { Character } from "../types";
+import { uploadImageFilesToSupabase } from "./MediaPersistence";
 
 
 //  FETCH SERIES CHARACTERS 
@@ -14,7 +15,6 @@ export async function fetch_series_characters(seriesId: string): Promise<Charact
     }
 
     if (!data) return [];
-
     return data.map((char: any): Character => ({
         id: char.id,
         createdAt: char.created_at,
@@ -41,7 +41,14 @@ export async function fetch_series_characters(seriesId: string): Promise<Charact
         bodyMods: char.body_mods,
         anatomy: char.anatomy,
         model: char.model,
-        family: JSON.parse(char.family || '{}'),
+        family: (() => {
+            try {
+                const parsed = JSON.parse(char.family || '[]');
+                return Array.isArray(parsed) ? parsed : [];
+            } catch {
+                return [];
+            }
+        })(),
         referenceMedia: JSON.parse(char.reference_images || '[]'),
         media: char.media || [],
     }));
@@ -116,6 +123,64 @@ export async function update_character(character: Character): Promise<Character 
     };
 }
 
-//  ADD CHARACTER MEDIA 
+//  ADD CHARACTER MEDIA
 
-//  UPDATE CHARACTER MEDIA 
+//  UPDATE CHARACTER MEDIA
+
+//  ADD NEW CHARACTER - ADD TO RELATIONS TABLE AS WELL IN QUERY ON SUPABASE 
+interface AddCharacterProps {
+    character: Omit<Character, 'id'>;
+    seriesId: string;
+}
+export async function add_new_character(char_props: AddCharacterProps): Promise<Boolean> {
+    try {
+        const character = char_props.character;
+        const [familyId] = character.family;
+
+
+        const { data, error } = await supabase.rpc('req_add_character_with_family', {
+            character_titles: character.titles,
+            character_sex: character.sex,
+            character_gender: character.gender,
+            character_species: character.species,
+            character_personality: character.personality,
+            character_hair: character.hair,
+            character_fashion: character.fashion,
+            character_quirks: character.quirks,
+            character_relationships: character.relationships,
+            character_orientation: character.orientation,
+            character_race: character.race,
+            character_age: character.age,
+            character_powers: character.powers,
+            character_martial_arts: character.martialArts,
+            character_hobbies: character.hobbies,
+            character_equipment: character.equipment,
+            character_backstory: character.backstory,
+            character_references: character.references,
+            character_character_sheet: character.characterSheet,
+            character_body_mods: character.bodyMods,
+            character_anatomy: JSON.stringify(character.anatomy),
+            character_model: "n/a",
+            character_name: character.name,
+            character_media_file: "n/a",
+            character_media_context: "n/a",
+            character_family_id: familyId,
+            parent_series_id: char_props.seriesId
+        });
+
+        if (error) {
+            console.error('[ERROR] :: add_new_character', error);
+            return false;
+        }
+
+        if (data?.startsWith('Error')) {
+            console.error('[SUPABASE FUNCTION ERROR]', data);
+            return false;
+        }
+
+        return true;
+    } catch (error) {
+        console.log("[ERROR] :: add_new_character", error)
+        return false;
+    }// end try-catch 
+} // end function 
