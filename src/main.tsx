@@ -37,7 +37,6 @@ createRoot(document.getElementById('root')!).render(
       <Route path='/characterDir/addNewCharacter/:id' element={<AddNewCharacter />} />
       <Route path='/characterDir/addFamily' element={<AddNewFamily />} />
       <Route path='/characterDir/addNewFamily/:id' element={<AddNewFamilyMember />} />
-
       <Route path='/themes' element={<GradientInit />} />
       <Route path='/themes/colorGradient' element={<ColorGradientForm />}/>
       <Route path='/themes/daisyui' element={<DaisyUIThemePack />} />
