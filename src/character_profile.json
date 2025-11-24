@@ -1,0 +1,91 @@
+
+{
+	"identity" : {
+		"name" : "John Doe",
+		"nickname" : "John the Gonk",
+		"family" : " The Royal Family Faust",
+		"education" : "High School graduate",
+		"address" : "86 Live Road, MB, Canada",
+		"languages" : "English, French",
+		"career" : "Cashier, then manager",
+		"pets" : "None",
+		"plants" : "None",
+		"religion" : "Christian",
+		"favorite_color" : "Blue",
+		"favorite_food" : "Pineapples",
+		"lucky_number" : 7,
+		"fears" : "Spiders",
+		"fashion" : "Sense of fashion",
+		"supernatural" : {
+			"fight_style" : "Hand to Hand",
+			"class" : "Monk",
+			"strengths" : " close range",
+			"weakness" : "long range",
+			"primary_element" : "Fire",
+			"secondary_element" : "Earth",
+			"tertiary_elements" : " Lightning, Wind "
+		}
+		
+	},
+	"anatomy" : {
+		"age" : 30,
+		"sex" : "Female",
+		"race" : "Human Caucasian",
+		"species" : " Human ",
+		"body_type" : "Athletic, Nimble",
+		"blood_type" : "O",
+		"height" : 1.59,
+		"weight" : 50,
+		"eyesight" : "20 20 vision",
+		"color_blind" : "Color Blind to Green",
+		"glasses" : false,
+		"handed" : "ambidextrous",
+		"voice_type" : "Monotone",
+		"scars" : "slash on right eye",
+		"burns" : "None",
+		"skin_damage" : "None",
+		"tattoos" : " Tribal on left arm",
+		"birthmarks" : "None",
+		"nose" : "Bridged nose",
+		"eyes" : "almond shape, blue eyes",
+		"posture" : "None",
+		"breast" : "36 B",
+		"legs" : "athletic, smooth",
+		"moles" : "None"
+		
+	},
+	"bio" : {
+		"dob" : "30 October 1885",
+		"dod" : "30 October 2025",
+		"birthplace" : "A town..",
+		"surgeries" : "None",
+		"cavities" : " 3 in childhood ",
+		"sexual_history" : " a virgin" ,
+		"current_lovers" : "None",
+		"past_lovers" : "None",
+		"relationship_status" : "Single",
+		"problem_relationships" : "None",
+		"family_relationships" : "None",
+		"friends" : "Alex the Beast",
+		"rivals" : "Alex the Beast",
+		"admires" : "His superior Alex the Beast",
+		"hates" : " his superior Alex the Beast" ,
+		"philosophy_love" : "Innocent, love is for adults",
+		"philosophy_relationships" : "Power makes right",
+		"childhood" : "Grew up alone.....",
+		"criminal_record" : "None",
+		"fears" : "Spiders",
+		"successes" : " Avenged Family, Became Pope ",
+		"failures" : "Let his superior die",
+		"dreams" : "To be the Pirate King"		
+	},
+	"personality" : {
+		"sayings" : "We are burning daylight!",
+		"hobbies": "reading",
+		"habits" : "smoking, snapping fingers",
+		"personality" : " Virtuous, Cheerful, Expressive",
+		"insecurities" : "Skin"
+	},
+	"other" : {}
+}
+

@@ -1,0 +1,83 @@
+{
+  "Artificer": {
+    "title": "The Artificer",
+    "description": "Makers of magic-infused objects, artificers are defined by their inventive nature. They see magic as a complex system waiting to be decoded and controlled. Instead of ephemeral spells, they seek to craft durable, useful, marvelous magical items.",
+    "thumbnail": "https://i0.wp.com/dungeonsanddragonsfan.com/wp-content/uploads/2024/04/all-dnd-classes-5e-artificer.png?w=800&ssl=1",
+    "children": ["Alchemist", "Armorer", "Artillerist", "Battle Smith"]
+  },
+
+  "Barbarian": {
+    "title": "The Barbarian",
+    "description": "For some, their rage springs from a communion with fierce animal spirits. Others draw from a roiling reservoir of anger at a world full of pain. For every barbarian, rage is a power that fuels not just a battle frenzy but also uncanny reflexes, resilience, and feats of strength.",
+    "thumbnail": "https://koboldpress.com/wp-content/uploads/2018/08/barbarian.jpg",
+    "children": [
+      "Path of the Ancestral Guardian",
+      "Path of the Battleranger",
+      "Path of the Beast",
+      "Path of the Giant",
+      "Path of the Storm Herald",
+      "Path of the Totem Warrior",
+      "Path of the Wild Magic",
+      "Path of the Zealot"
+    ]
+  },
+
+  "Bard": {
+    "title": "The Bard",
+    "description": "Whether scholar, skald, or scoundrel, a bard weaves magic through words and music to inspire allies, demoralize foes, manipulate minds, create illusions, and even heal wounds. The bard is a master of song, speech, and the magic they contain.",
+    "thumbnail": "https://i0.wp.com/dungeonsanddragonsfan.com/wp-content/uploads/2024/04/bard-dnd-5e-class-guide-hero.png?w=800&ssl=1",
+    "children": [
+        "College of Creation",
+        "College of Eloquence",
+        "College of Glamour",
+        "College of Lore",
+        "College of Spirits",
+        "College of Swords",
+        "College of Valor",
+        "College of Whispers"
+    ]
+  },
+
+   "Cleric": {
+    "title": "The Cleric",
+    "description": "Clerics are intermediaries between the mortal world and the distant planes of the gods. As varied as the gods they serve, clerics strive to embody the handiwork of their deities. No ordinary priest, a cleric is imbued with divine magic.",
+    "thumbnail": "",
+    "children": [
+        "Arcana Domian",
+        "Death Domain"
+
+    ]
+  },
+   "": {
+    "title": "",
+    "description": "",
+    "thumbnail": "",
+    "children": []
+  },
+   "": {
+    "title": "",
+    "description": "",
+    "thumbnail": "",
+    "children": []
+  },
+   "": {
+    "title": "",
+    "description": "",
+    "thumbnail": "",
+    "children": []
+  },
+   "": {
+    "title": "",
+    "description": "",
+    "thumbnail": "",
+    "children": []
+  },
+
+  "": {
+    "title": "",
+    "description": "",
+    "thumbnail": "",
+    "children": []
+  }
+}
+

@@ -1,23 +1,46 @@
-import { Character } from "../../types";
+import { downloadCharacterEpub } from "../../logic/EpubGenerator";
+import { Character, CharacterProfile } from "../../types";
 import { CharacterEditModal } from "./character-edit-modal";
-import { MediaModal } from "./media-modal";
 
 export default function CharacterTableCard(character: Character) {
     let characterSheet = "https://media.istockphoto.com/id/1289220545/photo/beautiful-woman-smiling-with-crossed-arms.jpg?s=612x612&w=0&k=20&c=qmOTkGstKj1qN0zPVWj-n28oRA6_BHQN8uVLIXg0TF8=";
+    let characterAnatomy : CharacterProfile;
+
     if (character) {
-        if (character.characterSheet === "") {
+        if (character.character_sheet === "") {
             characterSheet = "https://media.istockphoto.com/id/1289220545/photo/beautiful-woman-smiling-with-crossed-arms.jpg?s=612x612&w=0&k=20&c=qmOTkGstKj1qN0zPVWj-n28oRA6_BHQN8uVLIXg0TF8=";
         }else {
-            characterSheet = character.characterSheet;
+            characterSheet = character.character_sheet;
         }
+        const resultantUrl = character.anatomy.replace('"\\', '').replace('\\""', '');
+        
+        fetch(resultantUrl).then(function(response){
+            return response.json();
+        }).then(function(myJson) {
+            console.log(resultantUrl);
+            characterAnatomy = myJson;
+        }); 
     }
+    console.log(characterSheet);
+    
     return (
         <div className="card card-side bg-base-100 shadow-sm border">
             <figure>
                 {/** Character sheet and reference images  */}
-                <img
+               <div className="flex flex-col p-2 gap-6 justify-center">
+                <a
+                    href={characterSheet}
+                    target="_blank"
+               >
+                 <img
                     src={characterSheet}
                     alt="character sheet" />
+               </a>
+
+               <div className="btn bg-primary text-white">
+                    View References
+               </div>
+               </div>
   
             </figure>
             <div className="card-body">
@@ -49,6 +72,16 @@ export default function CharacterTableCard(character: Character) {
                         character={character}
                         onSave={() => { }}
                     />
+
+                    <div 
+                        className="btn" 
+                        onClick={async () => downloadCharacterEpub(
+                            characterAnatomy,
+                            character.character_sheet
+                        ) }
+                    >
+                        Epub Download
+                    </div>
                 </div>
             </div>
         </div>

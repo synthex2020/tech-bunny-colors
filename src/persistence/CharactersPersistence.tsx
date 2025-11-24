@@ -14,7 +14,7 @@ export async function fetch_series_characters(seriesId: string): Promise<Charact
     const { data, error } = await supabase.rpc('req_get_series_characters', {
         parent_series_id: seriesId,
     });
-
+    // run fetch for anatomy
     if (error) {
         console.error('Error fetching characters:', error);
         return [];
@@ -125,7 +125,7 @@ export async function update_character(character: Character): Promise<Character 
         bodyMods: updated.body_mods,
         anatomy: updated.anatomy,
         model: updated.model,
-        reference_images: updated.reference_images,
+        //reference_images: updated.reference_images,
         family: [], // Not returned in this RPC
         referenceMedia: [], // Not returned in this RPC
         media: [] // Not returned in this RPC
@@ -141,6 +141,7 @@ interface AddCharacterProps {
     character: Omit<Character, 'id'>;
     seriesId: string;
 }
+
 export async function add_new_character(char_props: AddCharacterProps): Promise<Boolean> {
     try {
         const character = char_props.character;
@@ -166,7 +167,7 @@ export async function add_new_character(char_props: AddCharacterProps): Promise<
             character_equipment: character.equipment,
             character_backstory: character.backstory,
             character_references: character.references,
-            character_character_sheet: character.characterSheet,
+            character_character_sheet: character.character_sheet,
             character_body_mods: character.bodyMods,
             character_anatomy: JSON.stringify(character.anatomy),
             character_model: "n/a",
