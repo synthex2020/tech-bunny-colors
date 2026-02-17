@@ -14,7 +14,7 @@ function SeriesMoreDetailsModal(seriesProps: SeriesProps) {
     const MediaCarousel = () => {
         //const imagesRaw = seriesProps.series.media;
         //const images: SeriesMedia[] = Array.isArray(imagesRaw) ? imagesRaw : [''];
-        const images : string[]= [];
+        const images : string[]= [seriesProps.series.thumbnail];
     
     
         const prevSlide = () => {
@@ -59,17 +59,17 @@ function SeriesMoreDetailsModal(seriesProps: SeriesProps) {
             <dialog id={seriesProps.modalId} className="modal">
                 <div className="modal-box w-11/12 max-w-5xl">
 
-                    <div className="hero bg-base-200 min-h-screen">
+                    <div className="hero min-h-screen">
                         <div className="hero-content flex-col lg:flex-row">
                             {/** MEDIA ITEMS - Images  */}
-                            <MediaCarousel />
+                            <img src={seriesProps.series.thumbnail}/>
                             
                             {/** TEXT DESCRIPTORS + HYPER LINKS   */}
                             <div>
                                 <h1 className="text-5xl font-bold">{seriesProps.series.title}</h1>
-                                <h2 className="text-3xl font-semibold">{seriesProps.series.authors}</h2>
-                                <h2 className="text-3xl font-semibold">{seriesProps.series.artists}</h2>
-                                <h4 className="text-2xl">{seriesProps.series.genre}</h4>
+                                <h2 className="text-lg font-semibold">Authors : {seriesProps.series.authors}</h2>
+                                <h2 className="text-lg font-semibold">Artists : {seriesProps.series.artists}</h2>
+                                <h4 className="text-sm">{seriesProps.series.genre}</h4>
                                 <h5 className="text-sm">{seriesProps.series.powerSystem.toString()}</h5>
                                 <p className="py-6 overflow-clip">
                                     Made : {seriesProps.series.createdAt}  | {seriesProps.series.audience} <br/>

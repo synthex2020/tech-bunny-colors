@@ -170,13 +170,18 @@ function AddNewCharacter() {
   const seriesId = id!;
 
   const [profile, setProfile] = useState<CharacterProfile>(initialProfile);
+  const [epubGenProfile, setEpubGenProfile] =
+    useState<CharacterProfile>(initialProfile);
   const [extra, setExtra] = useState<ExtraFields>(initialExtra);
   const [images, setImages] = useState<string[]>([]);
   const [referenceImages, setReferenceImages] = useState<File[]>();
   const [selectedFamilyId, setSelectedFamilyId] = useState<string>("");
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [anatomyJson, setAnatomyJson] = useState<string>("");
-  const [characterSheetDisplay, setCharacterSheetDisplay] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [clearForm, setClearForm] = useState<boolean>(false);
+  const [characterSheetDisplay, setCharacterSheetDisplay] =
+    useState<string>("");
 
   useEffect(() => {
     if (seriesId) {
@@ -301,7 +306,7 @@ function AddNewCharacter() {
   // ---- submit ----
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    setIsLoading(true);
     // Build body modifications string from detailed arrays + manual field
     const autoBodyModsParts: string[] = [];
     if (profile.anatomy.scars.length)
@@ -408,6 +413,7 @@ function AddNewCharacter() {
     const temporary: string[] = [];
     temporary.push(characterSheetResult);
     setCharacterSheetDisplay(characterSheetResult);
+    setEpubGenProfile(profile);
 
     if (referenceImages && referenceImages.length != 0) {
       const referenceResult = await uploadImageFilesToSupabase(referenceImages);
@@ -446,7 +452,7 @@ function AddNewCharacter() {
       model: extra.model,
       family: selectedFamilyId ? [selectedFamilyId] : [],
       referenceMedia: [characterSheetResult ?? ""],
-      media: [""],
+      media: temporary,
       character_sheet: characterSheetResult ?? "",
     };
     console.log(characterEntry);
@@ -458,13 +464,16 @@ function AddNewCharacter() {
 
     if (ok) {
       alert("Character Added");
-      setProfile(initialProfile);
+      if (clearForm) {
+        setProfile(initialProfile);
+      }
       setExtra(initialExtra);
       setImages([]);
       setSelectedFamilyId("");
       setAnatomyJson("");
       setCurrentStep(0);
 
+      setIsLoading(false);
       (document.getElementById("my_modal_3") as HTMLDialogElement).showModal();
     } else {
       alert("Failed to upload character");
@@ -560,9 +569,7 @@ function AddNewCharacter() {
               className="textarea textarea-bordered w-full"
               placeholder="Notes about their family or lineage."
               value={profile.identity.family}
-              onChange={(e) =>
-                updateIdentity("family", e.target.value.replace(/,/g, ""))
-              }
+              onChange={(e) => updateIdentity("family", e.target.value)}
             />
           </div>
 
@@ -577,9 +584,7 @@ function AddNewCharacter() {
               className="textarea textarea-bordered w-full"
               placeholder="Where do they live? (City, neighborhood, or something more abstract.)"
               value={profile.identity.address}
-              onChange={(e) =>
-                updateIdentity("address", e.target.value.replace(/,/g, ""))
-              }
+              onChange={(e) => updateIdentity("address", e.target.value)}
             />
           </div>
 
@@ -593,9 +598,7 @@ function AddNewCharacter() {
               className="input input-bordered w-full"
               placeholder="Education (e.g. Engineering degree, self-taught hacker)"
               value={profile.identity.education}
-              onChange={(e) =>
-                updateIdentity("education", e.target.value.replace(/,/g, ""))
-              }
+              onChange={(e) => updateIdentity("education", e.target.value)}
             />
           </div>
 
@@ -607,11 +610,9 @@ function AddNewCharacter() {
             </label>
             <textarea
               className="textarea textarea-bordered w-full"
-              placeholder={"Detective\nPrivate security\nPart-time barista"}
-              value={arrayToLines(profile.identity.career)}
-              onChange={(e) =>
-                updateIdentity("career", linesToArray(e.target.value))
-              }
+              placeholder={"Detective, Private security, Part-time barista"}
+              value={profile.identity.career}
+              onChange={(e) => updateIdentity("career", e.target.value)}
             />
           </div>
 
@@ -624,11 +625,9 @@ function AddNewCharacter() {
             </label>
             <textarea
               className="textarea textarea-bordered w-full"
-              placeholder={"English\nJapanese\nElvish"}
-              value={arrayToLines(profile.identity.languages)}
-              onChange={(e) =>
-                updateIdentity("languages", linesToArray(e.target.value))
-              }
+              placeholder={"English, Japanese, Elvish"}
+              value={profile.identity.languages}
+              onChange={(e) => updateIdentity("languages", e.target.value)}
             />
             <span className="label-text-alt text-xs mt-1">
               One language per line. Commas are removed automatically.
@@ -647,9 +646,7 @@ function AddNewCharacter() {
               className="input input-bordered w-full"
               placeholder="e.g. Catholic, Atheist, Follows the Flame"
               value={profile.identity.religion}
-              onChange={(e) =>
-                updateIdentity("religion", e.target.value.replace(/,/g, ""))
-              }
+              onChange={(e) => updateIdentity("religion", e.target.value)}
             />
           </div>
 
@@ -660,11 +657,9 @@ function AddNewCharacter() {
             </label>
             <textarea
               className="textarea textarea-bordered w-full"
-              placeholder={"Black cat\nCybernetically enhanced goldfish"}
-              value={arrayToLines(profile.identity.pets)}
-              onChange={(e) =>
-                updateIdentity("pets", linesToArray(e.target.value))
-              }
+              placeholder={"Black cat, Cybernetically enhanced goldfish"}
+              value={profile.identity.pets}
+              onChange={(e) => updateIdentity("pets", e.target.value)}
             />
           </div>
 
@@ -675,11 +670,9 @@ function AddNewCharacter() {
             </label>
             <textarea
               className="textarea textarea-bordered w-full"
-              placeholder={"Bonsai tree\nCarnivorous plant"}
-              value={arrayToLines(profile.identity.plants)}
-              onChange={(e) =>
-                updateIdentity("plants", linesToArray(e.target.value))
-              }
+              placeholder={"Bonsai tree, Carnivorous plant"}
+              value={profile.identity.plants}
+              onChange={(e) => updateIdentity("plants", e.target.value)}
             />
           </div>
 
@@ -695,10 +688,7 @@ function AddNewCharacter() {
                 className="input input-bordered w-full"
                 value={profile.identity.favouriteColor}
                 onChange={(e) =>
-                  updateIdentity(
-                    "favouriteColor",
-                    e.target.value.replace(/,/g, "")
-                  )
+                  updateIdentity("favouriteColor", e.target.value)
                 }
               />
             </div>
@@ -710,10 +700,7 @@ function AddNewCharacter() {
                 className="input input-bordered w-full"
                 value={profile.identity.favouriteFood}
                 onChange={(e) =>
-                  updateIdentity(
-                    "favouriteFood",
-                    e.target.value.replace(/,/g, "")
-                  )
+                  updateIdentity("favouriteFood", e.target.value)
                 }
               />
             </div>
@@ -727,10 +714,7 @@ function AddNewCharacter() {
                 className="input input-bordered w-full"
                 value={profile.identity.favouriteObject}
                 onChange={(e) =>
-                  updateIdentity(
-                    "favouriteObject",
-                    e.target.value.replace(/,/g, "")
-                  )
+                  updateIdentity("favouriteObject", e.target.value)
                 }
               />
             </div>
@@ -742,9 +726,7 @@ function AddNewCharacter() {
                 type="number"
                 className="input input-bordered w-full"
                 value={profile.identity.luckyNumber}
-                onChange={(e) =>
-                  updateIdentity("luckyNumber", Number(e.target.value))
-                }
+                onChange={(e) => updateIdentity("luckyNumber", e.target.value)}
               />
             </div>
           </div>
@@ -758,16 +740,14 @@ function AddNewCharacter() {
             </label>
             <textarea
               className="textarea textarea-bordered w-full"
-              placeholder={"Heights\nAbandonment\nDeep water"}
-              value={arrayToLines(profile.identity.fears)}
-              onChange={(e) =>
-                updateIdentity("fears", linesToArray(e.target.value))
-              }
+              placeholder={"Heights, Abandonment, Deep water"}
+              value={profile.identity.fears}
+              onChange={(e) => updateIdentity("fears", e.target.value)}
             />
           </div>
 
           {/* Supernatural / DnD flavored */}
-          <div className="md:col-span-2 grid md:grid-cols-2 gap-4">
+          <div className="flex flex-col w-full gap-4">
             <div className="form-control">
               <label className="label">
                 <span className="label-text font-semibold">
@@ -799,11 +779,11 @@ function AddNewCharacter() {
               <label className="label">
                 <span className="label-text font-semibold">Fight Style</span>
               </label>
-              <input
-                type="text"
-                className="input input-bordered w-full"
+              <textarea
+                className="textarea textarea-bordered w-full"
                 placeholder="Sword & shield, sniper, unarmed martial arts..."
                 value={profile.identity.supernatural.fightStyle}
+                
                 onChange={(e) =>
                   updateIdentitySupernatural("fightStyle", e.target.value)
                 }
@@ -917,9 +897,7 @@ function AddNewCharacter() {
           <input
             className="input input-bordered w-full"
             value={profile.anatomy.bodyType}
-            onChange={(e) =>
-              updateAnatomy("bodyType", e.target.value.replace(/,/g, ""))
-            }
+            onChange={(e) => updateAnatomy("bodyType", e.target.value)}
           />
         </div>
         <div className="form-control">
@@ -978,9 +956,7 @@ function AddNewCharacter() {
             className="input input-bordered w-full"
             placeholder="e.g. None, Deuteranopia, Protanopia"
             value={profile.anatomy.colorBlind}
-            onChange={(e) =>
-              updateAnatomy("colorBlind", e.target.value.replace(/,/g, ""))
-            }
+            onChange={(e) => updateAnatomy("colorBlind", e.target.value)}
           />
         </div>
       </div>
@@ -993,9 +969,7 @@ function AddNewCharacter() {
           <input
             className="input input-bordered w-full"
             value={profile.anatomy.voice_type}
-            onChange={(e) =>
-              updateAnatomy("voice_type", e.target.value.replace(/,/g, ""))
-            }
+            onChange={(e) => updateAnatomy("voice_type", e.target.value)}
           />
         </div>
 
@@ -1027,9 +1001,7 @@ function AddNewCharacter() {
           <input
             className="input input-bordered w-full"
             value={profile.anatomy.breast}
-            onChange={(e) =>
-              updateAnatomy("breast", e.target.value.replace(/,/g, ""))
-            }
+            onChange={(e) => updateAnatomy("breast", e.target.value)}
           />
         </div>
         <div className="form-control">
@@ -1039,9 +1011,7 @@ function AddNewCharacter() {
           <input
             className="input input-bordered w-full"
             value={profile.anatomy.legs}
-            onChange={(e) =>
-              updateAnatomy("legs", e.target.value.replace(/,/g, ""))
-            }
+            onChange={(e) => updateAnatomy("legs", e.target.value)}
           />
         </div>
       </div>
@@ -1077,9 +1047,7 @@ function AddNewCharacter() {
             className="textarea textarea-bordered w-full"
             placeholder="Summarize scars, tattoos, burns, birthmarks, etc."
             value={extra.bodyModifications}
-            onChange={(e) =>
-              updateExtra("bodyModifications", e.target.value.replace(/,/g, ""))
-            }
+            onChange={(e) => updateExtra("bodyModifications", e.target.value)}
           />
           <span className="label-text-alt text-xs mt-1">
             We&apos;ll also auto-append details from the lists below.
@@ -1087,7 +1055,7 @@ function AddNewCharacter() {
         </div>
       </div>
 
-      {/* Detailed lists */}
+      {/* TODO: Change listing type - Detailed lists */}
       <div className="grid md:grid-cols-2 gap-4 mt-4">
         <div className="form-control">
           <label className="label">
@@ -1100,41 +1068,31 @@ function AddNewCharacter() {
             className="textarea textarea-bordered w-full mb-2"
             placeholder="Scars (one per line)"
             value={arrayToLines(profile.anatomy.scars)}
-            onChange={(e) =>
-              updateAnatomy("scars", linesToArray(e.target.value))
-            }
+            onChange={(e) => updateAnatomy("scars", [e.target.value])}
           />
           <textarea
             className="textarea textarea-bordered w-full mb-2"
             placeholder="Burns (one per line)"
             value={arrayToLines(profile.anatomy.burns)}
-            onChange={(e) =>
-              updateAnatomy("burns", linesToArray(e.target.value))
-            }
+            onChange={(e) => updateAnatomy("burns", [e.target.value])}
           />
           <textarea
             className="textarea textarea-bordered w-full mb-2"
             placeholder="Tattoos (one per line)"
             value={arrayToLines(profile.anatomy.tattoos)}
-            onChange={(e) =>
-              updateAnatomy("tattoos", linesToArray(e.target.value))
-            }
+            onChange={(e) => updateAnatomy("tattoos", [e.target.value])}
           />
           <textarea
             className="textarea textarea-bordered w-full mb-2"
             placeholder="Birthmarks (one per line)"
             value={arrayToLines(profile.anatomy.birthmarks)}
-            onChange={(e) =>
-              updateAnatomy("birthmarks", linesToArray(e.target.value))
-            }
+            onChange={(e) => updateAnatomy("birthmarks", [e.target.value])}
           />
           <textarea
             className="textarea textarea-bordered w-full"
             placeholder="Moles (one per line)"
             value={arrayToLines(profile.anatomy.moles)}
-            onChange={(e) =>
-              updateAnatomy("moles", linesToArray(e.target.value))
-            }
+            onChange={(e) => updateAnatomy("moles", [e.target.value])}
           />
         </div>
 
@@ -1148,9 +1106,7 @@ function AddNewCharacter() {
             className="textarea textarea-bordered w-full mb-4"
             placeholder="Old burns, chemical damage, etc."
             value={arrayToLines(profile.anatomy.skinDamage)}
-            onChange={(e) =>
-              updateAnatomy("skinDamage", linesToArray(e.target.value))
-            }
+            onChange={(e) => updateAnatomy("skinDamage", [e.target.value])}
           />
 
           <label className="label">
@@ -1223,9 +1179,7 @@ function AddNewCharacter() {
             "Taps fingers when thinking\nAlways early\nCollects teacups"
           }
           value={arrayToLines(profile.personality.habits)}
-          onChange={(e) =>
-            updatePersonality("habits", linesToArray(e.target.value))
-          }
+          onChange={(e) => updatePersonality("habits", [e.target.value])}
         />
         <span className="label-text-alt text-xs mt-1">
           These will become the{" "}
@@ -1247,9 +1201,7 @@ function AddNewCharacter() {
             "Feels inferior to older sister\nWorries about being abandoned"
           }
           value={arrayToLines(profile.personality.insecurities)}
-          onChange={(e) =>
-            updatePersonality("insecurities", linesToArray(e.target.value))
-          }
+          onChange={(e) => updatePersonality("insecurities", [e.target.value])}
         />
       </div>
 
@@ -1264,9 +1216,7 @@ function AddNewCharacter() {
           className="textarea textarea-bordered w-full"
           placeholder='Things they often say, e.g. "Failure is data."'
           value={profile.personality.sayings}
-          onChange={(e) =>
-            updatePersonality("sayings", e.target.value.replace(/,/g, ""))
-          }
+          onChange={(e) => updatePersonality("sayings", e.target.value)}
         />
       </div>
     </div>
@@ -1342,9 +1292,7 @@ function AddNewCharacter() {
           className="input input-bordered w-full"
           placeholder="City, world, or vague location."
           value={profile.bio.birthplace}
-          onChange={(e) =>
-            updateBio("birthplace", e.target.value.replace(/,/g, ""))
-          }
+          onChange={(e) => updateBio("birthplace", e.target.value)}
         />
       </div>
 
@@ -1400,7 +1348,7 @@ function AddNewCharacter() {
           <textarea
             className="textarea textarea-bordered w-full"
             value={arrayToLines(profile.bio.friends)}
-            onChange={(e) => updateBio("friends", linesToArray(e.target.value))}
+            onChange={(e) => updateBio("friends", [e.target.value])}
           />
         </div>
         <div className="form-control">
@@ -1412,7 +1360,7 @@ function AddNewCharacter() {
           <textarea
             className="textarea textarea-bordered w-full"
             value={arrayToLines(profile.bio.rivals)}
-            onChange={(e) => updateBio("rivals", linesToArray(e.target.value))}
+            onChange={(e) => updateBio("rivals", [e.target.value])}
           />
         </div>
       </div>
@@ -1428,9 +1376,7 @@ function AddNewCharacter() {
           <textarea
             className="textarea textarea-bordered w-full"
             value={arrayToLines(profile.bio.currentLovers)}
-            onChange={(e) =>
-              updateBio("currentLovers", linesToArray(e.target.value))
-            }
+            onChange={(e) => updateBio("currentLovers", [e.target.value])}
           />
         </div>
         <div className="form-control">
@@ -1442,9 +1388,7 @@ function AddNewCharacter() {
           <textarea
             className="textarea textarea-bordered w-full"
             value={arrayToLines(profile.bio.pastLovers)}
-            onChange={(e) =>
-              updateBio("pastLovers", linesToArray(e.target.value))
-            }
+            onChange={(e) => updateBio("pastLovers", [e.target.value])}
           />
         </div>
       </div>
@@ -1460,9 +1404,7 @@ function AddNewCharacter() {
           <textarea
             className="textarea textarea-bordered w-full"
             value={arrayToLines(profile.bio.surgeries)}
-            onChange={(e) =>
-              updateBio("surgeries", linesToArray(e.target.value))
-            }
+            onChange={(e) => updateBio("surgeries", [e.target.value])}
           />
         </div>
         <div className="form-control">
@@ -1474,9 +1416,7 @@ function AddNewCharacter() {
           <textarea
             className="textarea textarea-bordered w-full"
             value={arrayToLines(profile.bio.cavities)}
-            onChange={(e) =>
-              updateBio("cavities", linesToArray(e.target.value))
-            }
+            onChange={(e) => updateBio("cavities", [e.target.value])}
           />
         </div>
       </div>
@@ -1491,9 +1431,7 @@ function AddNewCharacter() {
         <textarea
           className="textarea textarea-bordered w-full"
           value={arrayToLines(profile.bio.sexualHistory)}
-          onChange={(e) =>
-            updateBio("sexualHistory", linesToArray(e.target.value))
-          }
+          onChange={(e) => updateBio("sexualHistory", [e.target.value])}
         />
       </div>
 
@@ -1508,7 +1446,7 @@ function AddNewCharacter() {
           <textarea
             className="textarea textarea-bordered w-full"
             value={arrayToLines(profile.bio.admires)}
-            onChange={(e) => updateBio("admires", linesToArray(e.target.value))}
+            onChange={(e) => updateBio("admires", [e.target.value])}
           />
         </div>
         <div className="form-control">
@@ -1520,7 +1458,7 @@ function AddNewCharacter() {
           <textarea
             className="textarea textarea-bordered w-full"
             value={arrayToLines(profile.bio.hates)}
-            onChange={(e) => updateBio("hates", linesToArray(e.target.value))}
+            onChange={(e) => updateBio("hates", [e.target.value])}
           />
         </div>
       </div>
@@ -1534,9 +1472,7 @@ function AddNewCharacter() {
           <textarea
             className="textarea textarea-bordered w-full"
             value={profile.bio.philosphyLove}
-            onChange={(e) =>
-              updateBio("philosphyLove", e.target.value.replace(/,/g, ""))
-            }
+            onChange={(e) => updateBio("philosphyLove", e.target.value)}
           />
         </div>
         <div className="form-control">
@@ -1549,10 +1485,7 @@ function AddNewCharacter() {
             className="textarea textarea-bordered w-full"
             value={profile.bio.phiolosphyRelationships}
             onChange={(e) =>
-              updateBio(
-                "phiolosphyRelationships",
-                e.target.value.replace(/,/g, "")
-              )
+              updateBio("phiolosphyRelationships", e.target.value)
             }
           />
         </div>
@@ -1569,9 +1502,7 @@ function AddNewCharacter() {
           <textarea
             className="textarea textarea-bordered w-full"
             value={arrayToLines(profile.bio.criminalRecord)}
-            onChange={(e) =>
-              updateBio("criminalRecord", linesToArray(e.target.value))
-            }
+            onChange={(e) => updateBio("criminalRecord", [e.target.value])}
           />
         </div>
         <div className="form-control">
@@ -1583,7 +1514,7 @@ function AddNewCharacter() {
           <textarea
             className="textarea textarea-bordered w-full"
             value={arrayToLines(profile.bio.fears)}
-            onChange={(e) => updateBio("fears", linesToArray(e.target.value))}
+            onChange={(e) => updateBio("fears", [e.target.value])}
           />
         </div>
       </div>
@@ -1598,9 +1529,7 @@ function AddNewCharacter() {
           <textarea
             className="textarea textarea-bordered w-full"
             value={arrayToLines(profile.bio.successes)}
-            onChange={(e) =>
-              updateBio("successes", linesToArray(e.target.value))
-            }
+            onChange={(e) => updateBio("successes", [e.target.value])}
           />
         </div>
         <div className="form-control">
@@ -1612,9 +1541,7 @@ function AddNewCharacter() {
           <textarea
             className="textarea textarea-bordered w-full"
             value={arrayToLines(profile.bio.failures)}
-            onChange={(e) =>
-              updateBio("failures", linesToArray(e.target.value))
-            }
+            onChange={(e) => updateBio("failures", [e.target.value])}
           />
         </div>
       </div>
@@ -1628,7 +1555,7 @@ function AddNewCharacter() {
         <textarea
           className="textarea textarea-bordered w-full"
           value={arrayToLines(profile.bio.dreams)}
-          onChange={(e) => updateBio("dreams", linesToArray(e.target.value))}
+          onChange={(e) => updateBio("dreams", [e.target.value])}
         />
       </div>
     </div>
@@ -1654,9 +1581,7 @@ function AddNewCharacter() {
             className="textarea textarea-bordered w-full"
             placeholder="e.g. Long silver hair in a messy ponytail with undercut."
             value={extra.hair}
-            onChange={(e) =>
-              updateExtra("hair", e.target.value.replace(/,/g, ""))
-            }
+            onChange={(e) => updateExtra("hair", e.target.value)}
           />
           <span className="label-text-alt text-xs mt-1">
             This is a free-form description; it&apos;s separate from anatomy but
@@ -1675,9 +1600,7 @@ function AddNewCharacter() {
             className="textarea textarea-bordered w-full"
             placeholder="e.g. Cyberpunk streetwear, crop jacket, cargo pants, combat boots."
             value={extra.fashion}
-            onChange={(e) =>
-              updateExtra("fashion", e.target.value.replace(/,/g, ""))
-            }
+            onChange={(e) => updateExtra("fashion", e.target.value)}
           />
           <span className="label-text-alt text-xs mt-1">
             General clothing vibe. Helps drive how the character appears in most
@@ -1696,9 +1619,7 @@ function AddNewCharacter() {
             className="textarea textarea-bordered w-full"
             placeholder="Weapons, gadgets, iconic items (e.g. custom pistol, drone, enchanted locket)."
             value={extra.equipment}
-            onChange={(e) =>
-              updateExtra("equipment", e.target.value.replace(/,/g, ""))
-            }
+            onChange={(e) => updateExtra("equipment", e.target.value)}
           />
           <span className="label-text-alt text-xs mt-1">
             These end up in the <code>equipment</code> field in the backend.
@@ -1713,9 +1634,7 @@ function AddNewCharacter() {
             className="textarea textarea-bordered w-full"
             placeholder="High-level summary of powers or special abilities."
             value={extra.powers}
-            onChange={(e) =>
-              updateExtra("powers", e.target.value.replace(/,/g, ""))
-            }
+            onChange={(e) => updateExtra("powers", e.target.value)}
           />
           <span className="label-text-alt text-xs mt-1">
             This text is combined with supernatural class / elements when
@@ -1759,9 +1678,7 @@ function AddNewCharacter() {
             className="textarea textarea-bordered w-full"
             placeholder="High-level summary of cyberware, augmentations, piercings, etc."
             value={extra.bodyModifications}
-            onChange={(e) =>
-              updateExtra("bodyModifications", e.target.value.replace(/,/g, ""))
-            }
+            onChange={(e) => updateExtra("bodyModifications", e.target.value)}
           />
           <span className="label-text-alt text-xs mt-1">
             We also auto-append detailed lists from the Anatomy step (scars,
@@ -1781,9 +1698,7 @@ function AddNewCharacter() {
           className="input input-bordered w-full"
           placeholder="e.g. mblab_female_base_01, blender_rig_v2, custom_model_id"
           value={extra.model}
-          onChange={(e) =>
-            updateExtra("model", e.target.value.replace(/,/g, ""))
-          }
+          onChange={(e) => updateExtra("model", e.target.value)}
         />
         <span className="label-text-alt text-xs mt-1">
           Optional: use this to tie the character to a specific Blender / MB-Lab
@@ -1812,9 +1727,7 @@ function AddNewCharacter() {
           className="textarea textarea-bordered w-full"
           placeholder="List media, characters, aesthetics that inspired this character."
           value={profile.other.inspiration}
-          onChange={(e) =>
-            updateOther("inspiration", e.target.value.replace(/,/g, ""))
-          }
+          onChange={(e) => updateOther("inspiration", e.target.value)}
         />
       </div>
 
@@ -1945,21 +1858,35 @@ function AddNewCharacter() {
             <button
               type="button"
               className="btn btn-neutral"
+              // className={`btn btn-neutral ${isLoading ? "btn-disabled" : ""}`}
+              //disabled={isLoading}
               onClick={() =>
                 setCurrentStep((s) => Math.min(steps.length - 1, s + 1))
               }
             >
-              Next »
+              {/* {isLoading ? "Loading..." : "Next »"} */}
+              Next
             </button>
           ) : (
-            <button type="submit" className="btn btn-primary">
+            <button
+              type="submit"
+              className="btn btn-primary"
+              // className={`btn btn-primary ${isLoading ? "btn-disabled" : ""}`}
+              // disabled={isLoading}
+            >
+              {/* {isLoading ? "Saving..." : "Save Character"} */}
               Save Character
             </button>
           )}
         </div>
       </form>
 
-      <AddCharacterPreview characterProfile={profile} characterSheet={characterSheetDisplay} />
+      <AddCharacterPreview
+        characterProfile={epubGenProfile}
+        characterSheet={characterSheetDisplay}
+        clearForm={clearForm}
+        clearFormFn={setClearForm}
+      />
     </div>
   );
 }

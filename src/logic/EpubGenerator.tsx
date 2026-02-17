@@ -11,25 +11,23 @@ const escapeXml = (str: string) =>
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&apos;");
 
-const joinOrDash = (items: string[]) =>
-  items && items.length ? items.join(", ") : "—";
+const joinOrDash = (items: string[]) => {
+  if (items) {
+    return items.toString();
+  }
+  return "";
+};
 
 export async function downloadCharacterEpub(
   profile: CharacterProfile,
   characterSheetUrl: string | null | undefined
 ) {
   const zip = new JSZip();
-
-  const {
-    identity,
-    anatomy,
-    personality,
-    bio,
-    other,
-  } = profile;
+  console.log(profile);
+  const { identity, anatomy, personality, bio, other } = profile;
 
   const displayName =
-    identity.name || identity.nickname || "Unnamed character";
+    profile.identity.name || profile.identity.nickname || "Unnamed character";
 
   const safeName =
     displayName
@@ -116,7 +114,9 @@ export async function downloadCharacterEpub(
       <p><strong>Created from:</strong> Jennifer CharacterProfile data</p>
       ${
         other.inspiration
-          ? `<p><strong>Inspiration:</strong> ${escapeXml(other.inspiration)}</p>`
+          ? `<p><strong>Inspiration:</strong> ${escapeXml(
+              other.inspiration
+            )}</p>`
           : ""
       }
     </div>
@@ -228,9 +228,7 @@ export async function downloadCharacterEpub(
         <td>${escapeXml(
           `Body type: ${anatomy.bodyType || "—"}; Posture: ${
             anatomy.posture || "—"
-          }; Legs: ${anatomy.legs || "—"}; Chest: ${
-            anatomy.breast || "—"
-          }`
+          }; Legs: ${anatomy.legs || "—"}; Chest: ${anatomy.breast || "—"}`
         )}</td>
       </tr>
       <tr>
@@ -251,22 +249,22 @@ export async function downloadCharacterEpub(
       </tr>
     </table>
 
-    <h2>Medical & History</h2>
+    <h2>Medical &amp; History</h2>
     <table>
       <tr>
         <th>Surgeries / Illnesses</th>
         <td>${escapeXml(
-          `Surgeries: ${joinOrDash(bio.surgeries)}; Cavities / dental: ${joinOrDash(
-            bio.cavities
-          )}`
+          `Surgeries: ${joinOrDash(
+            bio.surgeries
+          )}; Cavities / dental: ${joinOrDash(bio.cavities)}`
         )}</td>
       </tr>
       <tr>
         <th>Criminal Record / Education</th>
         <td>${escapeXml(
-          `Criminal record: ${joinOrDash(
-            bio.criminalRecord
-          )}; Education: ${identity.education || "—"}`
+          `Criminal record: ${joinOrDash(bio.criminalRecord)}; Education: ${
+            identity.education || "—"
+          }`
         )}</td>
       </tr>
       <tr>
@@ -294,9 +292,7 @@ export async function downloadCharacterEpub(
       <tr>
         <th>People admired / hated</th>
         <td>${escapeXml(
-          `Admires: ${joinOrDash(bio.admires)}; Hates: ${joinOrDash(
-            bio.hates
-          )}`
+          `Admires: ${joinOrDash(bio.admires)}; Hates: ${joinOrDash(bio.hates)}`
         )}</td>
       </tr>
       <tr>
@@ -309,7 +305,7 @@ export async function downloadCharacterEpub(
       </tr>
     </table>
 
-    <h2>Personality, Work & Hobbies</h2>
+    <h2>Personality, Work &amp; Hobbies</h2>
     <table>
       <tr>
         <th class="section-title">Personality</th>
@@ -341,9 +337,7 @@ export async function downloadCharacterEpub(
       </tr>
       <tr>
         <th>Hobbies / Recreation</th>
-        <td>${escapeXml(
-          `${personality.hobbies || "—"}`
-        )}</td>
+        <td>${escapeXml(`${personality.hobbies || "—"}`)}</td>
       </tr>
       <tr>
         <th>Favorite things</th>
@@ -360,13 +354,15 @@ export async function downloadCharacterEpub(
         <td>${escapeXml(
           `Class: ${identity.supernatural.class || "—"}; Fight style: ${
             identity.supernatural.fightStyle || "—"
-          }; Elements: ${[
-            identity.supernatural.primaryElement,
-            identity.supernatural.secondaryElement,
-            identity.supernatural.tertiaryElement,
-          ]
-            .filter(Boolean)
-            .join(", ") || "—"}; Strengths: ${joinOrDash(
+          }; Elements: ${
+            [
+              identity.supernatural.primaryElement,
+              identity.supernatural.secondaryElement,
+              identity.supernatural.tertiaryElement,
+            ]
+              .filter(Boolean)
+              .join(", ") || "—"
+          }; Strengths: ${joinOrDash(
             identity.supernatural.strengths
           )}; Weaknesses: ${joinOrDash(identity.supernatural.weaknesses)}`
         )}</td>
@@ -374,9 +370,9 @@ export async function downloadCharacterEpub(
       <tr>
         <th>Successes / Failures</th>
         <td>${escapeXml(
-          `Successes: ${joinOrDash(
-            bio.successes
-          )}; Failures: ${joinOrDash(bio.failures)}`
+          `Successes: ${joinOrDash(bio.successes)}; Failures: ${joinOrDash(
+            bio.failures
+          )}`
         )}</td>
       </tr>
       <tr>
@@ -401,7 +397,9 @@ export async function downloadCharacterEpub(
     `<item id="details" href="text/details.xhtml" media-type="application/xhtml+xml"/>`,
     `<item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>`,
     hasImage
-      ? `<item id="sheet" href="images/character-sheet.${imageExt}" media-type="image/${imageExt === "jpg" ? "jpeg" : "png"}"/>`
+      ? `<item id="sheet" href="images/character-sheet.${imageExt}" media-type="image/${
+          imageExt === "jpg" ? "jpeg" : "png"
+        }"/>`
       : "",
   ]
     .filter(Boolean)

@@ -36,8 +36,15 @@ export async function generate_character_sheet(
     const displayName =
       identity.name || identity.nickname || "Unnamed character";
 
+    // --- Safely integrate breast size (US sizing, only for women) ---
+    // NOTE: Corrected the property access from anatomy.breast to anatomy.breastSize (assuming it exists in your CharacterProfile type based on the previous conversation)
+    const breastSizeInstruction =
+      anatomy.sex === "female" && anatomy.breast
+        ? `Breast size: ${anatomy.breast} (US sizing).`
+        : `Breasts: None / Minimal (as appropriate for their sex).`;
+
     const promptText = `
-Create a detailed full-body character sheet illustration of the following original character.
+Create a detailed, high-quality **artist's reference sheet** for the following original character. The style must be a clean, neutral, and highly technical illustration suitable for model sheets. **Prioritize anatomical and proportional accuracy for artists.**
 
 Name: ${displayName}
 Gender Identity: ${identity.gender}
@@ -47,6 +54,7 @@ Body Type: ${anatomy.bodyType}
 Age: ${anatomy.age}
 Height: ${anatomy.height}
 Weight: ${anatomy.weight}
+${breastSizeInstruction}
 
 Hair & Face:
 Hair style and color: ${
@@ -73,9 +81,12 @@ Tattoos: ${anatomy.tattoos.join(", ") || "None"}
 Birthmarks: ${anatomy.birthmarks.join(", ") || "None"}
 Moles: ${anatomy.moles.join(", ") || "None"}
 
-Style:
-Use a clean character sheet layout with orthographic poses (front, 3/4, and back if possible), and some small close-ups of important details (face, tattoos, accessories).
-Make the style consistent with a high-quality anime / stylized illustration, suitable for use as a reference for comics or animation.
+**Artist Reference Sheet Style Requirements:**
+1.  **Layout:** Use a **clean, technical character sheet layout** with **orthographic poses** (front, 3/4, and back). The character should be in a **neutral, standing pose**.
+2.  **Clothing:** The character must be illustrated wearing **minimal, form-fitting, non-obstructive clothing** (e.g., a simple sports bra/bikini top and shorts/briefs in a neutral color) to allow artists to **clearly see and reference the full body anatomy and proportions** without distraction.
+3.  **Proportions:** Include **proportional breakdown views** for both the **full body** and the **face**. This must include overlaying a **grid or measure lines** (e.g., using head-height units) next to the main figure to define the character's height, shoulder width, hip width, and limb lengths.
+4.  **Details:** Include **close-ups** for **face proportions** (front and side profiles), hands, and feet.
+5.  **Style:** Render in a highly detailed, **semi-realistic anime style** that resembles the quality and fidelity of modern anime like **The Apothecary Diaries or Bleach**. **Avoid dynamic poses or heavy shading** on the main figures. Use **clear line art** and lighting for maximum utility as a technical reference.
 `.trim();
 
     // --- Build contents depending on whether we have a reference image ---

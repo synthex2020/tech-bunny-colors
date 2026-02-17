@@ -22,7 +22,13 @@ interface SeriesCardProps {
 
 function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
     const navigate = useNavigate();
-    
+     // Limit genres to the first 3
+  const displayedGenres = series.genre
+    .split(",")
+    .map((g) => g.trim())
+    .slice(0, 3)
+    .join(", ");
+
     return (
         <div className="card w-96 bg-base-100 shadow-xl transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
             {/* Thumbnail Section */}
@@ -33,7 +39,7 @@ function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
                     className="w-full h-48 object-cover"
                 />
                 <div className="absolute top-2 right-2 badge badge-primary">
-                    {series.genre}
+                    {displayedGenres}
                 </div>
             </figure>
 

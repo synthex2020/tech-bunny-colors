@@ -1,5 +1,5 @@
 import { Family, Series } from "../types";
-
+import { uploadImageFilesToSupabase } from "./MediaPersistence";
 import { supabase } from "./SupabaseClientPeristence";
 
 interface AddSeriesProps {
@@ -141,7 +141,7 @@ export async function fetch_series_families(series_id: string): Promise<Family[]
             patron : family.family_given_patron,
             history : family.family_given_history
         }));
-
+        console.log(result);
 
         return result;
     } catch (error) {

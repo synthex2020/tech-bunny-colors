@@ -5,14 +5,18 @@ import { downloadCharacterEpub } from "../../logic/EpubGenerator";
 interface AddCharacterProps {
   characterProfile: CharacterProfile;
   characterSheet: string;
+  clearForm: boolean;
+  clearFormFn: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function AddCharacterPreview(props: AddCharacterProps) {
+  //  TODO: ADD OPTION TO REGENERATE WITH SOME ADDED CHANGES - close the dialog and avoid clearing the form 
   const { characterProfile, characterSheet } = props;
 
   const handleDownloadEpub = () => {
     downloadCharacterEpub(characterProfile, characterSheet);
   };
+  console.log(characterProfile.identity.name)
 
   return (
     <>
@@ -54,6 +58,17 @@ function AddCharacterPreview(props: AddCharacterProps) {
                   onClick={handleDownloadEpub}
                 >
                   Download EPUB File
+                </button>
+
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => {
+                    props.clearFormFn(false);
+                    (document.getElementById("my_modal_3") as HTMLDialogElement).close();
+                  }}
+                >
+                  Re-generate Character
                 </button>
               </div>
             </div>
