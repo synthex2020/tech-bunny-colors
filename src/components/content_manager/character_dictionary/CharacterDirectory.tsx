@@ -1,16 +1,21 @@
-import { useEffect, useState } from 'react';
-import SeriesCard from './SeriesCard';
-import { fetch_available_series } from '../../../persistence/SeriesPerisistence';
-import useSeriesStore from '../../../store/SeriesStore';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import SeriesCard from "./SeriesCard";
+import { fetch_available_series } from "../../../persistence/SeriesPerisistence";
+import useSeriesStore from "../../../store/SeriesStore";
+import { Series } from "../../../types";
 
 // TODO: Only fetch the information to be displayed to the user in the immediate vicinity
 
+// ─────────────────────────────────────────────
+// Quick Action Card
+// ─────────────────────────────────────────────
 type QuickActionProps = {
   icon: string;
   label: string;
   description: string;
   onClick: () => void;
-  color: 'primary' | 'secondary' | 'accent';
+  color: "primary" | "secondary" | "accent";
 };
 
 function QuickActionCard({ icon, label, description, onClick, color }: QuickActionProps) {
@@ -35,9 +40,131 @@ function QuickActionCard({ icon, label, description, onClick, color }: QuickActi
   );
 }
 
+// ─────────────────────────────────────────────
+// Reusable Series-Selector Modal
+// ─────────────────────────────────────────────
+interface SeriesSelectorModalProps {
+  modalId: string;
+  title: string;
+  icon: string;
+  description: string;
+  confirmLabel: string;
+  confirmColor?: "btn-primary" | "btn-secondary" | "btn-accent";
+  series: Series[];
+  onConfirm: (selectedSeriesId: string, selectedSeries: Series) => void;
+  note?: string;
+}
+
+function SeriesSelectorModal({
+  modalId,
+  title,
+  icon,
+  description,
+  confirmLabel,
+  confirmColor = "btn-primary",
+  series,
+  onConfirm,
+  note,
+}: SeriesSelectorModalProps) {
+  const [selectedId, setSelectedId] = useState<string>("");
+  const [error, setError] = useState(false);
+
+  const reset = () => {
+    setSelectedId("");
+    setError(false);
+  };
+
+  const handleConfirm = () => {
+    if (!selectedId) {
+      setError(true);
+      return;
+    }
+    const found = series.find((s) => s.id === selectedId);
+    if (!found) return;
+    (document.getElementById(modalId) as HTMLDialogElement)?.close();
+    reset();
+    onConfirm(selectedId, found);
+  };
+
+  return (
+    <dialog id={modalId} className="modal modal-bottom sm:modal-middle">
+      <div className="modal-box">
+        {/* Close button */}
+        <form method="dialog">
+          <button className="btn btn-sm btn-circle btn-ghost absolute right-3 top-3" onClick={reset}>✕</button>
+        </form>
+
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-1">
+          <span className="text-2xl">{icon}</span>
+          <h3 className="font-bold text-lg">{title}</h3>
+        </div>
+        <p className="text-sm text-base-content/60 mb-5">{description}</p>
+
+        {/* Series Dropdown */}
+        <fieldset className="fieldset">
+          <legend className="fieldset-legend text-xs">Select Series</legend>
+          <select
+            className={`select select-bordered w-full ${error ? "select-error" : ""}`}
+            value={selectedId}
+            onChange={(e) => {
+              setSelectedId(e.target.value);
+              setError(false);
+            }}
+          >
+            <option value="" disabled>— Choose a series —</option>
+            {series.map((s) => (
+              <option key={s.id} value={s.id}>{s.title}</option>
+            ))}
+          </select>
+          {error && (
+            <p className="text-error text-xs mt-1">Please select a series before continuing.</p>
+          )}
+        </fieldset>
+
+        {/* Optional note */}
+        {note && (
+          <div className="alert alert-info py-2 px-3 text-xs mt-3 gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20A10 10 0 0012 2z" />
+            </svg>
+            <span>{note}</span>
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="modal-action mt-5">
+          <form method="dialog">
+            <button className="btn btn-ghost btn-sm" onClick={reset}>Cancel</button>
+          </form>
+          <button className={`btn btn-sm ${confirmColor}`} onClick={handleConfirm}>
+            {confirmLabel} →
+          </button>
+        </div>
+      </div>
+
+      {/* Backdrop */}
+      <form method="dialog" className="modal-backdrop">
+        <button onClick={reset}>close</button>
+      </form>
+    </dialog>
+  );
+}
+
+// ─────────────────────────────────────────────
+// Helper
+// ─────────────────────────────────────────────
+function openModal(id: string) {
+  (document.getElementById(id) as HTMLDialogElement)?.showModal();
+}
+
+// ─────────────────────────────────────────────
+// Main Page
+// ─────────────────────────────────────────────
 function CharacterDirectory() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [showTips, setShowTips] = useState(false);
   const availableSeries = useSeriesStore((state) => state.series);
   const setGlobalSeries = useSeriesStore((state) => state.setSeries);
@@ -48,7 +175,7 @@ function CharacterDirectory() {
         const data = await fetch_available_series();
         setGlobalSeries(data);
       } catch (error) {
-        console.error('Failed to fetch series:', error);
+        console.error("Failed to fetch series:", error);
       } finally {
         setLoading(false);
       }
@@ -60,23 +187,59 @@ function CharacterDirectory() {
     item.title?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleAddCharacter = () => {
-    // TODO: Open Add Character modal or navigate to Add Character page
-    console.log('Add Character clicked');
+  // ── Navigation handlers (mirror SeriesCard routing exactly) ──
+  const handleAddCharacterConfirm = (seriesId: string) => {
+    navigate(`/characterDir/addNewCharacter/${seriesId}`);
   };
 
-  const handleAddEvent = () => {
-    // TODO: Open Add Event modal or navigate to Add Event page
-    console.log('Add Event clicked');
+  const handleAddEventConfirm = (_seriesId: string, series: Series) => {
+    navigate("/characterDir/importantEvents", { state: series.timeline });
   };
 
-  const handleAddLocation = () => {
-    // TODO: Open Add Location modal or navigate to Add Location page
-    console.log('Add Location clicked');
+  const handleAddLocationConfirm = (_seriesId: string, series: Series) => {
+    navigate("/characterDir/locationsTable", { state: series.locations });
   };
 
   return (
     <div className="min-h-screen bg-base-100">
+
+      {/* ── Modals — rendered once at top level so they escape scroll context ── */}
+      <SeriesSelectorModal
+        modalId="add_char_modal"
+        title="Add Character"
+        icon="🧑"
+        description="Choose which series this character belongs to. You'll be taken to the character creation form."
+        confirmLabel="Go to Character Form"
+        confirmColor="btn-primary"
+        series={availableSeries}
+        onConfirm={handleAddCharacterConfirm}
+        note="Characters are scoped to a single series. You can reassign them later from the character detail page."
+      />
+
+      <SeriesSelectorModal
+        modalId="add_event_modal"
+        title="Add Event"
+        icon="📅"
+        description="Choose which series this event belongs to. You'll be taken to that series' events timeline."
+        confirmLabel="Go to Events Timeline"
+        confirmColor="btn-secondary"
+        series={availableSeries}
+        onConfirm={handleAddEventConfirm}
+        note="Events are added directly inside the series timeline view."
+      />
+
+      <SeriesSelectorModal
+        modalId="add_location_modal"
+        title="Add Location"
+        icon="📍"
+        description="Choose which series this location belongs to. You'll be taken to that series' locations table."
+        confirmLabel="Go to Locations"
+        confirmColor="btn-accent"
+        series={availableSeries}
+        onConfirm={handleAddLocationConfirm}
+        note="Locations can be linked to multiple characters and events after creation."
+      />
+
       {/* ── Top Navbar ── */}
       <div className="navbar bg-base-200 border-b border-base-300 px-4 sticky top-0 z-30 shadow-sm">
         <div className="navbar-start">
@@ -103,7 +266,7 @@ function CharacterDirectory() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             {searchQuery && (
-              <button className="opacity-50 hover:opacity-100" onClick={() => setSearchQuery('')}>✕</button>
+              <button className="opacity-50 hover:opacity-100" onClick={() => setSearchQuery("")}>✕</button>
             )}
           </label>
         </div>
@@ -120,6 +283,7 @@ function CharacterDirectory() {
             <span className="hidden sm:inline text-xs">Tips</span>
           </button>
 
+          {/* Add New dropdown — shortcut for power users */}
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-primary btn-sm gap-1">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -129,21 +293,11 @@ function CharacterDirectory() {
             </label>
             <ul tabIndex={0} className="dropdown-content menu p-2 shadow-xl bg-base-200 border border-base-300 rounded-box w-52 mt-2 z-40">
               <li className="menu-title text-xs opacity-60 px-2 py-1">Create Entry</li>
-              <li>
-                <button onClick={handleAddCharacter} className="gap-2">
-                  <span>🧑</span> Add Character
-                </button>
-              </li>
-              <li>
-                <button onClick={handleAddEvent} className="gap-2">
-                  <span>📅</span> Add Event
-                </button>
-              </li>
-              <li>
-                <button onClick={handleAddLocation} className="gap-2">
-                  <span>📍</span> Add Location
-                </button>
-              </li>
+              <li><button onClick={() => openModal("add_char_modal")} className="gap-2"><span>🧑</span> Add Character</button></li>
+              <li><button onClick={() => openModal("add_event_modal")} className="gap-2"><span>📅</span> Add Event</button></li>
+              <li><button onClick={() => openModal("add_location_modal")} className="gap-2"><span>📍</span> Add Location</button></li>
+              <li className="divider my-0" />
+              <li><button onClick={() => navigate("/characterDir/addNewSeries")} className="gap-2"><span>📚</span> New Series</button></li>
             </ul>
           </div>
         </div>
@@ -160,10 +314,11 @@ function CharacterDirectory() {
             <div>
               <p className="font-semibold text-info mb-1">Operation Notes</p>
               <ul className="list-disc list-inside space-y-1 text-base-content/80">
-                <li>Use <kbd className="kbd kbd-xs">Add New</kbd> in the top-right to create Characters, Events, or Locations.</li>
-                <li>Each <strong>Series Card</strong> links to its full encyclopedia entry — click to expand details.</li>
-                <li>The search bar filters series by name in real-time; no page reload required.</li>
-                <li>Characters, Events, and Locations are scoped per series. Assign them during creation.</li>
+                <li>The three <strong>Quick Action cards</strong> open a series-picker dialog — select a series to be routed to the correct form.</li>
+                <li>Each <strong>Series Card</strong> also has its own scoped Add Character / Add Family / Locations / Events buttons for faster one-click access when you already know the series.</li>
+                <li>The <strong>Add New</strong> dropdown in the top-right is a shortcut to the same dialogs, plus New Series.</li>
+                <li>Search filters series by title in real-time — no page reload required.</li>
+                <li>Characters, Events, and Locations are scoped per series; assign them during creation.</li>
                 <li>Lazy loading is planned — large libraries may take a moment on first load.</li>
               </ul>
             </div>
@@ -176,10 +331,10 @@ function CharacterDirectory() {
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold tracking-tight">Characters & Story Encyclopedia</h1>
-              <p className="text-base-content/60 mt-1 text-sm">Internal reference for Caleido-Hope Labs narratives, characters, events, and locations.</p>
+              <p className="text-base-content/60 mt-1 text-sm">
+                Internal reference for Caleido-Hope Labs narratives, characters, events, and locations.
+              </p>
             </div>
-
-            {/* Stats strip */}
             {!loading && (
               <div className="flex gap-3 shrink-0">
                 <div className="stat bg-base-200 rounded-box p-3 min-w-0">
@@ -210,22 +365,22 @@ function CharacterDirectory() {
           <QuickActionCard
             icon="🧑"
             label="Add Character"
-            description="Create a new character profile"
-            onClick={handleAddCharacter}
+            description="Pick a series, then fill in the character form"
+            onClick={() => openModal("add_char_modal")}
             color="primary"
           />
           <QuickActionCard
             icon="📅"
             label="Add Event"
-            description="Log a story event or milestone"
-            onClick={handleAddEvent}
+            description="Pick a series, then log a story event"
+            onClick={() => openModal("add_event_modal")}
             color="secondary"
           />
           <QuickActionCard
             icon="📍"
             label="Add Location"
-            description="Register a place in the world"
-            onClick={handleAddLocation}
+            description="Pick a series, then register a location"
+            onClick={() => openModal("add_location_modal")}
             color="accent"
           />
         </section>
@@ -254,23 +409,24 @@ function CharacterDirectory() {
             </svg>
             <p className="text-lg font-medium">No series found</p>
             {searchQuery && (
-              <button className="btn btn-sm btn-ghost" onClick={() => setSearchQuery('')}>Clear search</button>
+              <button className="btn btn-sm btn-ghost" onClick={() => setSearchQuery("")}>Clear search</button>
             )}
           </div>
         ) : (
-          <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <section className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredSeries.map((item, index) => (
               <SeriesCard key={item.id ?? index} series={item} index={index} seriesId={item.id} />
             ))}
           </section>
         )}
 
-        {/* ── Footer Note ── */}
+        {/* ── Footer ── */}
         <div className="divider mt-12 mb-4" />
         <footer className="flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-base-content/40 pb-6">
           <span>Caleido-Hope Labs · Internal Use Only</span>
           <span>
-            {!loading && filteredSeries.length > 0 && `Showing ${filteredSeries.length} of ${availableSeries.length} series`}
+            {!loading && filteredSeries.length > 0 &&
+              `Showing ${filteredSeries.length} of ${availableSeries.length} series`}
           </span>
         </footer>
       </div>
