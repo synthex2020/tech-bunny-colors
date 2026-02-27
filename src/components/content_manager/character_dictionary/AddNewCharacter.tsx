@@ -10,6 +10,7 @@ import {
 } from "../../../persistence/MediaPersistence";
 import { generate_character_sheet } from "../../../logic/GeminiApi";
 import AddCharacterPreview from "../../ui/add-character-preview";
+import QuickPrefillPanel from "./QuickFillPanel";
 
 // --- helpers & constants (could be moved to separate file) ---
 // Each line = one item, and we strip commas entirely
@@ -153,6 +154,8 @@ const initialProfile: CharacterProfile = {
   },
 };
 
+
+
 const initialExtra: ExtraFields = {
   titles: "",
   hair: "",
@@ -189,10 +192,19 @@ function AddNewCharacter() {
     }
   }, [seriesId, setFamilies]);
 
+  const applyPrefill = (
+  prefillProfile: CharacterProfile,
+  prefillExtra: typeof extra,
+) => {
+  setProfile(prefillProfile);
+  setExtra(prefillExtra);
+  setCurrentStep(0); // Jump back to step 1 so user sees the filled data
+};
+
   // ---- generic updaters ----
   const updateIdentity = (
     field: keyof CharacterProfile["identity"],
-    value: any
+    value: any,
   ) => {
     setProfile((prev) => ({
       ...prev,
@@ -202,7 +214,7 @@ function AddNewCharacter() {
 
   const updateIdentitySupernatural = (
     field: keyof CharacterProfile["identity"]["supernatural"],
-    value: any
+    value: any,
   ) => {
     setProfile((prev) => ({
       ...prev,
@@ -218,7 +230,7 @@ function AddNewCharacter() {
 
   const updateAnatomy = (
     field: keyof CharacterProfile["anatomy"],
-    value: any
+    value: any,
   ) => {
     setProfile((prev) => ({
       ...prev,
@@ -228,7 +240,7 @@ function AddNewCharacter() {
 
   const updatePersonality = (
     field: keyof CharacterProfile["personality"],
-    value: any
+    value: any,
   ) => {
     setProfile((prev) => ({
       ...prev,
@@ -315,15 +327,15 @@ function AddNewCharacter() {
       autoBodyModsParts.push(`Burns: ${listToString(profile.anatomy.burns)}`);
     if (profile.anatomy.tattoos.length)
       autoBodyModsParts.push(
-        `Tattoos: ${listToString(profile.anatomy.tattoos)}`
+        `Tattoos: ${listToString(profile.anatomy.tattoos)}`,
       );
     if (profile.anatomy.birthmarks.length)
       autoBodyModsParts.push(
-        `Birthmarks: ${listToString(profile.anatomy.birthmarks)}`
+        `Birthmarks: ${listToString(profile.anatomy.birthmarks)}`,
       );
     if (profile.anatomy.skinDamage.length)
       autoBodyModsParts.push(
-        `Skin Damage: ${listToString(profile.anatomy.skinDamage)}`
+        `Skin Damage: ${listToString(profile.anatomy.skinDamage)}`,
       );
     if (profile.anatomy.moles.length)
       autoBodyModsParts.push(`Moles: ${listToString(profile.anatomy.moles)}`);
@@ -345,11 +357,11 @@ function AddNewCharacter() {
       backstoryParts.push(`[Love Philosophy]: ${profile.bio.philosphyLove}`);
     if (profile.bio.phiolosphyRelationships)
       backstoryParts.push(
-        `[Relationship Philosophy]: ${profile.bio.phiolosphyRelationships}`
+        `[Relationship Philosophy]: ${profile.bio.phiolosphyRelationships}`,
       );
     if (profile.bio.successes.length)
       backstoryParts.push(
-        `[Successes]: ${listToString(profile.bio.successes)}`
+        `[Successes]: ${listToString(profile.bio.successes)}`,
       );
     if (profile.bio.failures.length)
       backstoryParts.push(`[Failures]: ${listToString(profile.bio.failures)}`);
@@ -357,12 +369,12 @@ function AddNewCharacter() {
       backstoryParts.push(`[Dreams]: ${listToString(profile.bio.dreams)}`);
     if (profile.bio.criminalRecord.length)
       backstoryParts.push(
-        `[Criminal Record]: ${listToString(profile.bio.criminalRecord)}`
+        `[Criminal Record]: ${listToString(profile.bio.criminalRecord)}`,
       );
 
     if (profile.identity.family)
       backstoryParts.unshift(
-        `[Familial Relations (free text)]: ${profile.identity.family}`
+        `[Familial Relations (free text)]: ${profile.identity.family}`,
       );
 
     const backstory = backstoryParts.join("\n");
@@ -374,27 +386,27 @@ function AddNewCharacter() {
       powerParts.push(`Class: ${profile.identity.supernatural.class}`);
     if (profile.identity.supernatural.fightStyle)
       powerParts.push(
-        `Fight Style: ${profile.identity.supernatural.fightStyle}`
+        `Fight Style: ${profile.identity.supernatural.fightStyle}`,
       );
     if (profile.identity.supernatural.primaryElement)
       powerParts.push(
-        `Primary Element: ${profile.identity.supernatural.primaryElement}`
+        `Primary Element: ${profile.identity.supernatural.primaryElement}`,
       );
     if (profile.identity.supernatural.secondaryElement)
       powerParts.push(
-        `Secondary Element: ${profile.identity.supernatural.secondaryElement}`
+        `Secondary Element: ${profile.identity.supernatural.secondaryElement}`,
       );
     if (profile.identity.supernatural.tertiaryElement)
       powerParts.push(
-        `Tertiary Element: ${profile.identity.supernatural.tertiaryElement}`
+        `Tertiary Element: ${profile.identity.supernatural.tertiaryElement}`,
       );
     if (profile.identity.supernatural.strengths.length)
       powerParts.push(
-        `Strengths: ${listToString(profile.identity.supernatural.strengths)}`
+        `Strengths: ${listToString(profile.identity.supernatural.strengths)}`,
       );
     if (profile.identity.supernatural.weaknesses.length)
       powerParts.push(
-        `Weaknesses: ${listToString(profile.identity.supernatural.weaknesses)}`
+        `Weaknesses: ${listToString(profile.identity.supernatural.weaknesses)}`,
       );
     const powers = powerParts.join(" | ");
 
@@ -406,7 +418,7 @@ function AddNewCharacter() {
 
     const characterSheetResult = await generate_character_sheet(
       profile,
-      referenceAgent
+      referenceAgent,
     );
 
     //  Generate the needed Files
@@ -783,7 +795,6 @@ function AddNewCharacter() {
                 className="textarea textarea-bordered w-full"
                 placeholder="Sword & shield, sniper, unarmed martial arts..."
                 value={profile.identity.supernatural.fightStyle}
-                
                 onChange={(e) =>
                   updateIdentitySupernatural("fightStyle", e.target.value)
                 }
@@ -1821,6 +1832,10 @@ function AddNewCharacter() {
         structured data back into your existing backend fields, so your API and
         database stay exactly the same.
       </p>
+
+      <div>
+        <QuickPrefillPanel onApply={applyPrefill} />
+      </div>
 
       {/* Steps indicator */}
       <ul className="steps steps-horizontal w-full mb-4">

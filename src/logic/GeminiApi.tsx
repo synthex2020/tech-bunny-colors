@@ -36,15 +36,28 @@ export async function generate_character_sheet(
     const displayName =
       identity.name || identity.nickname || "Unnamed character";
 
-    // --- Safely integrate breast size (US sizing, only for women) ---
-    // NOTE: Corrected the property access from anatomy.breast to anatomy.breastSize (assuming it exists in your CharacterProfile type based on the previous conversation)
     const breastSizeInstruction =
       anatomy.sex === "female" && anatomy.breast
         ? `Breast size: ${anatomy.breast} (US sizing).`
         : `Breasts: None / Minimal (as appropriate for their sex).`;
 
     const promptText = `
-Create a detailed, high-quality **artist's reference sheet** for the following original character. The style must be a clean, neutral, and highly technical illustration suitable for model sheets. **Prioritize anatomical and proportional accuracy for artists.**
+Create a detailed, high-quality **artist's reference sheet** for the following original character. 
+
+**Core Style Directive:**
+The art style must be a deliberate fusion of **The Boondocks (primary influence, ~70%)** and **One Punch Man (secondary influence, ~30%)**. 
+
+From **The Boondocks**: Sharp, angular linework. Strong jaw and facial bone structure. Expressive, slightly exaggerated facial features — wide eyes with solid dark pupils, defined brow lines, and bold mouths. Characters have a grounded, real-world ethnic and racial specificity — avoid whitewashing or genericizing features. Clothing sits naturally with weight and drape. The line art is confident and heavy — no scratchy or sketchy strokes. Background characters feel like real people, not archetypes.
+
+From **One Punch Man** (Yusuke Murata's manga style specifically): Extreme anatomical precision and musculature when the character calls for it. Dynamic implied energy even in neutral poses — a stillness that feels coiled. Clean technical linework at the same weight as Boondocks but with more rendering on form. Subtle speed-line-influenced shadow techniques for depth without full shading.
+
+The **Boondocks aesthetic dominates** — flat color fills, strong outlines, slightly stylized proportions. One Punch Man influence shows up in the **body construction and rendering quality**, not in the overall visual language.
+
+**Do not** produce generic anime style, chibi, moe, or shonen-magazine style. The result should look like it could appear in an Aaron McGruder production that hired Murata as a guest animator.
+
+---
+
+Character Data:
 
 Name: ${displayName}
 Gender Identity: ${identity.gender}
@@ -57,22 +70,18 @@ Weight: ${anatomy.weight}
 ${breastSizeInstruction}
 
 Hair & Face:
-Hair style and color: ${
-      other.inspiration || "a style that fits their personality"
-    }
+Hair style and color: ${other.inspiration || "a style that fits their personality"}
 Eyes: ${anatomy.eyes}
 Nose: ${anatomy.nose}
 Posture: ${anatomy.posture}
 
 Personality: ${personality.personality}
-Habits / quirks: ${personality.habits.join(", ") || "N/A"}
+Habits / Quirks: ${personality.habits.join(", ") || "N/A"}
 
 Supernatural / Class:
 Class (DnD style): ${identity.supernatural.class}
 Fight Style: ${identity.supernatural.fightStyle}
-Elements: ${identity.supernatural.primaryElement}, ${
-      identity.supernatural.secondaryElement
-    }, ${identity.supernatural.tertiaryElement}
+Elements: ${identity.supernatural.primaryElement}, ${identity.supernatural.secondaryElement}, ${identity.supernatural.tertiaryElement}
 
 Body Modifications:
 Scars: ${anatomy.scars.join(", ") || "None"}
@@ -81,19 +90,33 @@ Tattoos: ${anatomy.tattoos.join(", ") || "None"}
 Birthmarks: ${anatomy.birthmarks.join(", ") || "None"}
 Moles: ${anatomy.moles.join(", ") || "None"}
 
-**Artist Reference Sheet Style Requirements:**
-1.  **Layout:** Use a **clean, technical character sheet layout** with **orthographic poses** (front, 3/4, and back). The character should be in a **neutral, standing pose**.
-2.  **Clothing:** The character must be illustrated wearing **minimal, form-fitting, non-obstructive clothing** (e.g., a simple sports bra/bikini top and shorts/briefs in a neutral color) to allow artists to **clearly see and reference the full body anatomy and proportions** without distraction.
-3.  **Proportions:** Include **proportional breakdown views** for both the **full body** and the **face**. This must include overlaying a **grid or measure lines** (e.g., using head-height units) next to the main figure to define the character's height, shoulder width, hip width, and limb lengths.
-4.  **Details:** Include **close-ups** for **face proportions** (front and side profiles), hands, and feet.
-5.  **Style:** Render in a highly detailed, **semi-realistic anime style** that resembles the quality and fidelity of modern anime like **The Apothecary Diaries or Bleach**. **Avoid dynamic poses or heavy shading** on the main figures. Use **clear line art** and lighting for maximum utility as a technical reference.
+---
+
+**Reference Sheet Layout Requirements:**
+
+1. **Poses:** Three orthographic views — **front, 3/4 turn, and back** — in a neutral standing pose. The 3/4 view may carry a subtle expression or weight shift to show personality, but must remain technically readable. Poses should feel lived-in and grounded in the Boondocks tradition — not stiff, not heroic.
+
+2. **Clothing:** Minimal, form-fitting reference clothing (sports bra/briefs or equivalent in a flat neutral tone) to expose anatomy and proportions clearly. Clothing should have the natural drape and fabric weight characteristic of Boondocks costuming — no fantasy armor or costume unless part of the character design.
+
+3. **Proportions:** Include a **head-height measurement grid** alongside the main figure. Mark shoulder width, hip width, and limb ratios. Face proportion guides (front + side profile) with landmark lines for eyes, nose, mouth, and ear placement — executed in the Boondocks facial geometry style (strong cheekbones, defined jawline, ethnic specificity honored).
+
+4. **Detail Panels:** Close-up insets for:
+   - Face (front-on and 3/4 profile)
+   - Hands
+   - Feet
+   - Any significant body modifications (scars, tattoos, etc.) called out with small annotation lines
+
+5. **Linework:** Heavy, confident outlines on silhouette edges. Slightly thinner interior lines. **Flat color fills with minimal gradient** — cel-shading only where it defines form. Shadow shapes should be bold and geometric in the Boondocks tradition, with Murata-style anatomical shadow placement on musculature.
+
+6. **Color Palette:** Use a small, deliberate palette. Skin tones must be rendered with the racial accuracy that is a hallmark of The Boondocks — warm undertones for Black characters, correct olive/cool ranges for others. No desaturation or genericizing.
+
+7. **Typography:** Include the character's name in clean, bold sans-serif lettering at the top of the sheet. Annotation labels (height, weight, notes) in a small, technical font alongside measurement guides.
 `.trim();
 
     // --- Build contents depending on whether we have a reference image ---
     let contents: any;
 
     if (reference) {
-      // Text + image (editing / style transfer style)
       const base64Image = await fileToBase64(reference);
       contents = [
         {
@@ -107,7 +130,6 @@ Moles: ${anatomy.moles.join(", ") || "None"}
         },
       ];
     } else {
-      // Text-only – docs allow plain string for contents
       contents = promptText;
     }
 
@@ -132,7 +154,6 @@ Moles: ${anatomy.moles.join(", ") || "None"}
         bytes[i] = binaryString.charCodeAt(i);
       }
 
-      // Build a File for Supabase
       const safeName =
         displayName
           .toLowerCase()
