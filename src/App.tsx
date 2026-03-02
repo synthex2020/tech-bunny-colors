@@ -24,7 +24,7 @@ const DirectoryCard: React.FC<DirectoryCardProps> = ({
   const navigate = useNavigate();
 
   return (
-    <div className="card card-compact bg-base-100 w-96 shadow-xl">
+    <div className="card card-compact bg-base-100 w-96 shadow-xl p-2">
       <figure>
         <img src={imageSrc} alt={altText} />
       </figure>
@@ -88,7 +88,7 @@ function App() {
 
       <div className="container mx-auto px-4">
 
-        <section id='mainContent' className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <section id='mainContent' className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3">
           {directoryCards.map((card, index) => (
             <DirectoryCard
               key={index}

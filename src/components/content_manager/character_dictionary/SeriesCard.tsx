@@ -73,19 +73,6 @@ function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
                 <div className="card-actions flex flex-wrap gap-2 mt-4">
                    
 
-                    {/* Add Character Button - use params to send over id */}
-                    <button
-                        className="btn btn-outline text-sm"
-                        
-                        onClick={() => {
-                            let routingRoute = "/characterDir/addNewCharacter/" + seriesId + "";
-                            navigate(routingRoute)
-                        }}
-                    >
-                        <PlusCircle size={16} />
-                        Add Character
-                    </button>
-
                     {/* Add Family Button  */}
                     <button
                         className="btn btn-outline text-sm"
@@ -111,24 +98,6 @@ function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
                         New Family Member
                     </button>
 
-                    {/* Add New Series Button */}
-                    <button
-                        className="btn btn-outline text-sm"
-                        onClick={() => navigate('/characterDir/addNewSeries')}
-                    >
-                        <PlusCircle size={16} />
-                        New Series
-                    </button>
-
-                    {/* Add New Series Button */}
-                    <button
-                        className="btn btn-outline text-sm"
-                        onClick={() => navigate('/characterDir/characterCreator')}
-                    >
-                        <PlusCircle size={16} />
-                        Generate New Character
-                    </button>
-
                 </div>
 
                 {/* Navigation Buttons */}
@@ -145,7 +114,6 @@ function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
                             state: series.locations
                         })}
                     >
-                        <MapPin size={16} />
                         Locations
                     </button>
                     <button
@@ -156,7 +124,6 @@ function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
 
                         }}
                     >
-                        <Users size={16} />
                         Characters
                     </button>
                     <button
@@ -165,7 +132,6 @@ function SeriesCard({ series, index, seriesId }: SeriesCardProps) {
                             state: series.timeline
                         })}
                     >
-                        <Calendar size={16} />
                         Events
                     </button>
 
