@@ -5,7 +5,7 @@ import { CharacterEditModal } from "./character-edit-modal";
 
 export default function CharacterTableCard(character: Character) {
   const [characterSheet, setCharacterSheet] = useState(
-    "https://media.istockphoto.com/id/1289220545/photo/beautiful-woman-smiling-with-crossed-arms.jpg?s=612x612&w=0&k=20&c=qmOTkGstKj1qN0zPVWj-n28oRA6_BHQN8uVLIXg0TF8="
+    "https://media.istockphoto.com/id/1289220545/photo/beautiful-woman-smiling-with-crossed-arms.jpg?s=612x612&w=0&k=20&c=qmOTkGstKj1qN0zPVWj-n28oRA6_BHQN8uVLIXg0TF8=",
   );
 
   const blobToBase64 = (blob: Blob): Promise<string> => {
@@ -26,7 +26,7 @@ export default function CharacterTableCard(character: Character) {
       character.character_sheet.includes("media.istockphoto")
     ) {
       setCharacterSheet(
-        "https://media.istockphoto.com/id/1289220545/photo/beautiful-woman-smiling-with-crossed-arms.jpg?s=612x612&w=0&k=20&c=qmOTkGstKj1qN0zPVWj-n28oRA6_BHQN8uVLIXg0TF8="
+        "https://media.istockphoto.com/id/1289220545/photo/beautiful-woman-smiling-with-crossed-arms.jpg?s=612x612&w=0&k=20&c=qmOTkGstKj1qN0zPVWj-n28oRA6_BHQN8uVLIXg0TF8=",
       );
       return;
     }
@@ -44,7 +44,7 @@ export default function CharacterTableCard(character: Character) {
     // NORMAL URL CASE
     setCharacterSheet(character.character_sheet);
   }, [character]);
-
+  const mediaArray = character.media.toString().replace("[", "").replace("]", "");
   return (
     <div className="card card-side bg-base-100 shadow-sm border">
       <figure>
@@ -58,7 +58,13 @@ export default function CharacterTableCard(character: Character) {
             <img src={characterSheet} alt="character sheet" />
           )}
 
-          <div className="btn bg-primary text-white">View References</div>
+          <div className="btn bg-primary text-white">
+            {mediaArray != "" && (
+              <a href={JSON.parse(mediaArray).file} target="_blank">
+                View Reference
+              </a>
+            )}
+          </div>
         </div>
       </figure>
       <div className="card-body">
@@ -118,7 +124,9 @@ export default function CharacterTableCard(character: Character) {
                     anatomyUrl = `https://mkcijqngeshomivhjrbe.supabase.co/storage/v1/object/public/${bucket}/${filePath}`;
                   }
                   console.log(anatomyUrl);
-                  const response = await fetch(anatomyUrl.trim().replace(/^"|"$/g, ""));
+                  const response = await fetch(
+                    anatomyUrl.trim().replace(/^"|"$/g, ""),
+                  );
 
                   if (!response.ok) {
                     console.error("HTTP ERROR", response.status);
