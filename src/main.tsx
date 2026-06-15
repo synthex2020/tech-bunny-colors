@@ -19,6 +19,7 @@ import UploadContentPage from './components/content_manager/content_managment/Ad
 import ReactNativeElementsCustom from './components/theme_selectors/ReactNativeElementsCustomThemes.tsx'
 import AddNewFamily from './components/content_manager/character_dictionary/AddNewFamily.tsx'
 import AddNewFamilyMember from './components/content_manager/character_dictionary/AddNewFamilyMember.tsx'
+import VolumeConstructor from './components/comics/VolumeConstructor.tsx'
 
 
 createRoot(document.getElementById('root')!).render(
@@ -42,6 +43,7 @@ createRoot(document.getElementById('root')!).render(
       <Route path='/themes/daisyui' element={<DaisyUIThemePack />} />
       <Route path='/themes/react-native-elements' element={<ReactNativeElementsCustom />} />
       <Route path='socialDir' element={<SocialMediaDiretory />}>
+      <Route path='/comics/create-volume' element={<VolumeConstructor />} />
       </Route>
     
     </Routes>
